@@ -1,6 +1,6 @@
 {
-  "name": "electron-react-typescript",
-  "version": "0.0.6",
+  "name": "toolkit",
+  "version": "0.0.0",
   "description": "",
   "main": "./dist/main.js",
   "scripts": {
@@ -75,17 +75,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com:Robinfr/electron-react-typescript.git"
+    "url": "git+ssh://git@github.com:suchanlee/toolkit.git"
   },
   "author": {
     "name": "Suchan Lee",
     "email": "lee.suchan@gmail.com"
   },
-  "license": "SEE LICENSE",
   "bugs": {
-    "url": "https://github.com/Robinfr/electron-react-typescript/issues"
+    "url": "https://github.com/suchanlee/toolkit/issues"
   },
-  "homepage": "https://github.com/Robinfr/electron-react-typescript",
+  "homepage": "https://github.com/suchanlee/toolkit",
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
