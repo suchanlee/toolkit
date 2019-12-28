@@ -5,18 +5,22 @@ export type AsyncValue<V> =
   | AsyncReloading<V>
   | AsyncFailedLoading;
 
-export interface InternalAsyncValue<V, S = AsyncStatus> {
+export interface InternalAsyncValue<S = AsyncStatus> {
   status: S;
-  value: V;
 }
 
-export type AsyncNotStarted = InternalAsyncValue<void, AsyncStatus.NOT_STARTED>;
-export type AsyncLoading<V> = InternalAsyncValue<Promise<V>, AsyncStatus.LOADING>;
-export type AsyncLoaded<V> = InternalAsyncValue<V, AsyncStatus.LOADED>;
-export type AsyncReloading<V> = InternalAsyncValue<V, AsyncStatus.RELOADING> & {
-  promise: Promise<V>;
+export type AsyncNotStarted = InternalAsyncValue<AsyncStatus.NOT_STARTED>;
+export type AsyncLoading<V> = InternalAsyncValue<AsyncStatus.LOADING> & {
+  promise?: Promise<V>;
 };
-export type AsyncFailedLoading = InternalAsyncValue<void, AsyncStatus.FAILED_LOADING> & {
+export type AsyncLoaded<V> = InternalAsyncValue<AsyncStatus.LOADED> & {
+  value: V;
+};
+export type AsyncReloading<V> = InternalAsyncValue<AsyncStatus.RELOADING> & {
+  value: V;
+  promise?: Promise<V>;
+};
+export type AsyncFailedLoading = InternalAsyncValue<AsyncStatus.FAILED_LOADING> & {
   error: Error;
 };
 

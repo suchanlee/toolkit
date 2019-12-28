@@ -147,6 +147,8 @@
     "@blueprintjs/core": "^3.22.3",
     "@blueprintjs/icons": "^3.13.0",
     "classnames": "^2.2.6",
+    "electron-better-ipc": "^0.7.0",
+    "grabity": "^1.0.5",
     "is-url": "^1.2.4",
     "lodash-es": "^4.17.15",
     "mousetrap": "^1.6.3",

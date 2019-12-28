@@ -3,6 +3,7 @@ import classnames from "classnames";
 import isUrl from "is-url";
 import * as React from "react";
 import { KeyboardNavSupportedInput } from "../../shared-components/KeyboardNavSupportedInput";
+import { ReadingsUrlPreview } from "./ReadingsUrlPreview";
 
 require("./ReadingsInput.scss");
 
@@ -30,11 +31,14 @@ export class ReadingsInput extends React.PureComponent<ReadingsInput.Props, Read
           onChange={this.handleChange}
         />
         {isUrl(this.state.value) && (
-          <Button
-            title="Add url to reading list"
-            className={classnames("readings-input-add-button", Classes.SMALL)}
-            icon="plus"
-          />
+          <React.Fragment>
+            <Button
+              title="Add url to reading list"
+              className={classnames("readings-input-add-button", Classes.SMALL)}
+              icon="plus"
+            />
+            <ReadingsUrlPreview url={this.state.value} />
+          </React.Fragment>
         )}
       </div>
     );

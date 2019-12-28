@@ -15,6 +15,7 @@
     "jsx-no-string-ref": true,
     "jsx-self-close": true,
     "max-line-length": false,
+    "no-else-after-return": false,
     "object-literal-shorthand": false,
     "ordered-imports": [true, {
       

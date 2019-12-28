@@ -4,20 +4,20 @@ import {
   AsyncLoading,
   AsyncNotStarted,
   AsyncReloading,
-  AsyncStatus
+  AsyncStatus,
+  AsyncValue
 } from "./asyncTypes";
 
 export function asyncNotStarted(): AsyncNotStarted {
   return {
-    status: AsyncStatus.NOT_STARTED,
-    value: undefined
+    status: AsyncStatus.NOT_STARTED
   };
 }
 
-export function asyncLoading<V>(promise: Promise<V>): AsyncLoading<V> {
+export function asyncLoading<V>(promise?: Promise<V>): AsyncLoading<V> {
   return {
     status: AsyncStatus.LOADING,
-    value: promise
+    promise: promise
   };
 }
 
@@ -28,7 +28,7 @@ export function asyncLoaded<V>(value: V): AsyncLoaded<V> {
   };
 }
 
-export function asyncReloading<V>(value: V, promise: Promise<V>): AsyncReloading<V> {
+export function asyncReloading<V>(value: V, promise?: Promise<V>): AsyncReloading<V> {
   return {
     status: AsyncStatus.RELOADING,
     promise: promise,
@@ -39,7 +39,18 @@ export function asyncReloading<V>(value: V, promise: Promise<V>): AsyncReloading
 export function asyncFailedLoading(error: Error): AsyncFailedLoading {
   return {
     status: AsyncStatus.FAILED_LOADING,
-    value: undefined,
     error: error
   };
+}
+
+export function isLoading<T>(asyncValue: AsyncValue<any>): asyncValue is AsyncLoading<T> {
+  return asyncValue.status === AsyncStatus.LOADING;
+}
+
+export function isLoaded<T>(asyncValue: AsyncValue<any>): asyncValue is AsyncLoaded<T> {
+  return asyncValue.status === AsyncStatus.LOADED;
+}
+
+export function isFailedLoading(asyncValue: AsyncValue<any>): asyncValue is AsyncFailedLoading {
+  return asyncValue.status === AsyncStatus.FAILED_LOADING;
 }

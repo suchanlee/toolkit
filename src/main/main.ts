@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from "electron";
 import * as path from "path";
 import * as url from "url";
+import { registerMainIpcListeners } from "./ipc";
 
 let win: BrowserWindow | null;
 
@@ -59,3 +60,5 @@ app.on("activate", () => {
     createWindow();
   }
 });
+
+registerMainIpcListeners();
