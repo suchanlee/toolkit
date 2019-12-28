@@ -10,6 +10,7 @@
     "indent": [true, "spaces", 2],
     "jsx-alignment": true,
     "jsx-equals-spacing": [true, "never"],
+    "jsx-no-lambda": false,
     "jsx-no-string-ref": true,
     "jsx-self-close": true,
     "max-line-length": false,

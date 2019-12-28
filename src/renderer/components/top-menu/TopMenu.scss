@@ -1,0 +1,20 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.top-menu {
+  padding: 15px;
+
+  .top-menu-item {
+    margin-right: 20px;
+    letter-spacing: 1px;
+    cursor: pointer;
+
+    &:hover {
+      border-bottom: 1px solid $light-gray5;
+    }
+
+    &.-active {
+      font-weight: 800;
+      border-bottom: 2px solid $light-gray5;
+    }
+  }
+}

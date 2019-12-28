@@ -4,6 +4,13 @@ export type Iso8601String = string & {
 
 export type KeyedByDate<T> = Record<string, T>;
 
+export enum Nav {
+  TODOS = "TODOS",
+  READINGS = "READINGS",
+  NOTES = "NOTES",
+  JS = "JS"
+}
+
 export interface Todo {
   status: TodoStatus;
   description: string;

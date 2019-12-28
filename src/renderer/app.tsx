@@ -4,6 +4,8 @@ import { AppContainer } from "react-hot-loader";
 import { Provider } from "react-redux";
 
 import { Application } from "./components/Application";
+import { FloatingMenu } from "./components/floating-menu/FloatingMenu";
+import { KeyboardNavigation } from "./components/keyboard/KeyboardNavigation";
 import { store } from "./store/store";
 
 require("./app.scss");
@@ -11,15 +13,15 @@ require("./app.scss");
 const mainElement = document.createElement("div");
 document.body.appendChild(mainElement);
 
-const render = (Component: () => JSX.Element) => {
-  ReactDOM.render(
-    <AppContainer>
-      <Provider store={store}>
-        <Component />
-      </Provider>
-    </AppContainer>,
-    mainElement
-  );
-};
-
-render(Application);
+ReactDOM.render(
+  <AppContainer>
+    <Provider store={store}>
+      <React.Fragment>
+        <KeyboardNavigation />
+        <FloatingMenu />
+        <Application />
+      </React.Fragment>
+    </Provider>
+  </AppContainer>,
+  mainElement
+);
