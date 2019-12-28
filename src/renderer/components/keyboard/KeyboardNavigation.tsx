@@ -30,39 +30,38 @@ class KeyboardNavigationInternal extends React.PureComponent<KeyboardNavigation.
 
   private registerKeyboardListeners() {
     // floating menu
-    mousetrap.bind("esc", () => {
-      console.log("esc");
-      this.props.hideFloatingMenu();
-    });
-    mousetrap.bind("/", this.handleSlashPress);
+    mousetrap.bind("esc", this.props.hideFloatingMenu);
+    mousetrap.bind("/", this.handleSlashKeyUp);
 
     // navigation
-    mousetrap.bind("command+1", evt => {
-      console.log(evt);
-      this.handleCommandPlusOnePress();
-    });
-    mousetrap.bind("command+2", this.handleCommandPlusTwoPress);
-    mousetrap.bind("command+3", this.handleCommandPlusThreePress);
-    mousetrap.bind("command+4", this.handleCommandPlusFourPress);
+    mousetrap.bind("command+1", this.handleCommandPlusOneKeyUp);
+    mousetrap.bind("command+2", this.handleCommandPlusTwoKeyUp);
+    mousetrap.bind("command+3", this.handleCommandPlusThreeKeyUp);
+    mousetrap.bind("command+4", this.handleCommandPlusFourKeyUp);
   }
 
   private unregisterKeyboardListeners() {
     mousetrap.reset();
   }
 
-  private handleSlashPress = (evt: KeyboardEvent) => {
-    this.props.showFloatingMenu();
-    // prevent default of this keypress as it will cause the floating menu
-    // input to have the "/" key registered and set as value
-    // evt.stopPropagation();
-    evt.preventDefault();
+  private handleSlashKeyUp = (evt: ExtendedKeyboardEvent) => {
+    const target = (evt.target ?? evt.srcElement) as HTMLElement | null;
+    if (target == null || !SLASH_IGNORED_TAG_NAMES.has(target.tagName?.toLowerCase())) {
+      this.props.showFloatingMenu();
+      // prevent default of this keyUp as it will cause the floating menu
+      // input to have the "/" key registered and set as value
+      // evt.stopPropagation();
+      evt.preventDefault();
+    }
   };
 
-  private handleCommandPlusOnePress = () => this.props.setNav(Nav.TODOS);
-  private handleCommandPlusTwoPress = () => this.props.setNav(Nav.READINGS);
-  private handleCommandPlusThreePress = () => this.props.setNav(Nav.NOTES);
-  private handleCommandPlusFourPress = () => this.props.setNav(Nav.JS);
+  private handleCommandPlusOneKeyUp = () => this.props.setNav(Nav.TODOS);
+  private handleCommandPlusTwoKeyUp = () => this.props.setNav(Nav.READINGS);
+  private handleCommandPlusThreeKeyUp = () => this.props.setNav(Nav.NOTES);
+  private handleCommandPlusFourKeyUp = () => this.props.setNav(Nav.JS);
 }
+
+const SLASH_IGNORED_TAG_NAMES = new Set(["input", "textarea", "select"]);
 
 const mapDispatchToProps: KeyboardNavigation.DispatchProps = {
   showFloatingMenu: FloatingMenuActions.show,
