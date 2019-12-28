@@ -45,7 +45,7 @@ module.exports = merge.smart(baseConfig, {
                 loaders: ['style-loader', 'css-loader']
             },
             {
-                test: /\.(gif|png|jpe?g|svg)$/,
+                test: /\.(gif|ttf|eot|png|jpe?g|svg)$/,
                 use: [
                     'file-loader',
                     {
@@ -55,6 +55,17 @@ module.exports = merge.smart(baseConfig, {
                         }
                     }
                 ]
+            },
+            {
+                test: /\.(woff|woff2)$/,
+                use: {
+                    loader: 'url-loader',
+                    options: {
+                        name: 'fonts/[hash].[ext]',
+                        limit: 5000,
+                        mimetype: 'application/font-woff'
+                    }
+                }
             },
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
             {
