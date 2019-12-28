@@ -11,10 +11,21 @@ export enum Nav {
   JS = "JS"
 }
 
-export interface Todo {
-  status: TodoStatus;
-  description: string;
+export enum EntryType {
+  TODO = "TODO",
+  READING = "READING",
+  NOTE = "NOTE"
+}
+
+export interface Entry {
+  type: EntryType;
+  value: string;
   date: Iso8601String;
+}
+
+export interface Todo extends Entry {
+  type: EntryType.TODO;
+  status: TodoStatus;
 }
 
 export enum TodoStatus {
@@ -22,3 +33,15 @@ export enum TodoStatus {
   IN_PROGRESS = "IN_PROGRESS",
   FINISHED = "FINISHED"
 }
+
+export interface Reading extends Entry {
+  type: EntryType.READING;
+  status: TodoStatus;
+}
+
+export enum ReadingStatus {
+  ACTIVE = "ACTIVE",
+  ARCHIVED = "ARCHIVED"
+}
+
+export type ReadingStatusFilter = ReadingStatus | "ALL";

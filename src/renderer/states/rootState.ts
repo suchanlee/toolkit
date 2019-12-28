@@ -1,6 +1,7 @@
 import { createInitiailFloatingMenuState, FloatingMenuState } from "./floatingMenuState";
 import { createInitialNavigationState, NavigationState } from "./navigationState";
 import { createInitialPersistedState, PersistedState } from "./persistedState";
+import { createInitialReadingState, ReadingState } from "./readingState";
 import { TodoState } from "./todoState";
 
 export interface RootState {
@@ -8,6 +9,7 @@ export interface RootState {
   persisted: PersistedState;
   floatingMenu: FloatingMenuState;
   todo: TodoState | undefined;
+  reading: ReadingState;
 }
 
 export function createInitialRootState(): RootState {
@@ -15,6 +17,7 @@ export function createInitialRootState(): RootState {
     navigation: createInitialNavigationState(),
     persisted: createInitialPersistedState(),
     floatingMenu: createInitiailFloatingMenuState(),
-    todo: undefined
+    todo: undefined,
+    reading: createInitialReadingState()
   };
 }
