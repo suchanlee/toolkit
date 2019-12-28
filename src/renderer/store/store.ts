@@ -1,7 +1,7 @@
 import { applyMiddleware, createStore } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
 // tslint:disable-next-line: import-name
 import createSagaMiddleware from "redux-saga";
-import { composeWithDevTools } from "redux-devtools-extension";
 
 import { rootReducer } from "../reducers/rootReducer";
 import { createInitialRootState } from "../states/rootState";

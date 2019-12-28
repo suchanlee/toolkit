@@ -14,6 +14,9 @@
     "jsx-self-close": true,
     "max-line-length": false,
     "object-literal-shorthand": false,
+    "ordered-imports": [true, {
+      
+    }],
     "quotemark": [true, "double"],
     "ter-indent": false,
     "trailing-comma": false,

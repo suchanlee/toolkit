@@ -1,4 +1,4 @@
-import { Todo, Iso8601String } from "../types/types";
+import { Iso8601String, Todo } from "../types/types";
 
 export interface TodoState {
   date: Iso8601String;

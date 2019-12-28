@@ -1,13 +1,13 @@
-import classnames from "classnames";
 import { Classes, InputGroup, Overlay } from "@blueprintjs/core";
+import classnames from "classnames";
 import * as React from "react";
-import { RootState } from "../../states/rootState";
-import {
-  selectFloatingMenuQuery,
-  selectFloatingMenuIsShown
-} from "../../selectors/floatingMenuSelectors";
 import { connect } from "react-redux";
 import { FloatingMenuActions } from "../../actions/floatingMenuActions";
+import {
+  selectFloatingMenuIsShown,
+  selectFloatingMenuQuery
+} from "../../selectors/floatingMenuSelectors";
+import { RootState } from "../../states/rootState";
 
 require("./FloatingMenu.scss");
 

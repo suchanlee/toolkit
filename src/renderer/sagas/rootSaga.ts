@@ -1,4 +1,4 @@
-import { all, spawn, Effect } from "redux-saga/effects";
+import { all, Effect, spawn } from "redux-saga/effects";
 import { persistenceSaga } from "./persistenceSaga";
 
 export function* rootSaga() {

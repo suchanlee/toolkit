@@ -1,6 +1,6 @@
 import { TypedReducer } from "redoodle";
-import { FloatingMenuState } from "../states/floatingMenuState";
 import { FloatingMenuActions } from "../actions/floatingMenuActions";
+import { FloatingMenuState } from "../states/floatingMenuState";
 
 export const floatingMenuReducer = TypedReducer.builder<FloatingMenuState>()
   .withHandler(FloatingMenuActions.show.TYPE, state => {

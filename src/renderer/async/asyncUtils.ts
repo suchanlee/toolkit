@@ -1,10 +1,10 @@
 import {
-  AsyncNotStarted,
-  AsyncStatus,
-  AsyncLoading,
+  AsyncFailedLoading,
   AsyncLoaded,
+  AsyncLoading,
+  AsyncNotStarted,
   AsyncReloading,
-  AsyncFailedLoading
+  AsyncStatus
 } from "./asyncTypes";
 
 export function asyncNotStarted(): AsyncNotStarted {
