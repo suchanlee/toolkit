@@ -1,0 +1,16 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.#{$ns}-dark .readings-input.#{$ns}-input:focus {
+  box-shadow: none;
+  border-radius: none;
+}
+
+.readings-input-container {
+  position: relative;
+
+  .readings-input-add-button {
+    position: absolute;
+    right: 5px;
+    top: 3px;
+  }
+}

@@ -3,6 +3,9 @@ import { connect } from "react-redux";
 import { selectNavigationActive } from "../../selectors/navigationSelectors";
 import { RootState } from "../../states/rootState";
 import { Nav } from "../../types/types";
+import { Readings } from "../readings/Readings";
+
+require("./Content.scss");
 
 export namespace Content {
   export interface StoreProps {
@@ -14,7 +17,17 @@ export namespace Content {
 
 class ContentInternal extends React.PureComponent<Content.Props> {
   public render() {
-    return <div className="content">{this.props.currentNav}</div>;
+    return <div className="content">{this.renderContent()}</div>;
+  }
+
+  private renderContent() {
+    const { currentNav } = this.props;
+    switch (currentNav) {
+      case Nav.READINGS:
+        return <Readings />;
+      default:
+        return currentNav;
+    }
   }
 }
 

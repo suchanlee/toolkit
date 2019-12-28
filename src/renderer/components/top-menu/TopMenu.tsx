@@ -1,3 +1,4 @@
+import { Classes } from "@blueprintjs/core";
 import classnames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -24,7 +25,11 @@ export namespace TopMenu {
 
 class TopMenuInternal extends React.PureComponent<TopMenu.Props> {
   public render() {
-    return <div className="top-menu">{MENU_ITEMS.map(nav => this.renderMenuItem(nav))}</div>;
+    return (
+      <div className={classnames("top-menu", Classes.ELEVATION_0)}>
+        {MENU_ITEMS.map(nav => this.renderMenuItem(nav))}
+      </div>
+    );
   }
 
   private renderMenuItem(nav: Nav) {

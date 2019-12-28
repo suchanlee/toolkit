@@ -1,4 +1,4 @@
-import { Classes, InputGroup, Overlay } from "@blueprintjs/core";
+import { Classes, Overlay } from "@blueprintjs/core";
 import classnames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -7,6 +7,7 @@ import {
   selectFloatingMenuIsShown,
   selectFloatingMenuQuery
 } from "../../selectors/floatingMenuSelectors";
+import { KeyboardNavSupportedInput } from "../../shared-components/KeyboardNavSupportedInput";
 import { RootState } from "../../states/rootState";
 
 require("./FloatingMenu.scss");
@@ -35,23 +36,16 @@ class FloatingMenuInternal extends React.PureComponent<FloatingMenu.Props> {
         transitionDuration={50}
       >
         <div className={classnames("floating-menu", Classes.ELEVATION_2)}>
-          <InputGroup
+          <KeyboardNavSupportedInput
             autoFocus={true}
-            className="floating-menu-input"
+            className={classnames("floating-menu-input", "mousetrap")}
             onChange={this.handleInputChange}
-            onKeyUp={this.handleInputKeyUp}
             value={this.props.query}
           />
         </div>
       </Overlay>
     );
   }
-
-  private handleInputKeyUp = (evt: React.KeyboardEvent) => {
-    if (evt.key === "esc") {
-      this.props.hideFloatingMenu();
-    }
-  };
 
   private handleInputChange = (evt: React.SyntheticEvent<HTMLInputElement>) => {
     const { setQuery, isShown } = this.props;

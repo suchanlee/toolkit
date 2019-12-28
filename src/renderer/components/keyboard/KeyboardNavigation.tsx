@@ -30,11 +30,17 @@ class KeyboardNavigationInternal extends React.PureComponent<KeyboardNavigation.
 
   private registerKeyboardListeners() {
     // floating menu
-    mousetrap.bind("esc", this.props.hideFloatingMenu);
+    mousetrap.bind("esc", () => {
+      console.log("esc");
+      this.props.hideFloatingMenu();
+    });
     mousetrap.bind("/", this.handleSlashPress);
 
     // navigation
-    mousetrap.bind("command+1", this.handleCommandPlusOnePress);
+    mousetrap.bind("command+1", evt => {
+      console.log(evt);
+      this.handleCommandPlusOnePress();
+    });
     mousetrap.bind("command+2", this.handleCommandPlusTwoPress);
     mousetrap.bind("command+3", this.handleCommandPlusThreePress);
     mousetrap.bind("command+4", this.handleCommandPlusFourPress);
