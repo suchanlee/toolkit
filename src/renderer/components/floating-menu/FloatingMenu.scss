@@ -1,0 +1,12 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.floating-menu {
+  position: fixed;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px;
+  width: 400px;
+  background-color: $light-gray5;
+  border-radius: 3px;
+}

@@ -88,13 +88,16 @@
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-optional-chaining": "^7.7.5",
     "@babel/polyfill": "^7.4.4",
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
     "@hot-loader/react-dom": "^16.8.6",
+    "@types/classnames": "^2.2.9",
     "@types/electron-devtools-installer": "^2.2.0",
     "@types/jest": "^24.0.13",
+    "@types/mousetrap": "^1.6.3",
     "@types/react": "^16.8.18",
     "@types/react-dom": "^16.8.4",
     "@types/react-hot-loader": "^4.1.0",
@@ -139,10 +142,14 @@
   "dependencies": {
     "@blueprintjs/core": "^3.22.3",
     "@blueprintjs/icons": "^3.13.0",
+    "classnames": "^2.2.6",
+    "mousetrap": "^1.6.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.3",
+    "redoodle": "^2.3.2",
     "redux": "^4.0.1",
-    "redux-saga": "^1.1.3"
+    "redux-saga": "^1.1.3",
+    "reselect": "^4.0.0"
   }
 }

@@ -1,18 +1,15 @@
-import { applyMiddleware, createStore, Store } from "redux";
+import { applyMiddleware, createStore } from "redux";
+// tslint:disable-next-line: import-name
+import createSagaMiddleware from "redux-saga";
 import { composeWithDevTools } from "redux-devtools-extension";
 
-import { rootReducer, RootState } from "../reducers/rootReducer";
+import { rootReducer } from "../reducers/rootReducer";
+import { createInitialRootState } from "../states/rootState";
 
-const configureStore = (initialState?: RootState): Store<RootState | undefined> => {
+const configureStore = () => {
   const middlewares: any[] = [];
-  const enhancer = composeWithDevTools(applyMiddleware(...middlewares));
-  return createStore(rootReducer, initialState, enhancer);
+  const enhancer = composeWithDevTools(applyMiddleware(...middlewares, createSagaMiddleware()));
+  return createStore(rootReducer as any, createInitialRootState() as any, enhancer);
 };
-
-if (typeof (module as NodeModule).hot !== "undefined") {
-  (module as NodeModule).hot?.accept("../reducers", () =>
-    store.replaceReducer(require("../reducers").rootReducer)
-  );
-}
 
 export const store = configureStore();

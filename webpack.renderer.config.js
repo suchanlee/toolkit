@@ -24,11 +24,15 @@ module.exports = merge.smart(baseConfig, {
                             '@babel/preset-env',
                             { targets: { browsers: 'last 2 versions ' } }
                         ],
-                        '@babel/preset-typescript',
-                        '@babel/preset-react'
+                        [
+                            '@babel/preset-typescript',
+                            { allowNamespaces: true }
+                        ],
+                        '@babel/preset-react',
                     ],
                     plugins: [
-                        ['@babel/plugin-proposal-class-properties', { loose: true }]
+                        ['@babel/plugin-proposal-class-properties', { loose: true }],
+                        '@babel/plugin-proposal-optional-chaining'
                     ]
                 }
             },
