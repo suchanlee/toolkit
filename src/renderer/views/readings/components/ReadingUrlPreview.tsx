@@ -80,7 +80,7 @@ export class ReadingUrlPreview extends React.PureComponent<
         </div>
       );
     } else if (isLoaded(reading)) {
-      return <ReadingSummary reading={reading.value} />;
+      return <ReadingSummary className="reading-url-preview-summary" reading={reading.value} />;
     }
 
     return undefined;
