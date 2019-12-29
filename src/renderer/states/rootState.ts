@@ -1,4 +1,5 @@
 import { createInitiailFloatingMenuState, FloatingMenuState } from "./floatingMenuState";
+import { createInitialKeyNavListState, KeyNavListState } from "./keyNavListState";
 import { createInitialNavigationState, NavigationState } from "./navigationState";
 import { createInitialPersistedState, PersistedState } from "./persistedState";
 import { createInitialReadingState, ReadingState } from "./readingState";
@@ -10,6 +11,7 @@ export interface RootState {
   floatingMenu: FloatingMenuState;
   todo: TodoState | undefined;
   reading: ReadingState;
+  keyNavList: KeyNavListState;
 }
 
 export function createInitialRootState(): RootState {
@@ -18,6 +20,7 @@ export function createInitialRootState(): RootState {
     persisted: createInitialPersistedState(),
     floatingMenu: createInitiailFloatingMenuState(),
     todo: undefined,
-    reading: createInitialReadingState()
+    reading: createInitialReadingState(),
+    keyNavList: createInitialKeyNavListState()
   };
 }

@@ -11,6 +11,10 @@ export enum Nav {
   JS = "JS"
 }
 
+export interface KeyNavListLocation {
+  row: number;
+}
+
 export enum EntryType {
   TODO = "TODO",
   READING = "READING",
