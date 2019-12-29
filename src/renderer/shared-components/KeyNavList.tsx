@@ -33,7 +33,7 @@ export namespace KeyNavList {
 
 export class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
   public componentDidMount() {
-    mousetrap.bind("up", this.props.moveUp);
+    mousetrap.bind("up", this.handleUp);
     mousetrap.bind("down", this.handleDown);
     mousetrap.bind("enter", this.handleEnter);
   }
@@ -63,11 +63,19 @@ export class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<
     );
   }
 
-  private handleDown = () => {
+  private handleUp = (evt: KeyboardEvent) => {
+    if (this.props.current.row > 0) {
+      this.props.moveUp();
+      evt.preventDefault();
+    }
+  };
+
+  private handleDown = (evt: KeyboardEvent) => {
     const { items, current, moveDown } = this.props;
     if (items.length - 1 > current.row) {
       moveDown();
     }
+    evt.preventDefault();
   };
 
   private handleEnter = () => {

@@ -1,10 +1,11 @@
 import * as React from "react";
 import { connect, ConnectedComponent } from "react-redux";
-import { selectReadingReadings } from "../../selectors/readingSelectors";
+import { selectFilteredReadings } from "../../selectors/readingSelectors";
 import { KeyNavList, KeyNavListInternal } from "../../shared-components/KeyNavList";
 import { RootState } from "../../states/rootState";
 import { Reading } from "../../types/types";
-import { hashString } from "../../utils/hashString";
+import { hashString } from "../../utils/stringUtils";
+import { ReadingSummary } from "./ReadingSummary";
 
 // hack due connected component not properly supporting generic components
 const KNL = KeyNavList as ConnectedComponent<
@@ -43,12 +44,12 @@ function getItemKey(reading: Reading) {
 }
 
 function renderItem(reading: Reading) {
-  return <div className="readings-list-item">{reading.title}</div>;
+  return <ReadingSummary reading={reading} />;
 }
 
 function mapStateToProps(state: RootState): ReadingsList.StoreProps {
   return {
-    readings: selectReadingReadings(state)
+    readings: selectFilteredReadings(state)
   };
 }
 

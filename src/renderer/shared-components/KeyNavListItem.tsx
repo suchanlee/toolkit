@@ -29,9 +29,18 @@ export namespace KeyNavListItem {
 }
 
 class KeyNavListItemInternal extends React.PureComponent<KeyNavListItem.Props<any>> {
+  private ref = React.createRef<HTMLDivElement>();
+
+  public componentDidUpdate(prevProps: KeyNavListItem.Props<any>) {
+    if (!prevProps.isActive && this.props.isActive) {
+      this.scrollIntoView();
+    }
+  }
+
   public render() {
     return (
       <div
+        ref={this.ref}
         className={classNames("key-nav-list-item", Classes.ELEVATION_0, this.props.className, {
           "-active": this.props.isActive
         })}
@@ -46,6 +55,14 @@ class KeyNavListItemInternal extends React.PureComponent<KeyNavListItem.Props<an
     this.props.setCurrent({ row: this.props.row });
     this.props.onItemSelect(this.props.item);
   };
+
+  private scrollIntoView() {
+    if (this.props.row === 0) {
+      window.scrollTo(0, 0);
+    } else {
+      this.ref.current?.scrollIntoView({ block: "nearest" });
+    }
+  }
 }
 
 function mapStateToProps(

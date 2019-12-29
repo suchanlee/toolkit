@@ -7,3 +7,7 @@ export function hashString(s: string) {
 
   return h;
 }
+
+export function normalizeString(s: string) {
+  return s.replace(/ /g, "").toLowerCase();
+}

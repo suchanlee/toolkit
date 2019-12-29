@@ -1,6 +1,5 @@
 import { Classes, Icon, Spinner } from "@blueprintjs/core";
 import classNames from "classnames";
-import { shell } from "electron";
 import { ipcRenderer } from "electron-better-ipc";
 import { GrabItResponse } from "grabity";
 import { debounce } from "lodash-es";
@@ -15,7 +14,10 @@ import {
   isLoaded,
   isLoading
 } from "../../async/asyncUtils";
+import { createReadingObject } from "../../objects/readingObject";
+import { Reading } from "../../types/types";
 import { CancellablePromise, makeCancellable } from "../../utils/cancellablePromise";
+import { ReadingSummary } from "./ReadingSummary";
 
 require("./ReadingsUrlPreview.scss");
 
@@ -25,12 +27,7 @@ export namespace ReadingsUrlPreview {
   }
 
   export interface State {
-    metadata: AsyncValue<{
-      title: string;
-      image?: string;
-      description?: string;
-      favicon?: string;
-    }>;
+    reading: AsyncValue<Reading>;
   }
 }
 
@@ -39,7 +36,7 @@ export class ReadingsUrlPreview extends React.PureComponent<
   ReadingsUrlPreview.State
 > {
   public state: ReadingsUrlPreview.State = {
-    metadata: asyncLoading()
+    reading: asyncLoading()
   };
 
   private fetchPromise: CancellablePromise<GrabItResponse> | undefined;
@@ -67,52 +64,30 @@ export class ReadingsUrlPreview extends React.PureComponent<
   }
 
   public renderPreview() {
-    const { metadata } = this.state;
+    const { reading } = this.state;
 
-    if (isLoading(metadata)) {
+    if (isLoading(reading)) {
       return (
         <div className="readings-url-preview-loading">
           <Spinner className={Classes.SMALL} />
         </div>
       );
-    } else if (isFailedLoading(metadata)) {
+    } else if (isFailedLoading(reading)) {
       return (
         <div className="readings-url-preview-error">
           <Icon className={Classes.SMALL} icon="error" />
           <span className="readings-url-preview-error-message">Failed to load preview</span>
         </div>
       );
-    } else if (isLoaded(metadata)) {
-      const { title, image, description, favicon } = metadata.value;
-      return (
-        <div className="readings-url-preview-loaded">
-          {(image != null || favicon != null) && (
-            <div
-              className="readings-url-preview-loaded-img"
-              style={{ backgroundImage: `url(${image ?? favicon})` }}
-            />
-          )}
-          <div className="readings-url-preview-loaded-text">
-            <div className="readings-url-preview-loaded-title">
-              <a onClick={this.handleTitleClick}>{title}</a>
-            </div>
-            <div className="readings-url-preview-loaded-description">
-              {description ?? "No description available."}
-            </div>
-          </div>
-        </div>
-      );
+    } else if (isLoaded(reading)) {
+      return <ReadingSummary reading={reading.value} />;
     }
 
     return undefined;
   }
 
-  private handleTitleClick = () => {
-    shell.openExternal(this.props.url);
-  };
-
   private fetchUrlMetadata = debounce(async () => {
-    this.setState({ metadata: asyncLoading() });
+    this.setState({ reading: asyncLoading() });
     this.fetchPromise?.cancel();
 
     const promise = ipcRenderer.callMain<string>(
@@ -121,7 +96,15 @@ export class ReadingsUrlPreview extends React.PureComponent<
     ) as Promise<GrabItResponse>;
     this.fetchPromise = makeCancellable(promise);
     this.fetchPromise.promise
-      .then(res => this.setState({ metadata: asyncLoaded(res) }))
-      .catch(error => this.setState(() => ({ metadata: asyncFailedLoading(error) })));
+      .then(res => {
+        const reading: Reading = createReadingObject({
+          url: this.props.url,
+          title: res.title,
+          description: res.description,
+          imageUrl: res.image ?? res.favicon
+        });
+        this.setState({ reading: asyncLoaded(reading) });
+      })
+      .catch(error => this.setState(() => ({ reading: asyncFailedLoading(error) })));
   }, 200);
 }
