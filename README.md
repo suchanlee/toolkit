@@ -4,13 +4,13 @@
 Clone the repository with Git:
 
 ```bash
-git clone --depth=1 git@github.com:suchanlee/toolkit.git <your-project-name>
+git clone git@github.com:suchanlee/toolkit.git
 ```
 
 And then install the dependencies:
 
 ```bash
-cd <your-project-name>
+cd toolkit
 yarn
 ```
 
