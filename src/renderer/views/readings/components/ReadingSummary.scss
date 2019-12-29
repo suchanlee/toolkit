@@ -19,7 +19,19 @@
     flex-grow: 1;
 
     .reading-summary-title {
+      display: flex;
+      align-items: center;
       font-weight: 600;
+    }
+
+    .reading-summary-share-icon {
+      margin-left: 10px;
+      color: $gray3;
+      cursor: pointer;
+
+      &:hover {
+        color: $blue1;
+      }
     }
 
     .reading-summary-description {

@@ -1,3 +1,4 @@
+import { Icon } from "@blueprintjs/core";
 import classNames from "classnames";
 import { shell } from "electron";
 import * as React from "react";
@@ -20,7 +21,13 @@ export class ReadingSummary extends React.PureComponent<ReadingSummary.Props> {
         <div className="reading-summary-img" style={{ backgroundImage: `url(${imageUrl})` }} />
         <div className="reading-summary-text">
           <div className="reading-summary-title">
-            <a onClick={this.handleTitleClick}>{title}</a>
+            {title}
+            <Icon
+              className="reading-summary-share-icon"
+              icon="share"
+              onClick={this.handleTitleClick}
+              iconSize={12}
+            />
           </div>
           <div className="reading-summary-description">
             {description ?? "No description available."}
