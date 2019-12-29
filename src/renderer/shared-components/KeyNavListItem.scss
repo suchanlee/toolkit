@@ -1,0 +1,14 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.key-nav-list-item {
+  padding: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $dark-gray5;
+  }
+
+  &.-active {
+    background-color: $blue3;
+  }
+}

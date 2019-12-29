@@ -6,6 +6,9 @@ export const keyNavListReducer = TypedReducer.builder<KeyNavListState>()
   .withHandler(KeyNavListActions.reset.TYPE, _state => {
     return createInitialKeyNavListState();
   })
+  .withHandler(KeyNavListActions.setCurrent.TYPE, (state, current) => {
+    return setWith(state, { current });
+  })
   .withHandler(KeyNavListActions.moveUp.TYPE, state => {
     return setWith(state, {
       current: {

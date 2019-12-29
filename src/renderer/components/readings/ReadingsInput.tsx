@@ -4,7 +4,7 @@ import isUrl from "is-url";
 import * as React from "react";
 import { connect } from "react-redux";
 import { ReadingActions } from "../../actions/readingActions";
-import { selectReadingInputValue } from "../../selectors/readingSelector";
+import { selectReadingInputValue } from "../../selectors/readingSelectors";
 import { KeyboardNavSupportedInput } from "../../shared-components/KeyboardNavSupportedInput";
 import { RootState } from "../../states/rootState";
 import { ReadingsUrlPreview } from "./ReadingsUrlPreview";

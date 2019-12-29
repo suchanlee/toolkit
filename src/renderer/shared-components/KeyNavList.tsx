@@ -3,6 +3,8 @@ import * as mousetrap from "mousetrap";
 import * as React from "react";
 import { connect } from "react-redux";
 import { KeyNavListActions } from "../actions/keyNavListActions";
+import { selectKeyNavListCurrent } from "../selectors/keyNavListSelectors";
+import { RootState } from "../states/rootState";
 import { KeyNavListLocation } from "../types/types";
 import { KeyNavListItem } from "./KeyNavListItem";
 
@@ -29,7 +31,7 @@ export namespace KeyNavList {
   export type Props<T> = OwnProps<T> & StoreProps & DispatchProps;
 }
 
-class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
+export class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
   public componentDidMount() {
     mousetrap.bind("up", this.props.moveUp);
     mousetrap.bind("down", this.handleDown);
@@ -46,10 +48,11 @@ class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
   public render() {
     return (
       <div className={classNames("key-nav-list", this.props.className)}>
-        {this.props.items.map(item => (
+        {this.props.items.map((item, index) => (
           <KeyNavListItem
             key={this.props.getItemKey(item)}
             className={this.props.itemClassName}
+            row={index}
             item={item}
             onItemSelect={this.props.onItemSelect}
           >
@@ -74,11 +77,17 @@ class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
   };
 }
 
+function mapStateToProps(state: RootState): KeyNavList.StoreProps {
+  return {
+    current: selectKeyNavListCurrent(state)
+  };
+}
+
 const mapDispatchToProps: KeyNavList.DispatchProps = {
   reset: KeyNavListActions.reset,
   moveUp: KeyNavListActions.moveUp,
   moveDown: KeyNavListActions.moveDown
 };
 
-const enhanceWithRedux = connect(undefined, mapDispatchToProps);
+const enhanceWithRedux = connect(mapStateToProps, mapDispatchToProps);
 export const KeyNavList = enhanceWithRedux(KeyNavListInternal);
