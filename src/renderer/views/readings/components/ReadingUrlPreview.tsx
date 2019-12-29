@@ -4,8 +4,8 @@ import { ipcRenderer } from "electron-better-ipc";
 import { GrabItResponse } from "grabity";
 import { debounce } from "lodash-es";
 import * as React from "react";
-import { IpcEvent } from "../../../shared/ipcEvent";
-import { AsyncValue } from "../../async/asyncTypes";
+import { IpcEvent } from "../../../../shared/ipcEvent";
+import { AsyncValue } from "../../../async/asyncTypes";
 import {
   asyncFailedLoading,
   asyncLoaded,
@@ -13,15 +13,15 @@ import {
   isFailedLoading,
   isLoaded,
   isLoading
-} from "../../async/asyncUtils";
-import { createReadingObject } from "../../objects/readingObject";
-import { Reading } from "../../types/types";
-import { CancellablePromise, makeCancellable } from "../../utils/cancellablePromise";
+} from "../../../async/asyncUtils";
+import { CancellablePromise, makeCancellable } from "../../../utils/cancellablePromise";
+import { createReadingObject } from "../readingObject";
+import { Reading } from "../readingsTypes";
 import { ReadingSummary } from "./ReadingSummary";
 
-require("./ReadingsUrlPreview.scss");
+require("./ReadingUrlPreview.scss");
 
-export namespace ReadingsUrlPreview {
+export namespace ReadingUrlPreview {
   export interface Props {
     url: string;
   }
@@ -31,11 +31,11 @@ export namespace ReadingsUrlPreview {
   }
 }
 
-export class ReadingsUrlPreview extends React.PureComponent<
-  ReadingsUrlPreview.Props,
-  ReadingsUrlPreview.State
+export class ReadingUrlPreview extends React.PureComponent<
+  ReadingUrlPreview.Props,
+  ReadingUrlPreview.State
 > {
-  public state: ReadingsUrlPreview.State = {
+  public state: ReadingUrlPreview.State = {
     reading: asyncLoading()
   };
 
@@ -45,7 +45,7 @@ export class ReadingsUrlPreview extends React.PureComponent<
     this.fetchUrlMetadata();
   }
 
-  public componentDidUpdate(prevProps: ReadingsUrlPreview.Props) {
+  public componentDidUpdate(prevProps: ReadingUrlPreview.Props) {
     if (prevProps.url !== this.props.url) {
       this.fetchUrlMetadata();
     }
@@ -57,7 +57,7 @@ export class ReadingsUrlPreview extends React.PureComponent<
 
   public render() {
     return (
-      <div className={classNames("readings-url-preview", Classes.ELEVATION_0)}>
+      <div className={classNames("reading-url-preview", Classes.ELEVATION_0)}>
         {this.renderPreview()}
       </div>
     );
@@ -68,15 +68,15 @@ export class ReadingsUrlPreview extends React.PureComponent<
 
     if (isLoading(reading)) {
       return (
-        <div className="readings-url-preview-loading">
+        <div className="reading-url-preview-loading">
           <Spinner className={Classes.SMALL} />
         </div>
       );
     } else if (isFailedLoading(reading)) {
       return (
-        <div className="readings-url-preview-error">
+        <div className="reading-url-preview-error">
           <Icon className={Classes.SMALL} icon="error" />
-          <span className="readings-url-preview-error-message">Failed to load preview</span>
+          <span className="reading-url-preview-error-message">Failed to load preview</span>
         </div>
       );
     } else if (isLoaded(reading)) {

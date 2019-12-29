@@ -1,15 +1,14 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { selectNavigationActive } from "../../selectors/navigationSelectors";
+import { selectNavigationActiveView } from "../../selectors/navigationSelectors";
 import { RootState } from "../../states/rootState";
-import { Nav } from "../../types/types";
-import { Readings } from "../readings/Readings";
+import { ViewsByName } from "../../views/view";
 
 require("./Content.scss");
 
 export namespace Content {
   export interface StoreProps {
-    currentNav: Nav;
+    currentView: string;
   }
 
   export type Props = StoreProps;
@@ -21,19 +20,19 @@ class ContentInternal extends React.PureComponent<Content.Props> {
   }
 
   private renderContent() {
-    const { currentNav } = this.props;
-    switch (currentNav) {
-      case Nav.READINGS:
-        return <Readings />;
-      default:
-        return currentNav;
+    const { currentView } = this.props;
+    const view = ViewsByName[currentView];
+    if (view != null) {
+      return view.element;
     }
+
+    return `Unable to find view from: ${currentView}`;
   }
 }
 
 function mapStateToProps(state: RootState): Content.StoreProps {
   return {
-    currentNav: selectNavigationActive(state)
+    currentView: selectNavigationActiveView(state)
   };
 }
 

@@ -1,18 +1,13 @@
-import {
-  EntryType,
-  Iso8601String,
-  Reading,
-  ReadingStatus,
-  ReadingStatusFilter
-} from "../types/types";
+import { EntryType, Iso8601String } from "../../../types/types";
+import { Reading, ReadingStatus, ReadingStatusFilter } from "../readingsTypes";
 
-export interface ReadingState {
+export interface ReadingsState {
   readings: readonly Reading[];
   filter: ReadingStatusFilter;
   inputValue: string;
 }
 
-export function createInitialReadingState(): ReadingState {
+export function createInitialReadingsState(): ReadingsState {
   return {
     readings: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => ({
       type: EntryType.READING,

@@ -1,12 +1,12 @@
 import isUrl from "is-url";
 import { createSelector } from "reselect";
-import { RootState } from "../states/rootState";
-import { normalizeString } from "../utils/stringUtils";
+import { RootState } from "../../../states/rootState";
+import { normalizeString } from "../../../utils/stringUtils";
 
-export const selectReading = (state: RootState) => state.reading;
-export const selectReadingInputValue = (state: RootState) => state.reading.inputValue;
-export const selectReadingFilter = (state: RootState) => state.reading.filter;
-export const selectReadingReadings = (state: RootState) => state.reading.readings;
+export const selectReading = (state: RootState) => state.readings;
+export const selectReadingInputValue = (state: RootState) => state.readings.inputValue;
+export const selectReadingFilter = (state: RootState) => state.readings.filter;
+export const selectReadingReadings = (state: RootState) => state.readings.readings;
 
 export const selectFilteredReadings = createSelector(
   selectReadingReadings,

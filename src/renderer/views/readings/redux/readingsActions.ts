@@ -1,5 +1,5 @@
 import { TypedAction } from "redoodle";
-import { ReadingStatusFilter } from "../types/types";
+import { ReadingStatusFilter } from "../readingsTypes";
 
 export namespace ReadingActions {
   export const setInputValue = TypedAction.define("reading::set-input-value")<string>();

@@ -3,7 +3,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { FloatingMenuActions } from "../../actions/floatingMenuActions";
 import { NavigationActions } from "../../actions/navigationActions";
-import { Nav } from "../../types/types";
+import { Views } from "../../views/view";
 
 export namespace KeyboardShortcuts {
   export interface DispatchProps {
@@ -34,10 +34,10 @@ class KeyboardShortcutsInternal extends React.PureComponent<KeyboardShortcuts.Pr
     mousetrap.bind("/", this.handleSlashKeyUp);
 
     // navigation
-    mousetrap.bind("command+1", this.handleCommandPlusOneKeyUp);
-    mousetrap.bind("command+2", this.handleCommandPlusTwoKeyUp);
-    mousetrap.bind("command+3", this.handleCommandPlusThreeKeyUp);
-    mousetrap.bind("command+4", this.handleCommandPlusFourKeyUp);
+    Views.forEach((view, index) => {
+      // start from index 1 for easier keyboard nav
+      mousetrap.bind(`command+${index + 1}`, () => this.props.setNav(view.name));
+    });
   }
 
   private unregisterKeyboardListeners() {
@@ -54,11 +54,6 @@ class KeyboardShortcutsInternal extends React.PureComponent<KeyboardShortcuts.Pr
       evt.preventDefault();
     }
   };
-
-  private handleCommandPlusOneKeyUp = () => this.props.setNav(Nav.TODOS);
-  private handleCommandPlusTwoKeyUp = () => this.props.setNav(Nav.READINGS);
-  private handleCommandPlusThreeKeyUp = () => this.props.setNav(Nav.NOTES);
-  private handleCommandPlusFourKeyUp = () => this.props.setNav(Nav.JS);
 }
 
 const SLASH_IGNORED_TAG_NAMES = new Set(["input", "textarea", "select"]);

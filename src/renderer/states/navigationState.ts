@@ -1,11 +1,11 @@
-import { Nav } from "../types/types";
+import { Views } from "../views/view";
 
 export interface NavigationState {
-  active: Nav;
+  activeView: string;
 }
 
 export function createInitialNavigationState(): NavigationState {
   return {
-    active: Nav.TODOS
+    activeView: Views[0].name
   };
 }

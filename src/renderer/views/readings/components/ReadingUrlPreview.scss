@@ -1,0 +1,17 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.reading-url-preview {
+  .reading-url-preview-loading,
+  .reading-url-preview-error {
+    padding: 10px 0;
+    text-align: center;
+  }
+
+  .reading-url-preview-error {
+    color: $gray5;
+
+    .reading-url-preview-error-message {
+      margin-left: 5px;
+    }
+  }
+}

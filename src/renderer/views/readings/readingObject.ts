@@ -1,4 +1,5 @@
-import { EntryType, Iso8601String, Reading, ReadingStatus } from "../types/types";
+import { EntryType, Iso8601String } from "../../types/types";
+import { Reading, ReadingStatus } from "./readingsTypes";
 
 export function createReadingObject(args: {
   url: string;

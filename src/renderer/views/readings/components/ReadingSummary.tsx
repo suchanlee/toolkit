@@ -1,6 +1,6 @@
 import { shell } from "electron";
 import * as React from "react";
-import { Reading } from "../../types/types";
+import { Reading } from "../readingsTypes";
 
 require("./ReadingSummary.scss");
 

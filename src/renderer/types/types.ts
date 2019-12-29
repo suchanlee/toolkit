@@ -4,13 +4,6 @@ export type Iso8601String = string & {
 
 export type KeyedByDate<T> = Record<string, T>;
 
-export enum Nav {
-  TODOS = "TODOS",
-  READINGS = "READINGS",
-  NOTES = "NOTES",
-  JS = "JS"
-}
-
 export interface KeyNavListLocation {
   row: number;
 }
@@ -26,29 +19,3 @@ export interface Entry {
   value: string;
   date: Iso8601String;
 }
-
-export interface Todo extends Entry {
-  type: EntryType.TODO;
-  status: TodoStatus;
-}
-
-export enum TodoStatus {
-  NOT_STARTED = "NOT_STARTED",
-  IN_PROGRESS = "IN_PROGRESS",
-  FINISHED = "FINISHED"
-}
-
-export interface Reading extends Entry {
-  type: EntryType.READING;
-  title: string;
-  description?: string;
-  imageUrl?: string;
-  status: ReadingStatus;
-}
-
-export enum ReadingStatus {
-  ACTIVE = "ACTIVE",
-  ARCHIVED = "ARCHIVED"
-}
-
-export type ReadingStatusFilter = ReadingStatus | "ALL";

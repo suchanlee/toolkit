@@ -3,15 +3,15 @@ import classNames from "classnames";
 import isUrl from "is-url";
 import * as React from "react";
 import { connect } from "react-redux";
-import { ReadingActions } from "../../actions/readingActions";
-import { selectReadingInputValue } from "../../selectors/readingSelectors";
-import { KeyboardNavSupportedInput } from "../../shared-components/KeyboardNavSupportedInput";
-import { RootState } from "../../states/rootState";
-import { ReadingsUrlPreview } from "./ReadingsUrlPreview";
+import { KeyboardNavSupportedInput } from "../../../shared-components/KeyboardNavSupportedInput";
+import { RootState } from "../../../states/rootState";
+import { ReadingActions } from "../redux/readingsActions";
+import { selectReadingInputValue } from "../redux/readingsSelectors";
+import { ReadingUrlPreview } from "./ReadingUrlPreview";
 
-require("./ReadingsInput.scss");
+require("./ReadingInput.scss");
 
-export namespace ReadingsInput {
+export namespace ReadingInput {
   export interface StoreProps {
     value: string;
   }
@@ -23,13 +23,13 @@ export namespace ReadingsInput {
   export type Props = StoreProps & DispatchProps;
 }
 
-class ReadingsInputInternal extends React.PureComponent<ReadingsInput.Props> {
+class ReadingInputInternal extends React.PureComponent<ReadingInput.Props> {
   public render() {
     return (
-      <div className="readings-input-container">
+      <div className="reading-input-container">
         <KeyboardNavSupportedInput
           autoFocus={true}
-          className="readings-input"
+          className="reading-input"
           placeholder="Type url to add or to search..."
           value={this.props.value}
           onChange={this.handleChange}
@@ -38,10 +38,10 @@ class ReadingsInputInternal extends React.PureComponent<ReadingsInput.Props> {
           <React.Fragment>
             <Button
               title="Add url to reading list"
-              className={classNames("readings-input-add-button", Classes.SMALL)}
+              className={classNames("reading-input-add-button", Classes.SMALL)}
               icon="plus"
             />
-            <ReadingsUrlPreview url={this.props.value} />
+            <ReadingUrlPreview url={this.props.value} />
           </React.Fragment>
         )}
       </div>
@@ -53,15 +53,15 @@ class ReadingsInputInternal extends React.PureComponent<ReadingsInput.Props> {
   };
 }
 
-function mapStateToProps(state: RootState): ReadingsInput.StoreProps {
+function mapStateToProps(state: RootState): ReadingInput.StoreProps {
   return {
     value: selectReadingInputValue(state)
   };
 }
 
-const mapDispatchToProps: ReadingsInput.DispatchProps = {
+const mapDispatchToProps: ReadingInput.DispatchProps = {
   setValue: ReadingActions.setInputValue
 };
 
 const enhanceWithRedux = connect(mapStateToProps, mapDispatchToProps);
-export const ReadingsInput = enhanceWithRedux(ReadingsInputInternal);
+export const ReadingInput = enhanceWithRedux(ReadingInputInternal);

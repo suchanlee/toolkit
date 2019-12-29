@@ -3,17 +3,15 @@ import classNames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
 import { NavigationActions } from "../../actions/navigationActions";
-import { selectNavigationActive } from "../../selectors/navigationSelectors";
+import { selectNavigationActiveView } from "../../selectors/navigationSelectors";
 import { RootState } from "../../states/rootState";
-import { Nav } from "../../types/types";
+import { Views } from "../../views/view";
 
 require("./TopMenu.scss");
 
-const MENU_ITEMS = [Nav.TODOS, Nav.READINGS, Nav.NOTES, Nav.JS];
-
 export namespace TopMenu {
   export interface StoreProps {
-    currentNav: Nav;
+    currentView: string;
   }
 
   export interface DispatchProps {
@@ -27,19 +25,19 @@ class TopMenuInternal extends React.PureComponent<TopMenu.Props> {
   public render() {
     return (
       <div className={classNames("top-menu", Classes.ELEVATION_0)}>
-        {MENU_ITEMS.map(nav => this.renderMenuItem(nav))}
+        {Views.map(view => this.renderMenuItem(view.name))}
       </div>
     );
   }
 
-  private renderMenuItem(nav: Nav) {
+  private renderMenuItem(viewName: string) {
     return (
       <span
-        key={nav}
-        className={classNames("top-menu-item", { "-active": this.props.currentNav === nav })}
-        onClick={() => this.props.setNav(nav)}
+        key={viewName}
+        className={classNames("top-menu-item", { "-active": this.props.currentView === viewName })}
+        onClick={() => this.props.setNav(viewName)}
       >
-        {nav}
+        {viewName.toUpperCase()}
       </span>
     );
   }
@@ -47,7 +45,7 @@ class TopMenuInternal extends React.PureComponent<TopMenu.Props> {
 
 function mapStateToProps(state: RootState): TopMenu.StoreProps {
   return {
-    currentNav: selectNavigationActive(state)
+    currentView: selectNavigationActiveView(state)
   };
 }
 
