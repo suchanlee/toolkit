@@ -1,5 +1,5 @@
 import { Button, Classes } from "@blueprintjs/core";
-import classnames from "classnames";
+import classNames from "classnames";
 import isUrl from "is-url";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -38,7 +38,7 @@ class ReadingsInputInternal extends React.PureComponent<ReadingsInput.Props> {
           <React.Fragment>
             <Button
               title="Add url to reading list"
-              className={classnames("readings-input-add-button", Classes.SMALL)}
+              className={classNames("readings-input-add-button", Classes.SMALL)}
               icon="plus"
             />
             <ReadingsUrlPreview url={this.props.value} />

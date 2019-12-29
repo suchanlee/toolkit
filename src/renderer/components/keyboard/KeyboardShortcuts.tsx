@@ -5,7 +5,7 @@ import { FloatingMenuActions } from "../../actions/floatingMenuActions";
 import { NavigationActions } from "../../actions/navigationActions";
 import { Nav } from "../../types/types";
 
-export namespace KeyboardNavigation {
+export namespace KeyboardShortcuts {
   export interface DispatchProps {
     showFloatingMenu: typeof FloatingMenuActions.show;
     hideFloatingMenu: typeof FloatingMenuActions.hide;
@@ -15,7 +15,7 @@ export namespace KeyboardNavigation {
   export type Props = DispatchProps;
 }
 
-class KeyboardNavigationInternal extends React.PureComponent<KeyboardNavigation.Props> {
+class KeyboardShortcutsInternal extends React.PureComponent<KeyboardShortcuts.Props> {
   public componentDidMount() {
     this.registerKeyboardListeners();
   }
@@ -63,11 +63,11 @@ class KeyboardNavigationInternal extends React.PureComponent<KeyboardNavigation.
 
 const SLASH_IGNORED_TAG_NAMES = new Set(["input", "textarea", "select"]);
 
-const mapDispatchToProps: KeyboardNavigation.DispatchProps = {
+const mapDispatchToProps: KeyboardShortcuts.DispatchProps = {
   showFloatingMenu: FloatingMenuActions.show,
   hideFloatingMenu: FloatingMenuActions.hide,
   setNav: NavigationActions.setNav
 };
 
 const enhanceWithRedux = connect(undefined, mapDispatchToProps);
-export const KeyboardNavigation = enhanceWithRedux(KeyboardNavigationInternal);
+export const KeyboardShortcuts = enhanceWithRedux(KeyboardShortcutsInternal);

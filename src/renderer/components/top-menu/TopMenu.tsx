@@ -1,5 +1,5 @@
 import { Classes } from "@blueprintjs/core";
-import classnames from "classnames";
+import classNames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
 import { NavigationActions } from "../../actions/navigationActions";
@@ -26,7 +26,7 @@ export namespace TopMenu {
 class TopMenuInternal extends React.PureComponent<TopMenu.Props> {
   public render() {
     return (
-      <div className={classnames("top-menu", Classes.ELEVATION_0)}>
+      <div className={classNames("top-menu", Classes.ELEVATION_0)}>
         {MENU_ITEMS.map(nav => this.renderMenuItem(nav))}
       </div>
     );
@@ -36,7 +36,7 @@ class TopMenuInternal extends React.PureComponent<TopMenu.Props> {
     return (
       <span
         key={nav}
-        className={classnames("top-menu-item", { "-active": this.props.currentNav === nav })}
+        className={classNames("top-menu-item", { "-active": this.props.currentNav === nav })}
         onClick={() => this.props.setNav(nav)}
       >
         {nav}

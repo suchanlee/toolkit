@@ -1,5 +1,5 @@
 import { Classes, Overlay } from "@blueprintjs/core";
-import classnames from "classnames";
+import classNames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
 import { FloatingMenuActions } from "../../actions/floatingMenuActions";
@@ -35,10 +35,10 @@ class FloatingMenuInternal extends React.PureComponent<FloatingMenu.Props> {
         hasBackdrop={false}
         transitionDuration={50}
       >
-        <div className={classnames("floating-menu", Classes.ELEVATION_2)}>
+        <div className={classNames("floating-menu", Classes.ELEVATION_2)}>
           <KeyboardNavSupportedInput
             autoFocus={true}
-            className={classnames("floating-menu-input", "mousetrap")}
+            className={classNames("floating-menu-input", "mousetrap")}
             onChange={this.handleInputChange}
             value={this.props.query}
           />

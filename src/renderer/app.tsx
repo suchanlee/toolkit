@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 
 import { Application } from "./components/Application";
 import { FloatingMenu } from "./components/floating-menu/FloatingMenu";
-import { KeyboardNavigation } from "./components/keyboard/KeyboardNavigation";
+import { KeyboardShortcuts } from "./components/keyboard/KeyboardShortcuts";
 import { store } from "./store/store";
 
 require("./app.scss");
@@ -17,7 +17,7 @@ ReactDOM.render(
   <AppContainer>
     <Provider store={store}>
       <React.Fragment>
-        <KeyboardNavigation />
+        <KeyboardShortcuts />
         <FloatingMenu />
         <Application />
       </React.Fragment>
