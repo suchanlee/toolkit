@@ -40,7 +40,10 @@ export enum TodoStatus {
 
 export interface Reading extends Entry {
   type: EntryType.READING;
-  status: TodoStatus;
+  title: string;
+  description?: string;
+  imageUrl?: string;
+  status: ReadingStatus;
 }
 
 export enum ReadingStatus {
