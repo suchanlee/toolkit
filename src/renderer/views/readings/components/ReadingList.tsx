@@ -4,6 +4,7 @@ import { KeyNavList, KeyNavListInternal } from "../../../shared-components/KeyNa
 import { RootState } from "../../../states/rootState";
 import { hashString } from "../../../utils/stringUtils";
 import { Reading } from "../readingsTypes";
+import { ReadingActions } from "../redux/readingsActions";
 import { selectFilteredReadings } from "../redux/readingsSelectors";
 import { ReadingSummary } from "./ReadingSummary";
 
@@ -18,7 +19,11 @@ export namespace ReadingList {
     readings: readonly Reading[];
   }
 
-  export type Props = StoreProps;
+  export interface DispatchProps {
+    setActive: typeof ReadingActions.setActive;
+  }
+
+  export type Props = StoreProps & DispatchProps;
 }
 
 class ReadingListInternal extends React.PureComponent<ReadingList.Props> {
@@ -35,7 +40,7 @@ class ReadingListInternal extends React.PureComponent<ReadingList.Props> {
   }
 
   private handleSelect = (reading: Reading) => {
-    alert(reading.title);
+    this.props.setActive(reading);
   };
 }
 
@@ -53,5 +58,9 @@ function mapStateToProps(state: RootState): ReadingList.StoreProps {
   };
 }
 
-const enhanceWithRedux = connect(mapStateToProps);
+const mapDispatchToProps: ReadingList.DispatchProps = {
+  setActive: ReadingActions.setActive
+};
+
+const enhanceWithRedux = connect(mapStateToProps, mapDispatchToProps);
 export const ReadingList = enhanceWithRedux(ReadingListInternal);

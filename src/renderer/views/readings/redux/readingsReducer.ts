@@ -9,4 +9,7 @@ export const readingsReducer = TypedReducer.builder<ReadingsState>()
   .withHandler(ReadingsActions.setFilter.TYPE, (state, filter) => {
     return setWith(state, { filter });
   })
+  .withHandler(ReadingsActions.setActive.TYPE, (state, active) => {
+    return setWith(state, { active });
+  })
   .build();

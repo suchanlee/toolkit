@@ -5,6 +5,7 @@ export interface ReadingsState {
   readings: readonly Reading[];
   filter: ReadingStatusFilter;
   inputValue: string;
+  active: Reading | undefined;
 }
 
 export function createInitialReadingsState(): ReadingsState {
@@ -19,6 +20,7 @@ export function createInitialReadingsState(): ReadingsState {
       status: ReadingStatus.ACTIVE
     })),
     filter: ReadingStatus.ACTIVE,
-    inputValue: ""
+    inputValue: "",
+    active: undefined
   };
 }

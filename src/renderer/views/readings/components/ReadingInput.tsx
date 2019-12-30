@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { KeyboardNavSupportedInput } from "../../../shared-components/KeyboardNavSupportedInput";
 import { RootState } from "../../../states/rootState";
 import { ReadingActions } from "../redux/readingsActions";
-import { selectReadingInputValue } from "../redux/readingsSelectors";
+import { selectReadingsInputValue } from "../redux/readingsSelectors";
 import { ReadingUrlPreview } from "./ReadingUrlPreview";
 
 require("./ReadingInput.scss");
@@ -55,7 +55,7 @@ class ReadingInputInternal extends React.PureComponent<ReadingInput.Props> {
 
 function mapStateToProps(state: RootState): ReadingInput.StoreProps {
   return {
-    value: selectReadingInputValue(state)
+    value: selectReadingsInputValue(state)
   };
 }
 
