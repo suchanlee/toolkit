@@ -15,6 +15,7 @@ export enum EntryType {
 }
 
 export interface Entry {
+  id: string;
   type: EntryType;
   value: string;
   date: Iso8601String;

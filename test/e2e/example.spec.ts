@@ -1,6 +1,6 @@
-import { Application } from "spectron";
 import * as electronPath from "electron";
 import * as path from "path";
+import { Application } from "spectron";
 
 jest.setTimeout(10000);
 
@@ -20,15 +20,6 @@ describe("Main window", () => {
     if (app.isRunning()) {
       app.stop();
     }
-  });
-
-  it("opens the window", async () => {
-    const { client, browserWindow } = app;
-
-    await client.waitUntilWindowLoaded();
-    const title = await browserWindow.getTitle();
-
-    expect(title).toBe("Webpack App");
   });
 
   it("increments the counter", async () => {

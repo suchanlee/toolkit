@@ -1,5 +1,5 @@
 import { setWith, TypedReducer } from "redoodle";
-import { ReadingActions as ReadingsActions } from "./readingsActions";
+import { ReadingActions as ReadingsActions, ReadingsInternalActions } from "./readingsActions";
 import { ReadingsState } from "./readingsState";
 
 export const readingsReducer = TypedReducer.builder<ReadingsState>()
@@ -11,5 +11,8 @@ export const readingsReducer = TypedReducer.builder<ReadingsState>()
   })
   .withHandler(ReadingsActions.setActive.TYPE, (state, active) => {
     return setWith(state, { active });
+  })
+  .withHandler(ReadingsInternalActions.setReadings.TYPE, (state, readings) => {
+    return setWith(state, { readings });
   })
   .build();

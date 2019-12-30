@@ -61,4 +61,9 @@ app.on("activate", () => {
   }
 });
 
+if (process.env.NODE_ENV === "development") {
+  app.setName("Toolkit");
+  app.setPath("userData", path.join(app.getPath("appData"), app.getName()));
+}
+
 registerMainIpcListeners();

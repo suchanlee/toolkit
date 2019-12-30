@@ -24,21 +24,12 @@ require("./ReadingUrlPreview.scss");
 export namespace ReadingUrlPreview {
   export interface Props {
     url: string;
-  }
-
-  export interface State {
     reading: AsyncValue<Reading>;
+    onReadingChange(reading: AsyncValue<Reading>): void;
   }
 }
 
-export class ReadingUrlPreview extends React.PureComponent<
-  ReadingUrlPreview.Props,
-  ReadingUrlPreview.State
-> {
-  public state: ReadingUrlPreview.State = {
-    reading: asyncLoading()
-  };
-
+export class ReadingUrlPreview extends React.PureComponent<ReadingUrlPreview.Props> {
   private fetchPromise: CancellablePromise<GrabItResponse> | undefined;
 
   public componentDidMount() {
@@ -64,7 +55,7 @@ export class ReadingUrlPreview extends React.PureComponent<
   }
 
   public renderPreview() {
-    const { reading } = this.state;
+    const { reading } = this.props;
 
     if (isLoading(reading)) {
       return (
@@ -87,7 +78,7 @@ export class ReadingUrlPreview extends React.PureComponent<
   }
 
   private fetchUrlMetadata = debounce(async () => {
-    this.setState({ reading: asyncLoading() });
+    this.props.onReadingChange(asyncLoading());
     this.fetchPromise?.cancel();
 
     const promise = ipcRenderer.callMain<string>(
@@ -103,8 +94,8 @@ export class ReadingUrlPreview extends React.PureComponent<
           description: res.description,
           imageUrl: res.image ?? res.favicon
         });
-        this.setState({ reading: asyncLoaded(reading) });
+        this.props.onReadingChange(asyncLoaded(reading));
       })
-      .catch(error => this.setState(() => ({ reading: asyncFailedLoading(error) })));
+      .catch(error => this.props.onReadingChange(asyncFailedLoading(error)));
   }, 200);
 }
