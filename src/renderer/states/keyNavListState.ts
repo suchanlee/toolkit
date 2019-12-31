@@ -7,7 +7,7 @@ export interface KeyNavListState {
 export function createInitialKeyNavListState(): KeyNavListState {
   return {
     current: {
-      row: 0
+      row: -1
     }
   };
 }

@@ -44,6 +44,9 @@
       font-style: italic;
       font-size: 10px;
       color: $gray3;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .reading-summary-description {
