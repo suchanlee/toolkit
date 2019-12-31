@@ -3,6 +3,7 @@
 .reading-summary {
   display: flex;
   padding: 3px;
+  min-height: 70px;
 
   .reading-summary-img {
     flex-basis: 80px;
@@ -17,22 +18,32 @@
 
   .reading-summary-text {
     flex-grow: 1;
+    overflow: hidden;
 
     .reading-summary-title {
-      display: flex;
       font-size: 13px;
-      align-items: center;
       font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .reading-summary-share-icon {
-      margin-left: 10px;
+      margin-right: 8px;
+      margin-bottom: 2px;
       color: $gray3;
       cursor: pointer;
 
       &:hover {
         color: $blue1;
       }
+    }
+
+    .reading-summary-url {
+      margin-top: 3px;
+      font-style: italic;
+      font-size: 10px;
+      color: $gray3;
     }
 
     .reading-summary-description {

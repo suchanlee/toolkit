@@ -23,9 +23,11 @@ export const selectFilteredReadings = createSelector(
     if (inputValue.trim().length > 0 && !isUrl(inputValue)) {
       const normInputValue = normalizeString(inputValue);
       filteredReadings = filteredReadings.filter(r => {
-        return `${normalizeString(r.title)} ${normalizeString(
-          r.description ?? ""
-        )} ${normalizeString(r.value)}`.indexOf(normInputValue);
+        return (
+          `${normalizeString(r.title)} ${normalizeString(r.description ?? "")} ${normalizeString(
+            r.value
+          )}`.indexOf(normInputValue) > -1
+        );
       });
     }
 
