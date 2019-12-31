@@ -1,6 +1,5 @@
 import { Button, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
-import isUrl from "is-url";
 import * as React from "react";
 import { connect } from "react-redux";
 import { AsyncValue } from "../../../async/asyncTypes";
@@ -9,7 +8,10 @@ import { KeyboardNavSupportedInput } from "../../../shared-components/KeyboardNa
 import { RootState } from "../../../states/rootState";
 import { Reading } from "../readingsTypes";
 import { ReadingActions } from "../redux/readingsActions";
-import { selectReadingsInputValue } from "../redux/readingsSelectors";
+import {
+  selectReadingsInputValue,
+  selectReadingsInputValueIsUrl
+} from "../redux/readingsSelectors";
 import { ReadingUrlPreview } from "./ReadingUrlPreview";
 
 require("./ReadingInput.scss");
@@ -17,6 +19,7 @@ require("./ReadingInput.scss");
 export namespace ReadingInput {
   export interface StoreProps {
     value: string;
+    isValueUrl: boolean;
   }
 
   export interface DispatchProps {
@@ -47,7 +50,7 @@ class ReadingInputInternal extends React.PureComponent<ReadingInput.Props, Readi
           onChange={this.handleChange}
           onKeyUp={this.handleKeyUp}
         />
-        {isUrl(this.props.value) && (
+        {this.props.isValueUrl && (
           <React.Fragment>
             <Button
               title="Add url to reading list"
@@ -96,7 +99,8 @@ class ReadingInputInternal extends React.PureComponent<ReadingInput.Props, Readi
 
 function mapStateToProps(state: RootState): ReadingInput.StoreProps {
   return {
-    value: selectReadingsInputValue(state)
+    value: selectReadingsInputValue(state),
+    isValueUrl: selectReadingsInputValueIsUrl(state)
   };
 }
 

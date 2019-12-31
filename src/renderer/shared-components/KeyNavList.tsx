@@ -12,6 +12,7 @@ export namespace KeyNavList {
   export interface OwnProps<T> {
     className?: string;
     itemClassName?: string;
+    ignoredKeys?: Set<string>;
     items: readonly T[];
     onItemSelect: (item: T) => void;
     getItemKey: (item: T) => string;
@@ -64,7 +65,7 @@ export class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<
   }
 
   private handleUp = (evt: KeyboardEvent) => {
-    if (this.props.current.row > 0) {
+    if (!this.props.ignoredKeys?.has(evt.key) && this.props.current.row > 0) {
       this.props.moveUp();
       evt.preventDefault();
     }
@@ -72,13 +73,17 @@ export class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<
 
   private handleDown = (evt: KeyboardEvent) => {
     const { items, current, moveDown } = this.props;
-    if (items.length - 1 > current.row) {
+    if (!this.props.ignoredKeys?.has(evt.key) && items.length - 1 > current.row) {
       moveDown();
     }
     evt.preventDefault();
   };
 
-  private handleEnter = () => {
+  private handleEnter = (evt: KeyboardEvent) => {
+    if (this.props.ignoredKeys?.has(evt.key)) {
+      return;
+    }
+
     const { onItemSelect, items, current } = this.props;
     const { row } = current;
     onItemSelect(items[row]);

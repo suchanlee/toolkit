@@ -8,6 +8,9 @@ export const selectReadingsInputValue = (state: RootState) => state.readings.inp
 export const selectReadingsFilter = (state: RootState) => state.readings.filter;
 export const selectReadingsReadings = (state: RootState) => state.readings.readings;
 export const selectReadingsActive = (state: RootState) => state.readings.active;
+export const selectReadingsInputValueIsUrl = createSelector(selectReadingsInputValue, inputValue =>
+  isUrl(inputValue)
+);
 
 export const selectFilteredReadings = createSelector(
   selectReadingsReadings,
