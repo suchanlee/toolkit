@@ -1,7 +1,6 @@
 import { Icon } from "@blueprintjs/core";
 import classNames from "classnames";
 import { shell } from "electron";
-import * as mousetrap from "mousetrap";
 import * as React from "react";
 import { connect } from "react-redux";
 import { selectKeyNavListCurrent } from "../../../selectors/keyNavListSelectors";
@@ -32,20 +31,21 @@ export namespace ReadingItem {
 class ReadingItemInternal extends React.PureComponent<ReadingItem.Props> {
   public componentDidMount() {
     if (this.props.isKeyNavListActive) {
-      this.bindKeyUp();
+      this.bindKeyDown();
     }
   }
 
   public componentDidUpdate(prevProps: ReadingItem.Props) {
     if (!prevProps.isKeyNavListActive && this.props.isKeyNavListActive) {
-      this.bindKeyUp();
+      console.log(this.props.index);
+      this.bindKeyDown();
     } else if (prevProps.isKeyNavListActive && !this.props.isKeyNavListActive) {
-      this.unbindKeyUp();
+      this.unbindKeyDown();
     }
   }
 
   public componentWillUnmount() {
-    this.unbindKeyUp();
+    this.unbindKeyDown();
   }
 
   public render() {
@@ -70,16 +70,22 @@ class ReadingItemInternal extends React.PureComponent<ReadingItem.Props> {
     );
   }
 
-  private bindKeyUp() {
-    mousetrap.bind("command+enter", this.handleKeyUp);
+  private bindKeyDown() {
+    // use document.addEventListener instead of mousetrap because
+    // mousetrap registers only one event per key at a time and when
+    // multiple items bind and unbind, can run into race conditions where
+    // the bind in itemA happens first and then itemB unbinds.
+    document.addEventListener("keydown", this.handleKeyDown);
   }
 
-  private unbindKeyUp() {
-    mousetrap.unbind("command+enter");
+  private unbindKeyDown() {
+    document.removeEventListener("keydown", this.handleKeyDown);
   }
 
-  private handleKeyUp = () => {
-    shell.openExternal(this.props.reading.value);
+  private handleKeyDown = (evt: KeyboardEvent) => {
+    if (evt.key === "Enter" && evt.metaKey) {
+      shell.openExternal(this.props.reading.value);
+    }
   };
 
   private handleArchiveClick = (evt: React.SyntheticEvent) => {
