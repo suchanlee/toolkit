@@ -1,58 +1,7 @@
 @import "~@blueprintjs/core/lib/scss/variables";
 
-.iframe-panel-overlay {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-
-.iframe-panel-container {
-  position: absolute;
-  height: calc(100% - 38px);
+.iframe-panel-iframe {
+  height: 100%;
   width: 100%;
-  top: 38px;
-  background-color: $white;
-  border-radius: 5px;
-
-  .iframe-panel-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 7px 10px;
-    background-color: $light-gray5;
-    color: $black;
-    border-radius: 5px 5px 0 0;
-    border-bottom: 1px solid $light-gray1;
-    font-size: 12px;
-
-    .iframe-panel-close {
-      display: flex;
-      flex-shrink: 0;
-      align-items: center;
-      padding-left: 2px;
-      width: 14px;
-      height: 14px;
-      cursor: pointer;
-      background-color: $red5;
-      border-radius: 14px;
-
-      .iframe-panel-close-icon {
-        display: none;
-      }
-
-      &:hover {
-        .iframe-panel-close-icon {
-          display: inline;
-        }
-      }
-    }
-  }
-
-  .iframe-panel-iframe {
-    height: 100%;
-    width: 100%;
-    border: none;
-  }
+  border: none;
 }
