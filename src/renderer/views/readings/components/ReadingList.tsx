@@ -6,7 +6,7 @@ import { hashString } from "../../../utils/stringUtils";
 import { Reading } from "../readingsTypes";
 import { ReadingActions } from "../redux/readingsActions";
 import { selectFilteredReadings, selectReadingsInputValueIsUrl } from "../redux/readingsSelectors";
-import { ReadingSummary } from "./ReadingSummary";
+import { ReadingItem } from "./ReadingItem";
 
 // hack due connected component not properly supporting generic components
 const KNL = KeyNavList as ConnectedComponent<
@@ -20,6 +20,7 @@ export namespace ReadingList {
   export interface StoreProps {
     readings: readonly Reading[];
     isInputValueUrl: boolean;
+    // getActiveReading(): Reading | undefined;
   }
 
   export interface DispatchProps {
@@ -60,8 +61,8 @@ function getItemKey(reading: Reading) {
   return `${hashString(reading.value)}`;
 }
 
-function renderItem(reading: Reading) {
-  return <ReadingSummary reading={reading} />;
+function renderItem(reading: Reading, index: number) {
+  return <ReadingItem reading={reading} index={index} />;
 }
 
 function mapStateToProps(state: RootState): ReadingList.StoreProps {

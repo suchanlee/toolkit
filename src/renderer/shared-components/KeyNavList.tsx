@@ -16,7 +16,7 @@ export namespace KeyNavList {
     items: readonly T[];
     onItemSelect: (item: T) => void;
     getItemKey: (item: T) => string;
-    renderItem: (item: T) => JSX.Element;
+    renderItem: (item: T, index: number) => JSX.Element;
   }
 
   export interface StoreProps {
@@ -57,7 +57,7 @@ export class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<
             item={item}
             onItemSelect={this.props.onItemSelect}
           >
-            {this.props.renderItem(item)}
+            {this.props.renderItem(item, index)}
           </KeyNavListItem>
         ))}
       </div>

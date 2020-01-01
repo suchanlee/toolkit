@@ -29,6 +29,7 @@
 
     .iframe-panel-close {
       display: flex;
+      flex-shrink: 0;
       align-items: center;
       padding-left: 2px;
       width: 14px;

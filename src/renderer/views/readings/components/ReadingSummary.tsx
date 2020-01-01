@@ -40,8 +40,10 @@ export class ReadingSummary extends React.PureComponent<ReadingSummary.Props> {
     );
   }
 
-  private handleTitleClick = () => {
+  private handleTitleClick = (evt: React.SyntheticEvent) => {
     shell.openExternal(this.props.reading.value);
+    // prevent KNLItem from being selected
+    evt.stopPropagation();
   };
 }
 

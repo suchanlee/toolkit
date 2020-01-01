@@ -1,0 +1,10 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.reading-list-filter {
+  padding-top: 10px;
+  padding-left: 8px;
+
+  .#{$ns}-control {
+    color: $light-gray3;
+  }
+}
