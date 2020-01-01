@@ -2,7 +2,6 @@ import * as React from "react";
 import { connect, ConnectedComponent } from "react-redux";
 import { KeyNavList, KeyNavListInternal } from "../../../shared-components/KeyNavList";
 import { RootState } from "../../../states/rootState";
-import { hashString } from "../../../utils/stringUtils";
 import { Reading } from "../readingsTypes";
 import { ReadingActions } from "../redux/readingsActions";
 import { selectFilteredReadings, selectReadingsInputValueIsUrl } from "../redux/readingsSelectors";
@@ -58,7 +57,7 @@ class ReadingListInternal extends React.PureComponent<ReadingList.Props> {
 }
 
 function getItemKey(reading: Reading) {
-  return `${hashString(reading.value)}`;
+  return reading.id;
 }
 
 function renderItem(reading: Reading, index: number) {

@@ -11,12 +11,14 @@ export interface KeyNavListLocation {
 export enum EntryType {
   TODO = "TODO",
   READING = "READING",
-  NOTE = "NOTE"
+  NOTE = "NOTE",
+  CODE = "CODE"
 }
 
 export interface Entry {
   id: string;
   type: EntryType;
   value: string;
+  // created date
   date: Iso8601String;
 }

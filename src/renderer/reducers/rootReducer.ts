@@ -1,5 +1,6 @@
 import { combineReducers } from "redoodle";
 import { RootState } from "../states/rootState";
+import { notesReducer } from "../views/notes/redux/notesReducer";
 import { readingsReducer } from "../views/readings/redux/readingsReducer";
 import { todoReducer } from "../views/todos/redux/todoReducer";
 import { floatingMenuReducer } from "./floatingMenuReducer";
@@ -13,5 +14,6 @@ export const rootReducer = combineReducers<RootState>({
   todos: todoReducer,
   navigation: navigationReducer,
   readings: readingsReducer,
+  notes: notesReducer,
   keyNavList: keyNavListReducer
 });

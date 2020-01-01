@@ -1,3 +1,4 @@
+import { createInitialNotesState, NotesState } from "../views/notes/redux/notesState";
 import { createInitialReadingsState, ReadingsState } from "../views/readings/redux/readingsState";
 import { createInitialTodosState, TodosState } from "../views/todos/redux/todosState";
 import {
@@ -14,6 +15,7 @@ export interface RootState {
   floatingMenu: FloatingMenuState;
   todos: TodosState;
   readings: ReadingsState;
+  notes: NotesState;
   keyNavList: KeyNavListState;
 }
 
@@ -24,6 +26,7 @@ export function createInitialRootState(): RootState {
     floatingMenu: createInitialFloatingMenuState(),
     todos: createInitialTodosState(),
     readings: createInitialReadingsState(),
+    notes: createInitialNotesState(),
     keyNavList: createInitialKeyNavListState()
   };
 }
