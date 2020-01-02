@@ -43,7 +43,7 @@ class NotesInputInternal extends React.PureComponent<NotesInput.Props> {
           value={this.props.query}
           onChange={this.handleInputChange}
         />
-        <Button icon="edit" title="Add new note (⌘N)" onClick={this.handleButtonClick} />
+        <Button icon="plus" title="Add new note (⌘N)" onClick={this.handleButtonClick} />
       </ControlGroup>
     );
   }
