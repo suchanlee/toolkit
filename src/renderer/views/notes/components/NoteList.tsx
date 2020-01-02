@@ -4,7 +4,8 @@ import { KeyNavList, KeyNavListInternal } from "../../../shared-components/KeyNa
 import { RootState } from "../../../states/rootState";
 import { Note } from "../notesTypes";
 import { NotesActions } from "../redux/notesActions";
-import { selectNotesHasActive, selectNotesNotes } from "../redux/notesSelectors";
+import { selectFilteredNotes, selectNotesHasActive } from "../redux/notesSelectors";
+import { NoteItem } from "./NoteItem";
 
 // hack due connected component not properly supporting generic components
 const KNL = KeyNavList as ConnectedComponent<typeof KeyNavListInternal, KeyNavList.OwnProps<Note>>;
@@ -56,12 +57,12 @@ function getItemKey(note: Note) {
 }
 
 function renderItem(note: Note) {
-  return <div>{note.value}</div>;
+  return <NoteItem note={note} />;
 }
 
 function mapStateToProps(state: RootState): NoteList.StoreProps {
   return {
-    notes: selectNotesNotes(state),
+    notes: selectFilteredNotes(state),
     hasActive: selectNotesHasActive(state)
   };
 }

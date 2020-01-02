@@ -5,3 +5,8 @@ export interface Note extends Entry {
   tags: readonly string[];
   lastModified: Iso8601String;
 }
+
+export interface NoteParts {
+  title: string;
+  summary: string;
+}

@@ -1,0 +1,6 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.#{$ns}-dark .notes-input.#{$ns}-input:focus {
+  box-shadow: none;
+  border-radius: none;
+}

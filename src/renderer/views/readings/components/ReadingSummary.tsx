@@ -33,7 +33,7 @@ export class ReadingSummary extends React.PureComponent<ReadingSummary.Props> {
             {getPathFromUrl(url)}
           </div>
           <div className="reading-summary-description" title={description}>
-            {description ?? "No description available."}
+            {description != null ? description.slice(0, 500) : "No description available."}
           </div>
         </div>
       </div>
