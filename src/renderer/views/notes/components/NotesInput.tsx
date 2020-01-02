@@ -18,6 +18,7 @@ export namespace NotesInput {
   export interface DispatchProps {
     setQuery: typeof NotesActions.setQuery;
     addNote: typeof NotesActions.addNote;
+    setActiveId: typeof NotesActions.setActiveId;
   }
 
   export type Props = StoreProps & DispatchProps;
@@ -60,7 +61,9 @@ class NotesInputInternal extends React.PureComponent<NotesInput.Props> {
   };
 
   private addNote() {
-    this.props.addNote(createNote({ value: "", tags: [] }));
+    const note = createNote({ value: "", tags: [] });
+    this.props.addNote(note);
+    this.props.setActiveId(note.id);
   }
 }
 
@@ -72,7 +75,8 @@ function mapStateToProps(state: RootState): NotesInput.StoreProps {
 
 const mapDispatchToProps: NotesInput.DispatchProps = {
   setQuery: NotesActions.setQuery,
-  addNote: NotesActions.addNote
+  addNote: NotesActions.addNote,
+  setActiveId: NotesActions.setActiveId
 };
 
 const enhanceWithRedux = connect(mapStateToProps, mapDispatchToProps);
