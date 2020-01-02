@@ -1,4 +1,3 @@
-import { Classes } from "@blueprintjs/core";
 import classNames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -41,7 +40,7 @@ class KeyNavListItemInternal extends React.PureComponent<KeyNavListItem.Props<an
     return (
       <div
         ref={this.ref}
-        className={classNames("key-nav-list-item", Classes.ELEVATION_0, this.props.className, {
+        className={classNames("key-nav-list-item", this.props.className, {
           "-active": this.props.isActive
         })}
         onClick={this.handleClick}

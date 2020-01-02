@@ -4,7 +4,7 @@ import { PanelContainer } from "../../../shared-components/PanelContainer";
 import { RootState } from "../../../states/rootState";
 import { Note } from "../notesTypes";
 import { NotesActions } from "../redux/notesActions";
-import { selectNotesActive } from "../redux/notesSelectors";
+import { selectNotesActiveNote } from "../redux/notesSelectors";
 import { getNoteTitle } from "../utils/notesUtils";
 
 export namespace NotePanel {
@@ -13,7 +13,8 @@ export namespace NotePanel {
   }
 
   export interface DispatchProps {
-    setActive: typeof NotesActions.setActive;
+    setActiveId: typeof NotesActions.setActiveId;
+    setNoteValue: typeof NotesActions.setNoteValue;
   }
 
   export type Props = StoreProps & DispatchProps;
@@ -28,24 +29,34 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
         onClose={this.handleClose}
         title={note != null ? getNoteTitle(note) : ""}
       >
-        <textarea />
+        {note != null && <textarea value={note.value} onChange={this.handleChange} />}
       </PanelContainer>
     );
   }
 
   private handleClose = () => {
-    this.props.setActive(undefined);
+    this.props.setActiveId(undefined);
+  };
+
+  private handleChange = (evt: React.SyntheticEvent<HTMLTextAreaElement>) => {
+    if (this.props.note != null) {
+      this.props.setNoteValue({
+        id: this.props.note.id,
+        value: evt.currentTarget.value
+      });
+    }
   };
 }
 
 function mapStateToProps(state: RootState): NotePanel.StoreProps {
   return {
-    note: selectNotesActive(state)
+    note: selectNotesActiveNote(state)
   };
 }
 
 const mapDispatchToProps: NotePanel.DispatchProps = {
-  setActive: NotesActions.setActive
+  setActiveId: NotesActions.setActiveId,
+  setNoteValue: NotesActions.setNoteValue
 };
 
 const enhanceWithRedux = connect(mapStateToProps, mapDispatchToProps);

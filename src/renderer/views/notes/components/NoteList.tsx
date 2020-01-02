@@ -19,7 +19,7 @@ export namespace NoteList {
   }
 
   export interface DispatchProps {
-    setActive: typeof NotesActions.setActive;
+    setActive: typeof NotesActions.setActiveId;
   }
 
   export type Props = StoreProps & DispatchProps;
@@ -40,7 +40,7 @@ class NoteListInternal extends React.PureComponent<NoteList.Props> {
   }
 
   private handleSelect = (note: Note) => {
-    this.props.setActive(note);
+    this.props.setActive(note.id);
   };
 
   private getIgnoredKeys() {
@@ -68,7 +68,7 @@ function mapStateToProps(state: RootState): NoteList.StoreProps {
 }
 
 const mapDispatchToProps: NoteList.DispatchProps = {
-  setActive: NotesActions.setActive
+  setActive: NotesActions.setActiveId
 };
 
 const enhanceWithRedux = connect(mapStateToProps, mapDispatchToProps);

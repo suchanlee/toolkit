@@ -6,7 +6,7 @@ import { Reading } from "../readingsTypes";
 import { ReadingActions, ReadingsInternalActions } from "./readingsActions";
 import { selectReadingsReadings } from "./readingsSelectors";
 
-const READINGS_FILE_NAME = ".readings";
+const READINGS_FILE_NAME = "readings";
 
 export function* readingsSaga() {
   yield initializeReadings();

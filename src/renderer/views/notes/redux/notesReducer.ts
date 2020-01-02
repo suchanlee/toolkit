@@ -1,17 +1,15 @@
 import { setWith, TypedReducer } from "redoodle";
-import { NotesActions } from "./notesActions";
+import { NotesActions, NotesInternalActions } from "./notesActions";
 import { NotesState } from "./notesState";
 
 export const notesReducer = TypedReducer.builder<NotesState>()
-  .withHandler(NotesActions.setActive.TYPE, (state, active) => {
-    return setWith(state, { active });
+  .withHandler(NotesActions.setActiveId.TYPE, (state, activeId) => {
+    return setWith(state, { activeId });
   })
   .withHandler(NotesActions.setQuery.TYPE, (state, query) => {
     return setWith(state, { query });
   })
-  .withHandler(NotesActions.addNote.TYPE, (state, note) => {
-    return setWith(state, {
-      notes: [note, ...state.notes]
-    });
+  .withHandler(NotesInternalActions.setNotes.TYPE, (state, notes) => {
+    return setWith(state, { notes });
   })
   .build();

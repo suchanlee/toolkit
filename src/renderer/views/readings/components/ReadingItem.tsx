@@ -37,7 +37,6 @@ class ReadingItemInternal extends React.PureComponent<ReadingItem.Props> {
 
   public componentDidUpdate(prevProps: ReadingItem.Props) {
     if (!prevProps.isKeyNavListActive && this.props.isKeyNavListActive) {
-      console.log(this.props.index);
       this.bindKeyDown();
     } else if (prevProps.isKeyNavListActive && !this.props.isKeyNavListActive) {
       this.unbindKeyDown();
