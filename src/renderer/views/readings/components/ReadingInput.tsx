@@ -7,7 +7,7 @@ import { asyncLoading, isLoaded } from "../../../async/asyncUtils";
 import { KeyboardNavSupportedInput } from "../../../shared-components/KeyboardNavSupportedInput";
 import { RootState } from "../../../states/rootState";
 import { Reading } from "../readingsTypes";
-import { ReadingActions } from "../redux/readingsActions";
+import { ReadingsActions } from "../redux/readingsActions";
 import {
   selectReadingsInputValue,
   selectReadingsInputValueIsUrl
@@ -23,8 +23,8 @@ export namespace ReadingInput {
   }
 
   export interface DispatchProps {
-    setValue: typeof ReadingActions.setInputValue;
-    addReading: typeof ReadingActions.addReading;
+    setValue: typeof ReadingsActions.setInputValue;
+    addReading: typeof ReadingsActions.addReading;
   }
 
   export type Props = StoreProps & DispatchProps;
@@ -105,8 +105,8 @@ function mapStateToProps(state: RootState): ReadingInput.StoreProps {
 }
 
 const mapDispatchToProps: ReadingInput.DispatchProps = {
-  setValue: ReadingActions.setInputValue,
-  addReading: ReadingActions.addReading
+  setValue: ReadingsActions.setInputValue,
+  addReading: ReadingsActions.addReading
 };
 
 const enhanceWithRedux = connect(mapStateToProps, mapDispatchToProps);

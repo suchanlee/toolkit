@@ -3,7 +3,7 @@ import { connect, ConnectedComponent } from "react-redux";
 import { KeyNavList, KeyNavListInternal } from "../../../shared-components/KeyNavList";
 import { RootState } from "../../../states/rootState";
 import { Reading } from "../readingsTypes";
-import { ReadingActions } from "../redux/readingsActions";
+import { ReadingsActions } from "../redux/readingsActions";
 import { selectFilteredReadings, selectReadingsInputValueIsUrl } from "../redux/readingsSelectors";
 import { ReadingItem } from "./ReadingItem";
 
@@ -23,7 +23,7 @@ export namespace ReadingList {
   }
 
   export interface DispatchProps {
-    setActive: typeof ReadingActions.setActive;
+    setActive: typeof ReadingsActions.setActive;
   }
 
   export type Props = StoreProps & DispatchProps;
@@ -72,7 +72,7 @@ function mapStateToProps(state: RootState): ReadingList.StoreProps {
 }
 
 const mapDispatchToProps: ReadingList.DispatchProps = {
-  setActive: ReadingActions.setActive
+  setActive: ReadingsActions.setActive
 };
 
 const enhanceWithRedux = connect(mapStateToProps, mapDispatchToProps);

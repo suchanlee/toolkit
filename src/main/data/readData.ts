@@ -16,13 +16,13 @@ export function readData(fileName: string) {
     data = fs.readFileSync(filePath, "utf8");
   } catch (e) {
     console.warn(`Failed to read file for path: ${filePath}`, e);
-    return {};
+    return undefined;
   }
 
   try {
     return JSON.parse(data);
   } catch (e) {
     console.warn(`Failed to parse JSON for file: ${filePath}`, e);
-    return {};
+    return undefined;
   }
 }

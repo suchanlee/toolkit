@@ -1,7 +1,7 @@
-import { Reading, ReadingStatus, ReadingStatusFilter } from "../readingsTypes";
+import { Reading, ReadingsById, ReadingStatus, ReadingStatusFilter } from "../readingsTypes";
 
 export interface ReadingsState {
-  readings: readonly Reading[];
+  readings: ReadingsById;
   filter: ReadingStatusFilter;
   inputValue: string;
   active: Reading | undefined;
@@ -9,7 +9,7 @@ export interface ReadingsState {
 
 export function createInitialReadingsState(): ReadingsState {
   return {
-    readings: [],
+    readings: {},
     filter: ReadingStatus.ACTIVE,
     inputValue: "",
     active: undefined

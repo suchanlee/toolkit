@@ -14,3 +14,7 @@ export enum ReadingStatus {
 }
 
 export type ReadingStatusFilter = ReadingStatus | "ALL";
+
+export type ReadingsById = {
+  [id: string]: Reading;
+};

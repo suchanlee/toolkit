@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { IFramePanel } from "../../../shared-components/IFramePanel";
 import { RootState } from "../../../states/rootState";
 import { Reading } from "../readingsTypes";
-import { ReadingActions } from "../redux/readingsActions";
+import { ReadingsActions } from "../redux/readingsActions";
 import { selectReadingsActive } from "../redux/readingsSelectors";
 
 export namespace ReadingPanel {
@@ -12,7 +12,7 @@ export namespace ReadingPanel {
   }
 
   export interface DispatchProps {
-    setActive: typeof ReadingActions.setActive;
+    setActive: typeof ReadingsActions.setActive;
   }
 
   export type Props = StoreProps & DispatchProps;
@@ -47,7 +47,7 @@ function mapStateToProps(state: RootState): ReadingPanel.StoreProps {
 }
 
 const mapDispatchToProps: ReadingPanel.DispatchProps = {
-  setActive: ReadingActions.setActive
+  setActive: ReadingsActions.setActive
 };
 
 const enhanceWithRedux = connect(mapStateToProps, mapDispatchToProps);

@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { selectKeyNavListCurrent } from "../../../selectors/keyNavListSelectors";
 import { RootState } from "../../../states/rootState";
 import { Reading, ReadingStatus } from "../readingsTypes";
-import { ReadingActions } from "../redux/readingsActions";
+import { ReadingsActions } from "../redux/readingsActions";
 import { ReadingSummary } from "./ReadingSummary";
 
 require("./ReadingItem.scss");
@@ -22,7 +22,7 @@ export namespace ReadingItem {
   }
 
   export interface DispatchProps {
-    setStatus: typeof ReadingActions.setReadingStatus;
+    setStatus: typeof ReadingsActions.setReadingStatus;
   }
 
   export type Props = OwnProps & StoreProps & DispatchProps;
@@ -108,7 +108,7 @@ function mapStateToProps(state: RootState, ownProps: ReadingItem.OwnProps): Read
 }
 
 const mapDispatchToProps: ReadingItem.DispatchProps = {
-  setStatus: ReadingActions.setReadingStatus
+  setStatus: ReadingsActions.setReadingStatus
 };
 
 const enhanceWithRedux = connect(mapStateToProps, mapDispatchToProps);

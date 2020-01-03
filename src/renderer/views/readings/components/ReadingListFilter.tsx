@@ -3,7 +3,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { RootState } from "../../../states/rootState";
 import { ReadingStatus, ReadingStatusFilter } from "../readingsTypes";
-import { ReadingActions } from "../redux/readingsActions";
+import { ReadingsActions } from "../redux/readingsActions";
 import { selectReadingsFilter } from "../redux/readingsSelectors";
 
 require("./ReadingListFilter.scss");
@@ -14,7 +14,7 @@ export namespace ReadingListFilter {
   }
 
   export interface DispatchProps {
-    setFilter: typeof ReadingActions.setFilter;
+    setFilter: typeof ReadingsActions.setFilter;
   }
 
   export type Props = StoreProps & DispatchProps;
@@ -49,7 +49,7 @@ function mapStateToProps(state: RootState): ReadingListFilter.StoreProps {
 }
 
 const mapDispatchToProps: ReadingListFilter.DispatchProps = {
-  setFilter: ReadingActions.setFilter
+  setFilter: ReadingsActions.setFilter
 };
 
 const enhanceWithRedux = connect(mapStateToProps, mapDispatchToProps);

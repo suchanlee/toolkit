@@ -1,4 +1,5 @@
 import isUrl from "is-url";
+import { values } from "lodash-es";
 import { createSelector } from "reselect";
 import { RootState } from "../../../states/rootState";
 import { normalizeString } from "../../../utils/stringUtils";
@@ -17,7 +18,7 @@ export const selectFilteredReadings = createSelector(
   selectReadingsFilter,
   selectReadingsInputValue,
   (readings, filter, inputValue) => {
-    let filteredReadings = readings;
+    let filteredReadings = values(readings);
 
     if (filter !== "ALL") {
       filteredReadings = filteredReadings.filter(r => r.status === filter);
