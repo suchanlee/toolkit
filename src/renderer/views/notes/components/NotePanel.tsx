@@ -1,5 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
+import { MonacoEditor } from "../../../shared-components/monaco/MonacoEditor";
 import { PanelContainer } from "../../../shared-components/PanelContainer";
 import { RootState } from "../../../states/rootState";
 import { Note } from "../notesTypes";
@@ -29,7 +30,7 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
         onClose={this.handleClose}
         title={note != null ? getNoteTitle(note) : ""}
       >
-        {note != null && <textarea value={note.value} onChange={this.handleChange} />}
+        {note != null && <MonacoEditor value={note.value} onChange={this.handleChange} />}
       </PanelContainer>
     );
   }
@@ -38,11 +39,11 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
     this.props.setActiveId(undefined);
   };
 
-  private handleChange = (evt: React.SyntheticEvent<HTMLTextAreaElement>) => {
+  private handleChange = (value: string) => {
     if (this.props.note != null) {
       this.props.setNoteValue({
         id: this.props.note.id,
-        value: evt.currentTarget.value
+        value: value
       });
     }
   };
