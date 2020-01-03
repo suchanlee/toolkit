@@ -1,3 +1,4 @@
+import { IKeyboardEvent, KeyCode } from "monaco-editor";
 import * as React from "react";
 import { connect } from "react-redux";
 import { MonacoEditor } from "../../../shared-components/monaco/MonacoEditor";
@@ -30,7 +31,13 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
         onClose={this.handleClose}
         title={note != null ? getNoteTitle(note) : ""}
       >
-        {note != null && <MonacoEditor value={note.value} onChange={this.handleChange} />}
+        {note != null && (
+          <MonacoEditor
+            value={note.value}
+            onChange={this.handleChange}
+            onKeyUp={this.handleKeyUp}
+          />
+        )}
       </PanelContainer>
     );
   }
@@ -45,6 +52,12 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
         id: this.props.note.id,
         value: value
       });
+    }
+  };
+
+  private handleKeyUp = (evt: IKeyboardEvent) => {
+    if (evt.keyCode === KeyCode.Escape) {
+      this.props.setActiveId(undefined);
     }
   };
 }

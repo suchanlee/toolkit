@@ -1,4 +1,4 @@
-import { editor, IDisposable } from "monaco-editor";
+import { editor, IDisposable, IKeyboardEvent } from "monaco-editor";
 import * as React from "react";
 import { v4 as uuid } from "uuid";
 import { MonacoSpaceGrayTheme } from "./MonacoSpaceGrayTheme";
@@ -10,9 +10,10 @@ editor.defineTheme("spacegray", MonacoSpaceGrayTheme);
 
 export namespace MonacoEditor {
   export interface Props {
-    fontSize?: number;
     value: string;
+    fontSize?: number;
     onChange(value: string, event: editor.IModelContentChangedEvent): void;
+    onKeyUp?(evt: IKeyboardEvent): void;
   }
 }
 
@@ -33,10 +34,15 @@ export class MonacoEditor extends React.PureComponent<MonacoEditor.Props> {
         fontSize: this.props.fontSize ?? 14
       });
 
-      this.editor = monaco;
+      if (this.props.onKeyUp != null) {
+        monaco.onKeyUp(this.props.onKeyUp);
+      }
+      monaco.focus();
+
       this.subscription = monaco.onDidChangeModelContent(event => {
         this.props.onChange(monaco.getValue(), event);
       });
+      this.editor = monaco;
     }
 
     window.addEventListener("resize", this.handleResize);
