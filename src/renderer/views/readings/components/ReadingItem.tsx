@@ -1,9 +1,9 @@
-import { Icon } from "@blueprintjs/core";
-import classNames from "classnames";
+import { Colors } from "@blueprintjs/core";
 import { shell } from "electron";
 import * as React from "react";
 import { connect } from "react-redux";
 import { selectKeyNavListCurrent } from "../../../selectors/keyNavListSelectors";
+import { ItemActionButton } from "../../../shared-components/ItemActionButton";
 import { RootState } from "../../../states/rootState";
 import { Reading, ReadingStatus } from "../readingsTypes";
 import { ReadingsActions } from "../redux/readingsActions";
@@ -52,19 +52,13 @@ class ReadingItemInternal extends React.PureComponent<ReadingItem.Props> {
     return (
       <div className="reading-item">
         <ReadingSummary reading={reading} />
-        <div
-          className={classNames("reading-item-archive", {
-            "-archive": reading.status === ReadingStatus.ACTIVE,
-            "-unarchive": reading.status === ReadingStatus.ARCHIVED
-          })}
+        <ItemActionButton
+          className="reading-item-archive"
+          icon={reading.status === ReadingStatus.ACTIVE ? "archive" : "unarchive"}
           title={reading.status === ReadingStatus.ACTIVE ? "Archive" : "Unarchive"}
           onClick={this.handleArchiveClick}
-        >
-          <Icon
-            icon={reading.status === ReadingStatus.ACTIVE ? "archive" : "unarchive"}
-            className="reading-item-archive-icon"
-          />
-        </div>
+          backgroundColor={reading.status === ReadingStatus.ACTIVE ? "" : Colors.GREEN3}
+        />
       </div>
     );
   }

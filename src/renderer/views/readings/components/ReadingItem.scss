@@ -12,31 +12,5 @@
 
   .reading-item-archive {
     display: none;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 100%;
-    cursor: pointer;
-
-    &.-archive {
-      background-color: $red4;
-
-      &:hover {
-        background-color: $red3;
-      }
-    }
-
-    &.-unarchive {
-      background-color: $green4;
-
-      &:hover {
-        background-color: $green3;
-      }
-    }
-
-    .reading-item-archive-icon {
-      padding: 0 10px;
-    }
   }
 }

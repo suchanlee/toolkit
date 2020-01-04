@@ -1,0 +1,18 @@
+.item-action-button {
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  border-radius: 20px;
+  opacity: 0.6;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  .item-action-button-icon {
+    padding: 8px;
+  }
+}
