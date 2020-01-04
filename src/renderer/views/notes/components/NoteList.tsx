@@ -20,6 +20,7 @@ export namespace NoteList {
 
   export interface DispatchProps {
     setActive: typeof NotesActions.setActiveId;
+    setArchiveStatus: typeof NotesActions.setArchiveStatus;
   }
 
   export type Props = StoreProps & DispatchProps;
@@ -34,7 +35,7 @@ class NoteListInternal extends React.PureComponent<NoteList.Props> {
         ignoredKeys={this.getIgnoredKeys()}
         getItemKey={getItemKey}
         onItemSelect={this.handleSelect}
-        renderItem={renderItem}
+        renderItem={this.renderItem}
       />
     );
   }
@@ -50,14 +51,14 @@ class NoteListInternal extends React.PureComponent<NoteList.Props> {
       return undefined;
     }
   }
+
+  private renderItem = (note: Note) => {
+    return <NoteItem note={note} setArchiveStatus={this.props.setArchiveStatus} />;
+  };
 }
 
 function getItemKey(note: Note) {
   return note.id;
-}
-
-function renderItem(note: Note) {
-  return <NoteItem note={note} />;
 }
 
 function mapStateToProps(state: RootState): NoteList.StoreProps {
@@ -68,7 +69,8 @@ function mapStateToProps(state: RootState): NoteList.StoreProps {
 }
 
 const mapDispatchToProps: NoteList.DispatchProps = {
-  setActive: NotesActions.setActiveId
+  setActive: NotesActions.setActiveId,
+  setArchiveStatus: NotesActions.setArchiveStatus
 };
 
 const enhanceWithRedux = connect(mapStateToProps, mapDispatchToProps);

@@ -1,7 +1,14 @@
 @import "~@blueprintjs/core/lib/scss/variables";
 
 .note-item {
+  position: relative;
   padding: 10px;
+
+  &:hover {
+    .note-item-archive {
+      display: flex;
+    }
+  }
 
   .note-item-title {
     font-size: 13px;
@@ -26,5 +33,9 @@
       font-weight: 600;
       margin-right: 5px;
     }
+  }
+
+  .note-item-archive {
+    display: none;
   }
 }

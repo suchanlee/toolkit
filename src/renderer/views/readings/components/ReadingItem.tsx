@@ -83,8 +83,8 @@ class ReadingItemInternal extends React.PureComponent<ReadingItem.Props> {
   };
 
   private handleArchiveClick = (evt: React.SyntheticEvent) => {
-    const { reading, setArchiveStatus: setStatus } = this.props;
-    setStatus({
+    const { reading, setArchiveStatus } = this.props;
+    setArchiveStatus({
       id: reading.id,
       status:
         reading.archiveStatus === ArchiveStatus.ACTIVE

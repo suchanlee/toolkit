@@ -14,6 +14,7 @@ export function* notesSaga() {
   yield initializeNotes();
   yield takeEvery(NotesActions.addNote.TYPE, addNote);
   yield takeEvery(NotesActions.setNoteValue.TYPE, setNoteValue);
+  yield takeEvery(NotesActions.setArchiveStatus.TYPE, setNoteStatus);
 }
 
 function* initializeNotes() {
@@ -48,6 +49,24 @@ function* setNoteValue(action: TypedAction<NotesActions.SetNoteValuePayload>) {
       lastModified: new Date().toISOString() as Iso8601String
     })
   };
+
+  yield put(NotesInternalActions.setNotes(newNotes));
+  writeNotes(newNotes);
+}
+
+function* setNoteStatus(action: TypedAction<NotesActions.SetStatusPayload>) {
+  const currentNotes: NotesById = yield select(selectNotesNotes);
+  const note = currentNotes[action.payload.id];
+
+  if (note == null) {
+    return;
+  }
+
+  const newNotes: NotesById = setWith(currentNotes, {
+    [note.id]: setWith(note, {
+      archiveStatus: action.payload.status
+    })
+  });
 
   yield put(NotesInternalActions.setNotes(newNotes));
   writeNotes(newNotes);

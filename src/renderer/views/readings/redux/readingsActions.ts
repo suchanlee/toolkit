@@ -8,10 +8,10 @@ export namespace ReadingsActions {
   export const setActive = TypedAction.define("readings::set-active")<Reading | undefined>();
   export const addReading = TypedAction.define("readings::add-reading")<Reading>();
   export const setArchiveStatus = TypedAction.define("readings::set-reading-status")<
-    SetReadingStatusPayload
+    SetStatusPayload
   >();
 
-  export interface SetReadingStatusPayload {
+  export interface SetStatusPayload {
     id: string;
     status: ArchiveStatus;
   }

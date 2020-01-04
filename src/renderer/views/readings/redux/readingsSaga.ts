@@ -38,7 +38,7 @@ function* addReading(action: TypedAction<Reading>) {
   writeReadings(newReadings);
 }
 
-function* setReadingStatus(action: TypedAction<ReadingsActions.SetReadingStatusPayload>) {
+function* setReadingStatus(action: TypedAction<ReadingsActions.SetStatusPayload>) {
   const currentReadings: ReadingsById = yield select(selectReadingsReadings);
   const reading = currentReadings[action.payload.id];
 

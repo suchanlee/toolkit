@@ -1,6 +1,6 @@
-import { Entry, EntryType, Iso8601String } from "../../types/types";
+import { ArchivableEntry, EntryType, Iso8601String } from "../../types/types";
 
-export interface Note extends Entry {
+export interface Note extends ArchivableEntry {
   type: EntryType.NOTE;
   tags: readonly string[];
   lastModified: Iso8601String;
