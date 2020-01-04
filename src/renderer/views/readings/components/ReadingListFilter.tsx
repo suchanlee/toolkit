@@ -2,7 +2,8 @@ import { Checkbox } from "@blueprintjs/core";
 import * as React from "react";
 import { connect } from "react-redux";
 import { RootState } from "../../../states/rootState";
-import { ReadingStatus, ReadingStatusFilter } from "../readingsTypes";
+import { ArchiveStatus } from "../../../types/types";
+import { ReadingStatusFilter } from "../readingsTypes";
 import { ReadingsActions } from "../redux/readingsActions";
 import { selectReadingsFilter } from "../redux/readingsSelectors";
 
@@ -27,17 +28,17 @@ class ReadingListFilterInternal extends React.PureComponent<ReadingListFilter.Pr
         <Checkbox
           onChange={this.handleChange}
           checked={this.props.filter === "ALL"}
-          label="Show archived readings"
+          label="View archived readings"
         />
       </div>
     );
   }
 
   private handleChange = () => {
-    if (this.props.filter === "ALL") {
-      this.props.setFilter(ReadingStatus.ACTIVE);
+    if (this.props.filter === ArchiveStatus.ACTIVE) {
+      this.props.setFilter(ArchiveStatus.ARCHIVED);
     } else {
-      this.props.setFilter("ALL");
+      this.props.setFilter(ArchiveStatus.ACTIVE);
     }
   };
 }

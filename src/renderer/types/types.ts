@@ -22,3 +22,12 @@ export interface Entry {
   // created date
   date: Iso8601String;
 }
+
+export enum ArchiveStatus {
+  ACTIVE = "ACTIVE",
+  ARCHIVED = "ARCHIVED"
+}
+
+export interface ArchivableEntry extends Entry {
+  archiveStatus: ArchiveStatus;
+}

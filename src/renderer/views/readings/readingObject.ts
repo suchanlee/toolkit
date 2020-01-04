@@ -1,13 +1,13 @@
 import { v4 as uuid } from "uuid";
-import { EntryType, Iso8601String } from "../../types/types";
-import { Reading, ReadingStatus } from "./readingsTypes";
+import { ArchiveStatus, EntryType, Iso8601String } from "../../types/types";
+import { Reading } from "./readingsTypes";
 
 export function createReadingObject(args: {
   url: string;
   title: string;
   description?: string;
   imageUrl?: string;
-  status?: ReadingStatus;
+  archiveStatus?: ArchiveStatus;
 }): Reading {
   return {
     id: uuid(),
@@ -16,7 +16,7 @@ export function createReadingObject(args: {
     title: args.title,
     description: args.description,
     imageUrl: args.imageUrl,
-    status: args.status ?? ReadingStatus.ACTIVE,
+    archiveStatus: args.archiveStatus ?? ArchiveStatus.ACTIVE,
     date: new Date().toISOString() as Iso8601String
   };
 }

@@ -11,7 +11,7 @@ const READINGS_FILE_NAME = "readings";
 export function* readingsSaga() {
   yield initializeReadings();
   yield takeEvery(ReadingsActions.addReading.TYPE, addReading);
-  yield takeEvery(ReadingsActions.setReadingStatus.TYPE, setReadingStatus);
+  yield takeEvery(ReadingsActions.setArchiveStatus.TYPE, setReadingStatus);
 }
 
 function* initializeReadings() {
@@ -48,7 +48,7 @@ function* setReadingStatus(action: TypedAction<ReadingsActions.SetReadingStatusP
 
   const newReadings: ReadingsById = setWith(currentReadings, {
     [reading.id]: setWith(reading, {
-      status: action.payload.status
+      archiveStatus: action.payload.status
     })
   });
 

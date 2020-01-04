@@ -21,7 +21,7 @@ export const selectFilteredReadings = createSelector(
     let filteredReadings = values(readings);
 
     if (filter !== "ALL") {
-      filteredReadings = filteredReadings.filter(r => r.status === filter);
+      filteredReadings = filteredReadings.filter(r => r.archiveStatus === filter);
     }
 
     if (inputValue.trim().length > 0 && !isUrl(inputValue)) {

@@ -1,19 +1,13 @@
-import { Entry, EntryType } from "../../types/types";
+import { ArchivableEntry, ArchiveStatus, EntryType } from "../../types/types";
 
-export interface Reading extends Entry {
+export interface Reading extends ArchivableEntry {
   type: EntryType.READING;
   title: string;
   description?: string;
   imageUrl?: string;
-  status: ReadingStatus;
 }
 
-export enum ReadingStatus {
-  ACTIVE = "ACTIVE",
-  ARCHIVED = "ARCHIVED"
-}
-
-export type ReadingStatusFilter = ReadingStatus | "ALL";
+export type ReadingStatusFilter = ArchiveStatus | "ALL";
 
 export type ReadingsById = {
   [id: string]: Reading;

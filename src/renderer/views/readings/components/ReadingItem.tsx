@@ -5,7 +5,8 @@ import { connect } from "react-redux";
 import { selectKeyNavListCurrent } from "../../../selectors/keyNavListSelectors";
 import { ItemActionButton } from "../../../shared-components/ItemActionButton";
 import { RootState } from "../../../states/rootState";
-import { Reading, ReadingStatus } from "../readingsTypes";
+import { ArchiveStatus } from "../../../types/types";
+import { Reading } from "../readingsTypes";
 import { ReadingsActions } from "../redux/readingsActions";
 import { ReadingSummary } from "./ReadingSummary";
 
@@ -22,7 +23,7 @@ export namespace ReadingItem {
   }
 
   export interface DispatchProps {
-    setStatus: typeof ReadingsActions.setReadingStatus;
+    setArchiveStatus: typeof ReadingsActions.setArchiveStatus;
   }
 
   export type Props = OwnProps & StoreProps & DispatchProps;
@@ -54,10 +55,10 @@ class ReadingItemInternal extends React.PureComponent<ReadingItem.Props> {
         <ReadingSummary reading={reading} />
         <ItemActionButton
           className="reading-item-archive"
-          icon={reading.status === ReadingStatus.ACTIVE ? "archive" : "unarchive"}
-          title={reading.status === ReadingStatus.ACTIVE ? "Archive" : "Unarchive"}
+          icon={reading.archiveStatus === ArchiveStatus.ACTIVE ? "archive" : "unarchive"}
+          title={reading.archiveStatus === ArchiveStatus.ACTIVE ? "Archive" : "Unarchive"}
           onClick={this.handleArchiveClick}
-          backgroundColor={reading.status === ReadingStatus.ACTIVE ? "" : Colors.GREEN3}
+          backgroundColor={reading.archiveStatus === ArchiveStatus.ACTIVE ? "" : Colors.GREEN3}
         />
       </div>
     );
@@ -82,11 +83,13 @@ class ReadingItemInternal extends React.PureComponent<ReadingItem.Props> {
   };
 
   private handleArchiveClick = (evt: React.SyntheticEvent) => {
-    const { reading, setStatus } = this.props;
+    const { reading, setArchiveStatus: setStatus } = this.props;
     setStatus({
       id: reading.id,
       status:
-        reading.status === ReadingStatus.ACTIVE ? ReadingStatus.ARCHIVED : ReadingStatus.ACTIVE
+        reading.archiveStatus === ArchiveStatus.ACTIVE
+          ? ArchiveStatus.ARCHIVED
+          : ArchiveStatus.ACTIVE
     });
 
     // prevent KNLItem selection
@@ -102,7 +105,7 @@ function mapStateToProps(state: RootState, ownProps: ReadingItem.OwnProps): Read
 }
 
 const mapDispatchToProps: ReadingItem.DispatchProps = {
-  setStatus: ReadingsActions.setReadingStatus
+  setArchiveStatus: ReadingsActions.setArchiveStatus
 };
 
 const enhanceWithRedux = connect(mapStateToProps, mapDispatchToProps);

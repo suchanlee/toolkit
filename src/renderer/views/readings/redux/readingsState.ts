@@ -1,4 +1,5 @@
-import { Reading, ReadingsById, ReadingStatus, ReadingStatusFilter } from "../readingsTypes";
+import { ArchiveStatus } from "../../../types/types";
+import { Reading, ReadingsById, ReadingStatusFilter } from "../readingsTypes";
 
 export interface ReadingsState {
   readings: ReadingsById;
@@ -10,7 +11,7 @@ export interface ReadingsState {
 export function createInitialReadingsState(): ReadingsState {
   return {
     readings: {},
-    filter: ReadingStatus.ACTIVE,
+    filter: ArchiveStatus.ACTIVE,
     inputValue: "",
     active: undefined
   };
