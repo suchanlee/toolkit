@@ -1,6 +1,5 @@
 import { TypedAction } from "redoodle";
-import { Note } from "../notesTypes";
-import { NotesById } from "./notesState";
+import { Note, NotesById } from "../notesTypes";
 
 export namespace NotesActions {
   export const setActiveId = TypedAction.define("notes::set-active-id")<string | undefined>();

@@ -4,10 +4,9 @@ import { setWith, TypedAction } from "redoodle";
 import { put, select, takeEvery } from "redux-saga/effects";
 import { IpcEvent } from "../../../../shared/ipcEvent";
 import { Iso8601String } from "../../../types/types";
-import { Note } from "../notesTypes";
+import { Note, NotesById } from "../notesTypes";
 import { NotesActions, NotesInternalActions } from "./notesActions";
 import { selectNotesNotes } from "./notesSelectors";
-import { NotesById } from "./notesState";
 
 const NOTES_FILE_NAME = "notes";
 

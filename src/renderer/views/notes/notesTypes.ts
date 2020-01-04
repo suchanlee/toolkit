@@ -6,6 +6,10 @@ export interface Note extends Entry {
   lastModified: Iso8601String;
 }
 
+export type NotesById = {
+  [id: string]: Note;
+};
+
 export interface NoteParts {
   title: string;
   summary: string;

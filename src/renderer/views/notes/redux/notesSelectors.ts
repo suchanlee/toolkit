@@ -33,6 +33,6 @@ export const selectFilteredNotes = createSelector(
       filteredNotes = filteredNotes.filter(n => n.value.indexOf(q) > -1);
     }
 
-    return sortBy(filteredNotes, note => -new Date(note.date).getTime());
+    return sortBy(filteredNotes, note => -new Date(note.lastModified).getTime());
   }
 );
