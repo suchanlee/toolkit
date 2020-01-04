@@ -1,5 +1,5 @@
 import isUrl from "is-url";
-import { values } from "lodash-es";
+import { sortBy, values } from "lodash-es";
 import { createSelector } from "reselect";
 import { RootState } from "../../../states/rootState";
 import { normalizeString } from "../../../utils/stringUtils";
@@ -35,6 +35,6 @@ export const selectFilteredReadings = createSelector(
       });
     }
 
-    return filteredReadings;
+    return sortBy(filteredReadings, reading => -new Date(reading.date).getTime());
   }
 );
