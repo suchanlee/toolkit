@@ -2,7 +2,6 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const baseConfig = require('./webpack.base.config');
 
@@ -85,7 +84,6 @@ module.exports = merge.smart(baseConfig, {
     new HtmlWebpackPlugin({ title: "Toolkit" }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
-    }),
-    new MonacoWebpackPlugin()
+    })
   ]
 });

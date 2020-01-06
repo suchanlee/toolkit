@@ -1,13 +1,13 @@
-import { IKeyboardEvent, KeyCode } from "monaco-editor";
 import * as React from "react";
 import { connect } from "react-redux";
-import { MonacoEditor } from "../../../shared-components/monaco/MonacoEditor";
 import { PanelContainer } from "../../../shared-components/PanelContainer";
 import { RootState } from "../../../states/rootState";
 import { Note } from "../notesTypes";
 import { NotesActions } from "../redux/notesActions";
 import { selectNotesActiveNote } from "../redux/notesSelectors";
 import { getNoteTitle } from "../utils/notesUtils";
+
+require("./NotePanel.scss");
 
 export namespace NotePanel {
   export interface StoreProps {
@@ -32,7 +32,10 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
         title={note != null ? getNoteTitle(note) : ""}
       >
         {note != null && (
-          <MonacoEditor
+          <textarea
+            className="note-panel-textarea"
+            placeholder="Write note here..."
+            autoFocus={true}
             value={note.value}
             onChange={this.handleChange}
             onKeyUp={this.handleKeyUp}
@@ -46,17 +49,17 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
     this.props.setActiveId(undefined);
   };
 
-  private handleChange = (value: string) => {
+  private handleChange = (evt: React.SyntheticEvent<HTMLTextAreaElement>) => {
     if (this.props.note != null) {
       this.props.setNoteValue({
         id: this.props.note.id,
-        value: value
+        value: evt.currentTarget.value
       });
     }
   };
 
-  private handleKeyUp = (evt: IKeyboardEvent) => {
-    if (evt.keyCode === KeyCode.Escape) {
+  private handleKeyUp = (evt: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (evt.key === "Escape") {
       this.props.setActiveId(undefined);
     }
   };

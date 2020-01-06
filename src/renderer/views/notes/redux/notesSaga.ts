@@ -1,5 +1,4 @@
 import { ipcRenderer } from "electron-better-ipc";
-import { isEmpty } from "lodash-es";
 import { setWith, TypedAction } from "redoodle";
 import { put, select, takeEvery } from "redux-saga/effects";
 import { IpcEvent } from "../../../../shared/ipcEvent";
@@ -20,7 +19,7 @@ export function* notesSaga() {
 function* initializeNotes() {
   let notes: NotesById = yield ipcRenderer.callMain(IpcEvent.READ_DATA, NOTES_FILE_NAME);
 
-  if (notes == null || isEmpty(notes)) {
+  if (notes == null) {
     notes = {};
   }
 
