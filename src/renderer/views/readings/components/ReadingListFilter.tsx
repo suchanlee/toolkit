@@ -27,7 +27,7 @@ class ReadingListFilterInternal extends React.PureComponent<ReadingListFilter.Pr
       <div className="reading-list-filter">
         <Checkbox
           onChange={this.handleChange}
-          checked={this.props.filter === "ALL"}
+          checked={this.props.filter === ArchiveStatus.ARCHIVED}
           label="View archived readings"
         />
       </div>
