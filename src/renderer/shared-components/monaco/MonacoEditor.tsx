@@ -12,6 +12,7 @@ export namespace MonacoEditor {
   export interface Props {
     value: string;
     fontSize?: number;
+    language?: string;
     onChange(value: string, event: editor.IModelContentChangedEvent): void;
     onKeyUp?(evt: IKeyboardEvent): void;
   }
@@ -31,6 +32,7 @@ export class MonacoEditor extends React.PureComponent<MonacoEditor.Props> {
           enabled: false
         },
         theme: "spacegray",
+        language: this.props.language,
         fontSize: this.props.fontSize ?? 14
       });
 
