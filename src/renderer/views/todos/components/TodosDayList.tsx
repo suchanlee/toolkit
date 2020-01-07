@@ -1,7 +1,7 @@
 import * as React from "react";
-import { connect, ConnectedComponent } from "react-redux";
+import { connect } from "react-redux";
 import { v4 as uuid } from "uuid";
-import { KeyNavList, KeyNavListInternal } from "../../../shared-components/KeyNavList";
+import { createKNL } from "../../../shared-components/KeyNavList";
 import { RootState } from "../../../states/rootState";
 import { TodosActions } from "../redux/todosActions";
 import { selectTodosDays } from "../redux/todosSelectors";
@@ -9,11 +9,7 @@ import { TodosDay } from "../redux/todosTypes";
 import { todoDateToStr } from "../utils/todoDateUtils";
 import { TodosDayItem } from "./TodosDayItem";
 
-// hack due connected component not properly supporting generic components
-const KNL = KeyNavList as ConnectedComponent<
-  typeof KeyNavListInternal,
-  KeyNavList.OwnProps<TodosDay>
->;
+const KNL = createKNL<TodosDay>();
 
 export namespace TodosDayList {
   export interface StoreProps {

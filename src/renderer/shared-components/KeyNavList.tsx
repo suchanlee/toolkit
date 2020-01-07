@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import * as mousetrap from "mousetrap";
 import * as React from "react";
-import { connect } from "react-redux";
+import { connect, ConnectedComponent } from "react-redux";
 import { KeyNavListActions } from "../actions/keyNavListActions";
 import { selectKeyNavListLocations } from "../selectors/keyNavListSelectors";
 import { createInitialKeyNavListLocation } from "../states/keyNavListState";
@@ -35,7 +35,7 @@ export namespace KeyNavList {
   export type Props<T> = OwnProps<T> & StoreProps & DispatchProps;
 }
 
-export class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
+class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
   public componentDidMount() {
     this.props.init({ id: this.props.id });
     mousetrap.bind("up", this.handleUp);
@@ -112,4 +112,9 @@ const mapDispatchToProps: KeyNavList.DispatchProps = {
 };
 
 const enhanceWithRedux = connect(mapStateToProps, mapDispatchToProps);
-export const KeyNavList = enhanceWithRedux(KeyNavListInternal);
+const KeyNavList = enhanceWithRedux(KeyNavListInternal);
+
+// hack due connected component not properly supporting generic components
+export function createKNL<T>() {
+  return KeyNavList as ConnectedComponent<typeof KeyNavListInternal, KeyNavList.OwnProps<T>>;
+}

@@ -1,18 +1,14 @@
 import * as React from "react";
-import { connect, ConnectedComponent } from "react-redux";
+import { connect } from "react-redux";
 import { v4 as uuid } from "uuid";
-import { KeyNavList, KeyNavListInternal } from "../../../shared-components/KeyNavList";
+import { createKNL } from "../../../shared-components/KeyNavList";
 import { RootState } from "../../../states/rootState";
 import { Reading } from "../readingsTypes";
 import { ReadingsActions } from "../redux/readingsActions";
 import { selectFilteredReadings, selectReadingsInputValueIsUrl } from "../redux/readingsSelectors";
 import { ReadingItem } from "./ReadingItem";
 
-// hack due connected component not properly supporting generic components
-const KNL = KeyNavList as ConnectedComponent<
-  typeof KeyNavListInternal,
-  KeyNavList.OwnProps<Reading>
->;
+const KNL = createKNL<Reading>();
 
 const IGNORED_KEYS = new Set(["Enter"]);
 
