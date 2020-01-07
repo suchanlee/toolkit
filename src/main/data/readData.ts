@@ -1,7 +1,6 @@
 import { app } from "electron";
 import fs from "fs";
 import path from "path";
-import { writeData } from "./writeData";
 
 export function readData(fileName: string) {
   const filePath = path.join(app.getPath("userData"), `${fileName}.json`);
@@ -9,7 +8,7 @@ export function readData(fileName: string) {
 
   const hasFile = fs.existsSync(filePath);
   if (!hasFile) {
-    writeData(fileName, {});
+    return undefined;
   }
 
   try {
