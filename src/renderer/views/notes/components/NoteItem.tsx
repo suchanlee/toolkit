@@ -63,7 +63,7 @@ function formatDate(date: Date) {
       isPm ? "PM" : "AM"
     }`;
   } else {
-    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   }
 }
 
