@@ -1,13 +1,19 @@
 import { KeyNavListLocation } from "../types/types";
 
 export interface KeyNavListState {
-  current: KeyNavListLocation;
+  locationsById: {
+    [id: string]: KeyNavListLocation;
+  };
+}
+
+export function createInitialKeyNavListLocation(): KeyNavListLocation {
+  return {
+    row: -1
+  };
 }
 
 export function createInitialKeyNavListState(): KeyNavListState {
   return {
-    current: {
-      row: -1
-    }
+    locationsById: {}
   };
 }

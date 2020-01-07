@@ -2,7 +2,8 @@ import classNames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
 import { KeyNavListActions } from "../actions/keyNavListActions";
-import { selectKeyNavListCurrent } from "../selectors/keyNavListSelectors";
+import { selectKeyNavListLocations } from "../selectors/keyNavListSelectors";
+import { createInitialKeyNavListLocation } from "../states/keyNavListState";
 import { RootState } from "../states/rootState";
 
 require("./KeyNavListItem.scss");
@@ -10,6 +11,7 @@ require("./KeyNavListItem.scss");
 export namespace KeyNavListItem {
   export interface OwnProps<T> {
     className?: string;
+    listId: string;
     row: number;
     item: T;
     onItemSelect: (item: T) => void;
@@ -21,7 +23,7 @@ export namespace KeyNavListItem {
   }
 
   export interface DispatchProps {
-    setCurrent: typeof KeyNavListActions.setCurrent;
+    set: typeof KeyNavListActions.set;
   }
 
   export type Props<T> = OwnProps<T> & StoreProps & DispatchProps;
@@ -51,7 +53,10 @@ class KeyNavListItemInternal extends React.PureComponent<KeyNavListItem.Props<an
   }
 
   private handleClick = () => {
-    this.props.setCurrent({ row: this.props.row });
+    this.props.set({
+      id: this.props.listId,
+      location: { row: this.props.row }
+    });
     this.props.onItemSelect(this.props.item);
   };
 
@@ -68,13 +73,15 @@ function mapStateToProps(
   state: RootState,
   ownProps: KeyNavListItem.OwnProps<any>
 ): KeyNavListItem.StoreProps {
+  const location =
+    selectKeyNavListLocations(state)[ownProps.listId] ?? createInitialKeyNavListLocation();
   return {
-    isActive: selectKeyNavListCurrent(state).row === ownProps.row
+    isActive: location.row === ownProps.row
   };
 }
 
 const mapDispatchToProps: KeyNavListItem.DispatchProps = {
-  setCurrent: KeyNavListActions.setCurrent
+  set: KeyNavListActions.set
 };
 
 const enhanceWithRedux = connect(mapStateToProps, mapDispatchToProps);

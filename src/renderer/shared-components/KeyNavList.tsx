@@ -3,7 +3,8 @@ import * as mousetrap from "mousetrap";
 import * as React from "react";
 import { connect } from "react-redux";
 import { KeyNavListActions } from "../actions/keyNavListActions";
-import { selectKeyNavListCurrent } from "../selectors/keyNavListSelectors";
+import { selectKeyNavListLocations } from "../selectors/keyNavListSelectors";
+import { createInitialKeyNavListLocation } from "../states/keyNavListState";
 import { RootState } from "../states/rootState";
 import { KeyNavListLocation } from "../types/types";
 import { KeyNavListItem } from "./KeyNavListItem";
@@ -11,20 +12,22 @@ import { KeyNavListItem } from "./KeyNavListItem";
 export namespace KeyNavList {
   export interface OwnProps<T> {
     className?: string;
+    id: string;
     itemClassName?: string;
     ignoredKeys?: Set<string>;
     items: readonly T[];
     onItemSelect: (item: T) => void;
     getItemKey: (item: T) => string;
-    renderItem: (item: T, index: number) => JSX.Element;
+    renderItem: (item: T, listId: string, index: number) => JSX.Element;
   }
 
   export interface StoreProps {
-    current: KeyNavListLocation;
+    location: KeyNavListLocation;
   }
 
   export interface DispatchProps {
-    reset: typeof KeyNavListActions.reset;
+    init: typeof KeyNavListActions.init;
+    reset: typeof KeyNavListActions.remove;
     moveUp: typeof KeyNavListActions.moveUp;
     moveDown: typeof KeyNavListActions.moveDown;
   }
@@ -34,6 +37,7 @@ export namespace KeyNavList {
 
 export class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
   public componentDidMount() {
+    this.props.init({ id: this.props.id });
     mousetrap.bind("up", this.handleUp);
     mousetrap.bind("down", this.handleDown);
     mousetrap.bind("enter", this.handleEnter);
@@ -43,7 +47,7 @@ export class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<
     mousetrap.unbind("up");
     mousetrap.unbind("down");
     mousetrap.unbind("enter");
-    this.props.reset();
+    this.props.reset({ id: this.props.id });
   }
 
   public render() {
@@ -53,11 +57,12 @@ export class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<
           <KeyNavListItem
             key={this.props.getItemKey(item)}
             className={this.props.itemClassName}
+            listId={this.props.id}
             row={index}
             item={item}
             onItemSelect={this.props.onItemSelect}
           >
-            {this.props.renderItem(item, index)}
+            {this.props.renderItem(item, this.props.id, index)}
           </KeyNavListItem>
         ))}
       </div>
@@ -65,16 +70,16 @@ export class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<
   }
 
   private handleUp = (evt: KeyboardEvent) => {
-    if (!this.props.ignoredKeys?.has(evt.key) && this.props.current.row > 0) {
-      this.props.moveUp();
+    if (!this.props.ignoredKeys?.has(evt.key) && this.props.location.row > 0) {
+      this.props.moveUp({ id: this.props.id });
       evt.preventDefault();
     }
   };
 
   private handleDown = (evt: KeyboardEvent) => {
-    const { items, current, moveDown } = this.props;
+    const { items, location: current, moveDown } = this.props;
     if (!this.props.ignoredKeys?.has(evt.key) && items.length - 1 > current.row) {
-      moveDown();
+      moveDown({ id: this.props.id });
     }
     evt.preventDefault();
   };
@@ -84,20 +89,24 @@ export class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<
       return;
     }
 
-    const { onItemSelect, items, current } = this.props;
+    const { onItemSelect, items, location: current } = this.props;
     const { row } = current;
     onItemSelect(items[row]);
   };
 }
 
-function mapStateToProps(state: RootState): KeyNavList.StoreProps {
+function mapStateToProps(
+  state: RootState,
+  ownProps: KeyNavList.OwnProps<any>
+): KeyNavList.StoreProps {
   return {
-    current: selectKeyNavListCurrent(state)
+    location: selectKeyNavListLocations(state)[ownProps.id] ?? createInitialKeyNavListLocation()
   };
 }
 
 const mapDispatchToProps: KeyNavList.DispatchProps = {
-  reset: KeyNavListActions.reset,
+  init: KeyNavListActions.init,
+  reset: KeyNavListActions.remove,
   moveUp: KeyNavListActions.moveUp,
   moveDown: KeyNavListActions.moveDown
 };

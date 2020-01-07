@@ -1,5 +1,6 @@
 import * as React from "react";
 import { connect, ConnectedComponent } from "react-redux";
+import { v4 as uuid } from "uuid";
 import { KeyNavList, KeyNavListInternal } from "../../../shared-components/KeyNavList";
 import { RootState } from "../../../states/rootState";
 import { Note } from "../notesTypes";
@@ -27,10 +28,13 @@ export namespace NoteList {
 }
 
 class NoteListInternal extends React.PureComponent<NoteList.Props> {
+  private listId = uuid();
+
   public render() {
     return (
       <KNL
         className="note-list"
+        id={this.listId}
         items={this.props.notes}
         ignoredKeys={this.getIgnoredKeys()}
         getItemKey={getItemKey}

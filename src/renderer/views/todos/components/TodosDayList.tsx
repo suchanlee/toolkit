@@ -1,5 +1,6 @@
 import * as React from "react";
 import { connect, ConnectedComponent } from "react-redux";
+import { v4 as uuid } from "uuid";
 import { KeyNavList, KeyNavListInternal } from "../../../shared-components/KeyNavList";
 import { RootState } from "../../../states/rootState";
 import { TodosActions } from "../redux/todosActions";
@@ -27,10 +28,13 @@ export namespace TodosDayList {
 }
 
 class TodosDayListInternal extends React.PureComponent<TodosDayList.Props> {
+  private listId = uuid();
+
   public render() {
     return (
       <KNL
         className="todos-day-list"
+        id={this.listId}
         items={this.props.days}
         getItemKey={getItemKey}
         onItemSelect={this.handleSelect}

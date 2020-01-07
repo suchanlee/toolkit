@@ -1,5 +1,6 @@
 import * as React from "react";
 import { connect, ConnectedComponent } from "react-redux";
+import { v4 as uuid } from "uuid";
 import { KeyNavList, KeyNavListInternal } from "../../../shared-components/KeyNavList";
 import { RootState } from "../../../states/rootState";
 import { Reading } from "../readingsTypes";
@@ -30,10 +31,13 @@ export namespace ReadingList {
 }
 
 class ReadingListInternal extends React.PureComponent<ReadingList.Props> {
+  private listId = uuid();
+
   public render() {
     return (
       <KNL
         className="reading-list"
+        id={this.listId}
         items={this.props.readings}
         ignoredKeys={this.getIgnoredKeys()}
         getItemKey={getItemKey}
@@ -60,8 +64,8 @@ function getItemKey(reading: Reading) {
   return reading.id;
 }
 
-function renderItem(reading: Reading, index: number) {
-  return <ReadingItem reading={reading} index={index} />;
+function renderItem(reading: Reading, listId: string, index: number) {
+  return <ReadingItem reading={reading} listId={listId} index={index} />;
 }
 
 function mapStateToProps(state: RootState): ReadingList.StoreProps {

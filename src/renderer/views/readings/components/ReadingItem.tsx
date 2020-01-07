@@ -2,8 +2,9 @@ import { Colors } from "@blueprintjs/core";
 import { shell } from "electron";
 import * as React from "react";
 import { connect } from "react-redux";
-import { selectKeyNavListCurrent } from "../../../selectors/keyNavListSelectors";
+import { selectKeyNavListLocations } from "../../../selectors/keyNavListSelectors";
 import { ItemActionButton } from "../../../shared-components/ItemActionButton";
+import { createInitialKeyNavListLocation } from "../../../states/keyNavListState";
 import { RootState } from "../../../states/rootState";
 import { ArchiveStatus } from "../../../types/types";
 import { Reading } from "../readingsTypes";
@@ -15,6 +16,7 @@ require("./ReadingItem.scss");
 export namespace ReadingItem {
   export interface OwnProps {
     index: number;
+    listId: string;
     reading: Reading;
   }
 
@@ -98,9 +100,10 @@ class ReadingItemInternal extends React.PureComponent<ReadingItem.Props> {
 }
 
 function mapStateToProps(state: RootState, ownProps: ReadingItem.OwnProps): ReadingItem.StoreProps {
-  const current = selectKeyNavListCurrent(state);
+  const location =
+    selectKeyNavListLocations(state)[ownProps.listId] ?? createInitialKeyNavListLocation();
   return {
-    isKeyNavListActive: current.row === ownProps.index
+    isKeyNavListActive: location.row === ownProps.index
   };
 }
 
