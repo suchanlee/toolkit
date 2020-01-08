@@ -49,6 +49,7 @@ function* createTodosToday() {
   const newDays = [today, ...todosDays];
 
   yield put(InternalTodosActions.setTodosDays(newDays));
+  yield put(TodosActions.setActive(today.date));
   yield writeTodos();
 }
 
