@@ -5,7 +5,11 @@ import { RootState } from "../../../states/rootState";
 import { TodosActions } from "../redux/todosActions";
 import { selectActiveTodosDay } from "../redux/todosSelectors";
 import { TodosDay } from "../redux/todosTypes";
-import { todoDateToNumber, todoDateToStr } from "../utils/todoDateUtils";
+import { todoDateToStr } from "../utils/todoDateUtils";
+import { TodoInput } from "./TodoInput";
+import { TodosList } from "./TodosList";
+
+require("./TodosPanel.scss");
 
 export namespace TodosPanel {
   export interface StoreProps {
@@ -30,7 +34,12 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props> {
         isOpen={active != null}
         onClose={this.handleClose}
       >
-        <div className="todos-panel">{active != null && todoDateToNumber(active.date)}</div>
+        {active != null && (
+          <div className="todos-panel">
+            <TodoInput onPanelClose={this.handleClose} />
+            <TodosList day={active} />
+          </div>
+        )}
       </PanelContainer>
     );
   }
