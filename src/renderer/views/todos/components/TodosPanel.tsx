@@ -18,6 +18,7 @@ export namespace TodosPanel {
 
   export interface DispatchProps {
     setActive: typeof TodosActions.setActive;
+    addTodo: typeof TodosActions.addTodo;
   }
 
   export type Props = StoreProps & DispatchProps;
@@ -36,7 +37,7 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props> {
       >
         {active != null && (
           <div className="todos-panel">
-            <TodoInput onPanelClose={this.handleClose} />
+            <TodoInput addTodo={this.props.addTodo} onPanelClose={this.handleClose} />
             <TodosList day={active} />
           </div>
         )}
@@ -56,7 +57,8 @@ function mapStateToProps(state: RootState): TodosPanel.StoreProps {
 }
 
 const mapDispatchToProps: TodosPanel.DispatchProps = {
-  setActive: TodosActions.setActive
+  setActive: TodosActions.setActive,
+  addTodo: TodosActions.addTodo
 };
 
 const enhance = connect(mapStateToProps, mapDispatchToProps);

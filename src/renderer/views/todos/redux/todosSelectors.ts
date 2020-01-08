@@ -20,14 +20,25 @@ export const selectActiveTodosDay = createSelector(
   }
 );
 
+export const selectTodosToday = createSelector(selectTodosDays, days => {
+  const todayDate = createTodayTodoDate();
+  const lastDay = days[0];
+
+  if (lastDay != null && isTodoDatesEqual(lastDay.date, todayDate)) {
+    return lastDay;
+  } else {
+    return undefined;
+  }
+});
+
 export const selectTodosPersist = createSelector(
   selectTodosDays,
   selectTodosGroups,
   (days, groups): PersistedTodos => ({ todosDays: days, groups: groups })
 );
 
-export const selectTodosHasToday = createSelector(selectTodosDays, sortedDays => {
+export const selectTodosHasToday = createSelector(selectTodosDays, days => {
   const todayDate = createTodayTodoDate();
-  const lastDay = sortedDays[0];
+  const lastDay = days[0];
   return lastDay != null && isTodoDatesEqual(todayDate, lastDay.date);
 });

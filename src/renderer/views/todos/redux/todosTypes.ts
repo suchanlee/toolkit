@@ -8,7 +8,6 @@ export interface TodoGroup {
 export interface Todo extends Entry {
   groupId?: string;
   todoType: TodoType;
-  todoDate: TodoDate;
   type: EntryType.TODO;
   status: TodoStatus;
 }
