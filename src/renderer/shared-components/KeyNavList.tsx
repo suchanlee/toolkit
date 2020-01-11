@@ -1,5 +1,4 @@
 import classNames from "classnames";
-import * as mousetrap from "mousetrap";
 import * as React from "react";
 import { connect, ConnectedComponent } from "react-redux";
 import { KeyNavListActions } from "../actions/keyNavListActions";
@@ -27,7 +26,7 @@ export namespace KeyNavList {
 
   export interface DispatchProps {
     init: typeof KeyNavListActions.init;
-    reset: typeof KeyNavListActions.remove;
+    remove: typeof KeyNavListActions.remove;
     moveUp: typeof KeyNavListActions.moveUp;
     moveDown: typeof KeyNavListActions.moveDown;
   }
@@ -38,16 +37,16 @@ export namespace KeyNavList {
 class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
   public componentDidMount() {
     this.props.init({ id: this.props.id });
-    mousetrap.bind("up", this.handleUp);
-    mousetrap.bind("down", this.handleDown);
-    mousetrap.bind("enter", this.handleEnter);
+    // use document.addEventListener since we need to support multiple
+    // KNLs rendered at any given time and mousetrap only allows global
+    document.addEventListener("keyup", this.handleKeyUp);
+    document.addEventListener("keydown", this.handleKeyDown);
   }
 
   public componentWillUnmount() {
-    mousetrap.unbind("up");
-    mousetrap.unbind("down");
-    mousetrap.unbind("enter");
-    this.props.reset({ id: this.props.id });
+    document.removeEventListener("keyup", this.handleKeyUp);
+    document.removeEventListener("keydown", this.handleKeyDown);
+    this.props.remove({ id: this.props.id });
   }
 
   public render() {
@@ -69,29 +68,36 @@ class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
     );
   }
 
-  private handleUp = (evt: KeyboardEvent) => {
-    if (!this.props.ignoredKeys?.has(evt.key) && this.props.location.row > 0) {
-      this.props.moveUp({ id: this.props.id });
-      evt.preventDefault();
+  private handleKeyDown = (evt: KeyboardEvent) => {
+    const { items, location, moveDown } = this.props;
+
+    switch (evt.key) {
+      case "ArrowUp":
+        if (!this.props.ignoredKeys?.has(evt.key) && location.row > 0) {
+          this.props.moveUp({ id: this.props.id });
+          evt.preventDefault();
+        }
+        return;
+      case "ArrowDown":
+        if (!this.props.ignoredKeys?.has(evt.key) && items.length - 1 > location.row) {
+          moveDown({ id: this.props.id });
+        }
+        evt.preventDefault();
+        return;
+      default:
+      // noop
     }
   };
 
-  private handleDown = (evt: KeyboardEvent) => {
-    const { items, location: current, moveDown } = this.props;
-    if (!this.props.ignoredKeys?.has(evt.key) && items.length - 1 > current.row) {
-      moveDown({ id: this.props.id });
-    }
-    evt.preventDefault();
-  };
+  private handleKeyUp = (evt: KeyboardEvent) => {
+    if (evt.key === "Enter") {
+      const { items, onItemSelect, ignoredKeys, location } = this.props;
+      if (ignoredKeys?.has(evt.key)) {
+        return;
+      }
 
-  private handleEnter = (evt: KeyboardEvent) => {
-    if (this.props.ignoredKeys?.has(evt.key)) {
-      return;
+      onItemSelect(items[location.row]);
     }
-
-    const { onItemSelect, items, location: current } = this.props;
-    const { row } = current;
-    onItemSelect(items[row]);
   };
 }
 
@@ -106,7 +112,7 @@ function mapStateToProps(
 
 const mapDispatchToProps: KeyNavList.DispatchProps = {
   init: KeyNavListActions.init,
-  reset: KeyNavListActions.remove,
+  remove: KeyNavListActions.remove,
   moveUp: KeyNavListActions.moveUp,
   moveDown: KeyNavListActions.moveDown
 };
