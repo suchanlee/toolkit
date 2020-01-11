@@ -13,6 +13,10 @@ export function todoDateToNumber(date: TodoDate): number {
 
 export function createTodayTodoDate(): TodoDate {
   const date = new Date();
+  return createTodoDate(date);
+}
+
+export function createTodoDate(date: Date) {
   return {
     year: date.getFullYear(),
     month: date.getMonth() + 1,

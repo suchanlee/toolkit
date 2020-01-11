@@ -4,9 +4,9 @@ import { v4 as uuid } from "uuid";
 import { createKNL } from "../../../shared-components/KeyNavList";
 import { RootState } from "../../../states/rootState";
 import { TodosActions } from "../redux/todosActions";
-import { selectTodosDays } from "../redux/todosSelectors";
+import { selectTodosDays, selectTodosSundaysByDateDateStr } from "../redux/todosSelectors";
 import { TodosDay } from "../redux/todosTypes";
-import { todoDateToStr } from "../utils/todoDateUtils";
+import { createTodoDate, todoDateToStr } from "../utils/todoDateUtils";
 import { TodosDayItem } from "./TodosDayItem";
 
 const KNL = createKNL<TodosDay>();
@@ -14,6 +14,7 @@ const KNL = createKNL<TodosDay>();
 export namespace TodosDayList {
   export interface StoreProps {
     days: readonly TodosDay[];
+    sundaysByDateDateStr: Map<string, Date>;
   }
 
   export interface DispatchProps {
@@ -34,7 +35,7 @@ class TodosDayListInternal extends React.PureComponent<TodosDayList.Props> {
         items={this.props.days}
         getItemKey={getItemKey}
         onItemSelect={this.handleSelect}
-        renderItem={renderItem}
+        renderItem={this.renderItem}
       />
     );
   }
@@ -42,19 +43,29 @@ class TodosDayListInternal extends React.PureComponent<TodosDayList.Props> {
   private handleSelect = (day: TodosDay) => {
     this.props.setActive(day.date);
   };
+
+  private renderItem = (day: TodosDay) => {
+    const sunday = this.props.sundaysByDateDateStr.get(todoDateToStr(day.date));
+    if (sunday != null) {
+      return (
+        <React.Fragment>
+          <div>Week of {todoDateToStr(createTodoDate(sunday))}</div>
+          <TodosDayItem day={day} />
+        </React.Fragment>
+      );
+    }
+    return <TodosDayItem day={day} />;
+  };
 }
 
 function getItemKey(day: TodosDay) {
   return todoDateToStr(day.date);
 }
 
-function renderItem(day: TodosDay) {
-  return <TodosDayItem day={day} />;
-}
-
 function mapStateToProps(state: RootState): TodosDayList.StoreProps {
   return {
-    days: selectTodosDays(state)
+    days: selectTodosDays(state),
+    sundaysByDateDateStr: selectTodosSundaysByDateDateStr(state)
   };
 }
 
