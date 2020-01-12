@@ -1,4 +1,4 @@
-import { Button, Callout } from "@blueprintjs/core";
+import { Alert, Button, Callout, Classes } from "@blueprintjs/core";
 import * as mousetrap from "mousetrap";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -18,9 +18,20 @@ export namespace TodosInitButton {
   }
 
   export type Props = StoreProps & DispatchProps;
+
+  export interface State {
+    isOpen: boolean;
+  }
 }
 
-class TodosInitButtonInternal extends React.PureComponent<TodosInitButton.Props> {
+class TodosInitButtonInternal extends React.PureComponent<
+  TodosInitButton.Props,
+  TodosInitButton.State
+> {
+  public state: TodosInitButton.State = {
+    isOpen: false
+  };
+
   public componentDidMount() {
     mousetrap.bind("command+n", this.handleKeyDown);
   }
@@ -37,15 +48,50 @@ class TodosInitButtonInternal extends React.PureComponent<TodosInitButton.Props>
     return (
       <Callout className="todos-init-button" intent="primary" icon={null}>
         <Button text="Initialize todos for today (⌘N)" minimal={true} onClick={this.handleClick} />
+
+        <Alert
+          className={Classes.DARK}
+          isOpen={this.state.isOpen}
+          onClose={this.handleClose}
+          onOpened={this.handleOpened}
+          canEscapeKeyCancel={true}
+          intent="primary"
+          confirmButtonText="Yes (Y or Enter)"
+          cancelButtonText="No (N)"
+        >
+          <p>Would you like to inherit todos from the latest available todo day?</p>
+          <p>
+            WEEK TODOS will automatically be inherited if the latest available todo day is in the
+            same week as today.
+          </p>
+        </Alert>
       </Callout>
     );
   }
 
-  private handleClick = () => {
-    this.props.initToday();
+  private handleKeyDown = () => this.setState({ isOpen: true });
+
+  private handleClose = () => this.setState({ isOpen: false });
+
+  private handleOpened = () => {
+    mousetrap.bind(["y", "enter"], (evt: KeyboardEvent) => {
+      mousetrap.unbind(["y", "enter"]);
+      mousetrap.unbind("n");
+      this.props.initToday({ shouldInherit: true });
+      evt.preventDefault(); // prevet key input being triggered
+    });
+
+    mousetrap.bind("n", (evt: KeyboardEvent) => {
+      mousetrap.unbind(["y", "enter"]);
+      mousetrap.unbind("n");
+      this.props.initToday({ shouldInherit: false });
+      evt.preventDefault(); // prevet key input being triggered
+    });
   };
 
-  private handleKeyDown = this.props.initToday;
+  private handleClick = () => {
+    this.setState({ isOpen: true });
+  };
 }
 
 function mapStateToProps(state: RootState): TodosInitButton.StoreProps {

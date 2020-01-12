@@ -11,8 +11,8 @@ export function todoDateToNumber(date: TodoDate): number {
   );
 }
 
-export function todoDateToDate(tododate: TodoDate): Date {
-  return new Date(tododate.year, tododate.month - 1, tododate.day);
+export function todoDateToDate(todoDate: TodoDate): Date {
+  return new Date(todoDate.year, todoDate.month - 1, todoDate.day);
 }
 
 export function todoDateStrToTodoDate(todoDateStr: string): TodoDate {

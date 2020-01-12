@@ -22,4 +22,8 @@ export function isDateYesterday(date: Date) {
   return date.toDateString() === yesterdayDate.toDateString();
 }
 
+export function getSundayDate(date: Date) {
+  return new Date(date.getTime() - date.getDay() * DAY_IN_MILLIS);
+}
+
 export const DAY_IN_MILLIS = 60 * 60 * 24 * 1000;

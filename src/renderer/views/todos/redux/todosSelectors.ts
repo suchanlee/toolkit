@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 import { RootState } from "../../../states/rootState";
-import { DAY_IN_MILLIS, isDateToday } from "../../../utils/dateUtils";
+import { getSundayDate, isDateToday } from "../../../utils/dateUtils";
 import {
   createTodayTodoDate,
   isTodoDatesEqual,
@@ -45,25 +45,28 @@ export const selectActiveTodosDay = createSelector(
 
 export const selectTodosHasActive = createSelector(selectTodosActiveDate, active => active != null);
 
-export const selectTodosToday = createSelector(
+export const selectTodosLatestDay = createSelector(
   selectTodosDateStrs,
   selectTodosDays,
   (dateStrs, days) => {
-    const todayDate = createTodayTodoDate();
     const latestDateStr = dateStrs[0];
-
     if (latestDateStr == null) {
       return undefined;
     }
 
-    const latestDay = days[latestDateStr];
-    if (isTodoDatesEqual(latestDay.date, todayDate)) {
-      return latestDay;
-    } else {
-      return undefined;
-    }
+    return days[latestDateStr];
   }
 );
+
+export const selectTodosToday = createSelector(selectTodosLatestDay, latestDay => {
+  const todayDate = createTodayTodoDate();
+
+  if (latestDay != null && isTodoDatesEqual(latestDay.date, todayDate)) {
+    return latestDay;
+  } else {
+    return undefined;
+  }
+});
 
 export const selectTodosPersist = createSelector(
   selectTodosDaysAsArray,
@@ -85,7 +88,7 @@ export const selectTodosSundaysByTodoDateStr = createSelector(selectTodosDaysAsA
     const date = todoDateToDate(day.date);
 
     if (currentSunday == null || date.getTime() < currentSunday.getTime()) {
-      const sunday = new Date(date.getTime() - date.getDay() * DAY_IN_MILLIS);
+      const sunday = getSundayDate(date);
       currentSunday = sunday;
       sundaysByDayDateStr.set(todoDateToStr(day.date), sunday);
     }

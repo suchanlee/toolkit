@@ -2,17 +2,26 @@ import { ipcRenderer } from "electron-better-ipc";
 import { setWith, TypedAction } from "redoodle";
 import { put, select, takeLatest } from "redux-saga/effects";
 import { IpcEvent } from "../../../../shared/ipcEvent";
+import { getSundayDate } from "../../../utils/dateUtils";
 import { createTodo, createTodosDay } from "../todosObjects";
-import { todoDateToStr } from "../utils/todoDateUtils";
+import { todoDateToDate, todoDateToStr } from "../utils/todoDateUtils";
 import { InternalTodosActions, TodosActions } from "./todosActions";
 import {
   selectTodosDateStrs,
   selectTodosDays,
   selectTodosHasToday,
+  selectTodosLatestDay,
   selectTodosPersist,
   selectTodosToday
 } from "./todosSelectors";
-import { PersistedTodos, TodosDay, TodosDaysByDateStrs } from "./todosTypes";
+import {
+  PersistedTodos,
+  Todo,
+  TodosDay,
+  TodosDaysByDateStrs,
+  TodoStatus,
+  TodoType
+} from "./todosTypes";
 
 const TODOS_FILE_NAME = "todos";
 
@@ -56,13 +65,29 @@ function* initializeTodos() {
   yield put(InternalTodosActions.setGroups(persisted.groups));
 }
 
-function* createTodosToday() {
+function* createTodosToday(action: TypedAction<TodosActions.InitTodayPayload>) {
   const hasToday: boolean = yield select(selectTodosHasToday);
   if (hasToday) {
     return;
   }
 
-  const today = createTodosDay({});
+  const { shouldInherit } = action.payload;
+  const latestDay: TodosDay | undefined = yield select(selectTodosLatestDay);
+  let todos: readonly Todo[] = [];
+
+  if (latestDay != null) {
+    // inherit WEEK todos regardless of `shouldInherit` value, if latestDay is same week
+    const isSameWeek =
+      getSundayDate(new Date()).getTime() ===
+      getSundayDate(todoDateToDate(latestDay.date)).getTime();
+    todos = latestDay.todos.filter(
+      todo =>
+        todo.status !== TodoStatus.FINISHED &&
+        (shouldInherit || (todo.todoType === TodoType.WEEK && isSameWeek))
+    );
+  }
+
+  const today = createTodosDay({ todos });
   const todayDateStr = todoDateToStr(today.date);
   const days: TodosDaysByDateStrs = yield select(selectTodosDays);
   const dateStrs: readonly string[] = yield select(selectTodosDateStrs);

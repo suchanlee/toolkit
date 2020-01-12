@@ -3,10 +3,14 @@ import { TodoDate, TodoGroupsById, TodosDaysByDateStrs, TodoStatus, TodoType } f
 
 export namespace TodosActions {
   export const setActive = TypedAction.define("todos::set-active")<TodoDate | undefined>();
-  export const initToday = TypedAction.defineWithoutPayload("todos::init-today")();
+  export const initToday = TypedAction.define("todos::init-today")<InitTodayPayload>();
   export const addTodo = TypedAction.define("todos::add-todo")<AddTodoPayload>();
   export const removeTodo = TypedAction.define("todos::remove-todo")<RemoveTodoPayload>();
   export const setTodoStatus = TypedAction.define("todos::set-todo-status")<SetTodoStatusPayload>();
+
+  export interface InitTodayPayload {
+    shouldInherit: boolean;
+  }
 
   export interface AddTodoPayload {
     value: string;
