@@ -14,6 +14,7 @@ export namespace KeyNavListItem {
     listId: string;
     row: number;
     item: T;
+    isSelectionDisabled: boolean;
     onItemSelect: (item: T) => void;
     children: JSX.Element;
   }
@@ -32,10 +33,23 @@ export namespace KeyNavListItem {
 class KeyNavListItemInternal extends React.PureComponent<KeyNavListItem.Props<any>> {
   private ref = React.createRef<HTMLDivElement>();
 
+  public componentDidMount() {
+    if (this.props.isActive) {
+      this.bindKeyUp();
+    }
+  }
+
   public componentDidUpdate(prevProps: KeyNavListItem.Props<any>) {
     if (!prevProps.isActive && this.props.isActive) {
       this.scrollIntoView();
+      this.bindKeyUp();
+    } else if (prevProps.isActive && !this.props.isActive) {
+      this.unbindKeyUp();
     }
+  }
+
+  public componentWillUnmount() {
+    this.unbindKeyUp();
   }
 
   public render() {
@@ -60,12 +74,27 @@ class KeyNavListItemInternal extends React.PureComponent<KeyNavListItem.Props<an
     this.props.onItemSelect(this.props.item);
   };
 
+  private handleKeyUp = (evt: KeyboardEvent) => {
+    if (evt.key === "Enter" && !this.props.isSelectionDisabled) {
+      console.log(this.props.listId, this.props.item);
+      this.props.onItemSelect(this.props.item);
+    }
+  };
+
   private scrollIntoView() {
     if (this.props.row === 0) {
       window.scrollTo(0, 0);
     } else {
       this.ref.current?.scrollIntoView({ block: "nearest" });
     }
+  }
+
+  private bindKeyUp() {
+    document.addEventListener("keyup", this.handleKeyUp);
+  }
+
+  private unbindKeyUp() {
+    document.removeEventListener("keyup", this.handleKeyUp);
   }
 }
 

@@ -5,7 +5,6 @@ import { KeyNavListActions } from "../actions/keyNavListActions";
 import { selectKeyNavListLocations } from "../selectors/keyNavListSelectors";
 import { createInitialKeyNavListLocation } from "../states/keyNavListState";
 import { RootState } from "../states/rootState";
-import { KeyNavListLocation } from "../types/types";
 import { KeyNavListItem } from "./KeyNavListItem";
 
 export namespace KeyNavList {
@@ -22,7 +21,7 @@ export namespace KeyNavList {
   }
 
   export interface StoreProps {
-    location: KeyNavListLocation;
+    isLastRow: boolean;
   }
 
   export interface DispatchProps {
@@ -40,12 +39,10 @@ class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
     this.props.init({ id: this.props.id });
     // use document.addEventListener since we need to support multiple
     // KNLs rendered at any given time and mousetrap only allows global
-    document.addEventListener("keyup", this.handleKeyUp);
     document.addEventListener("keydown", this.handleKeyDown);
   }
 
   public componentWillUnmount() {
-    document.removeEventListener("keyup", this.handleKeyUp);
     document.removeEventListener("keydown", this.handleKeyDown);
     this.props.remove({ id: this.props.id });
   }
@@ -60,6 +57,9 @@ class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
             listId={this.props.id}
             row={index}
             item={item}
+            isSelectionDisabled={
+              this.props.ignoredKeys != null && this.props.ignoredKeys.has("Enter")
+            }
             onItemSelect={this.props.onItemSelect}
           >
             {this.props.renderItem(item, this.props.id, index)}
@@ -73,16 +73,13 @@ class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
     if (this.props.isDisabled !== true) {
       switch (evt.key) {
         case "ArrowUp":
-          if (!this.props.ignoredKeys?.has(evt.key) && this.props.location.row > 0) {
+          if (!this.props.ignoredKeys?.has(evt.key)) {
             this.props.moveUp({ id: this.props.id });
             evt.preventDefault();
           }
           break;
         case "ArrowDown":
-          if (
-            !this.props.ignoredKeys?.has(evt.key) &&
-            this.props.items.length - 1 > this.props.location.row
-          ) {
+          if (!this.props.ignoredKeys?.has(evt.key) && !this.props.isLastRow) {
             this.props.moveDown({ id: this.props.id });
             evt.preventDefault();
           }
@@ -92,25 +89,16 @@ class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
       }
     }
   };
-
-  private handleKeyUp = (evt: KeyboardEvent) => {
-    if (evt.key === "Enter") {
-      const { items, onItemSelect, ignoredKeys, location } = this.props;
-      if (ignoredKeys?.has(evt.key)) {
-        return;
-      }
-
-      onItemSelect(items[location.row]);
-    }
-  };
 }
 
 function mapStateToProps(
   state: RootState,
   ownProps: KeyNavList.OwnProps<any>
 ): KeyNavList.StoreProps {
+  const location =
+    selectKeyNavListLocations(state)[ownProps.id] ?? createInitialKeyNavListLocation();
   return {
-    location: selectKeyNavListLocations(state)[ownProps.id] ?? createInitialKeyNavListLocation()
+    isLastRow: location.row === ownProps.items.length - 1
   };
 }
 
