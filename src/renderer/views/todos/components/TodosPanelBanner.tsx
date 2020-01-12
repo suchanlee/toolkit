@@ -2,7 +2,7 @@ import classNames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
 import { selectKeyNavListLocations } from "../../../selectors/keyNavListSelectors";
-import { createInitialKeyNavListLocation } from "../../../states/keyNavListState";
+import { KNL_NON_SELECTING_ROW } from "../../../states/keyNavListState";
 import { RootState } from "../../../states/rootState";
 
 require("./TodosPanelBanner.scss");
@@ -47,14 +47,13 @@ class TodosPanelBannerInternal extends React.PureComponent<TodosPanelBanner.Prop
   }
 }
 
-const NON_SELECTING_ROW = createInitialKeyNavListLocation().row;
 export function mapStatetoProps(
   state: RootState,
   ownProps: TodosPanelBanner.OwnProps
 ): TodosPanelBanner.StoreProps {
   const location = selectKeyNavListLocations(state)[ownProps.listId];
   return {
-    isSelectingTodo: location?.row !== NON_SELECTING_ROW
+    isSelectingTodo: location?.row !== KNL_NON_SELECTING_ROW
   };
 }
 

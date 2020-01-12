@@ -1,25 +1,38 @@
 import * as React from "react";
+import { connect } from "react-redux";
 import { KeyNavListActions } from "../../../actions/keyNavListActions";
+import { selectKeyNavListLocations } from "../../../selectors/keyNavListSelectors";
 import { KeyboardNavSupportedInput } from "../../../shared-components/KeyboardNavSupportedInput";
+import { KNL_NON_SELECTING_ROW } from "../../../states/keyNavListState";
+import { RootState } from "../../../states/rootState";
 import { TodosActions } from "../redux/todosActions";
 import { TodoType } from "../redux/todosTypes";
 
 require("./TodoInput.scss");
 
 export namespace TodoInput {
-  export interface Props {
+  export interface OwnProps {
     listId: string;
-    addTodo: typeof TodosActions.addTodo;
-    initLocation: typeof KeyNavListActions.init;
-    onPanelClose(): void;
   }
+
+  export interface StoreProps {
+    isSelectingTodo: boolean;
+  }
+
+  export interface DispatchProps {
+    addTodo: typeof TodosActions.addTodo;
+    setActive: typeof TodosActions.setActive;
+    initLocation: typeof KeyNavListActions.init;
+  }
+
+  export type Props = OwnProps & StoreProps & DispatchProps;
 
   export interface State {
     value: string;
   }
 }
 
-export class TodoInput extends React.PureComponent<TodoInput.Props, TodoInput.State> {
+class TodoInputInternal extends React.PureComponent<TodoInput.Props, TodoInput.State> {
   public state: TodoInput.State = {
     value: ""
   };
@@ -49,13 +62,13 @@ export class TodoInput extends React.PureComponent<TodoInput.Props, TodoInput.St
 
   private handleKeyUp = (evt: React.KeyboardEvent) => {
     if (evt.key === "Escape") {
-      this.props.onPanelClose();
+      this.props.setActive(undefined);
     }
   };
 
   // command + key doesn't get triggered in key up, so use key down
   private handleKeyDown = (evt: React.KeyboardEvent) => {
-    if (evt.key === "Enter") {
+    if (evt.key === "Enter" && !this.props.isSelectingTodo) {
       if (this.state.value.trim().length > 0) {
         this.props.addTodo({
           value: this.state.value,
@@ -66,3 +79,19 @@ export class TodoInput extends React.PureComponent<TodoInput.Props, TodoInput.St
     }
   };
 }
+
+function mapStateToProps(state: RootState, ownProps: TodoInput.OwnProps): TodoInput.StoreProps {
+  const location = selectKeyNavListLocations(state)[ownProps.listId];
+  return {
+    isSelectingTodo: location?.row !== KNL_NON_SELECTING_ROW
+  };
+}
+
+const mapDispatchToProps: TodoInput.DispatchProps = {
+  setActive: TodosActions.setActive,
+  addTodo: TodosActions.addTodo,
+  initLocation: KeyNavListActions.init
+};
+
+const enhance = connect(mapStateToProps, mapDispatchToProps);
+export const TodoInput = enhance(TodoInputInternal);

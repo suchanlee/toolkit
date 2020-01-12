@@ -17,3 +17,5 @@ export function createInitialKeyNavListState(): KeyNavListState {
     locationsById: {}
   };
 }
+
+export const KNL_NON_SELECTING_ROW = createInitialKeyNavListLocation().row;
