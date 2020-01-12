@@ -26,6 +26,8 @@ export const selectActiveTodosDay = createSelector(
   }
 );
 
+export const selectTodosHasActive = createSelector(selectTodosActiveDate, active => active != null);
+
 export const selectTodosToday = createSelector(selectTodosDays, days => {
   const todayDate = createTodayTodoDate();
   const lastDay = days[0];

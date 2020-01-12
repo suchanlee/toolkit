@@ -14,6 +14,7 @@ export namespace KeyNavList {
     id: string;
     itemClassName?: string;
     ignoredKeys?: Set<"ArrowUp" | "ArrowDown" | "Enter">;
+    isDisabled?: boolean;
     items: readonly T[];
     onItemSelect: (item: T) => void;
     getItemKey: (item: T) => string;
@@ -69,23 +70,26 @@ class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
   }
 
   private handleKeyDown = (evt: KeyboardEvent) => {
-    const { items, location, moveDown } = this.props;
-
-    switch (evt.key) {
-      case "ArrowUp":
-        if (!this.props.ignoredKeys?.has(evt.key) && location.row > 0) {
-          this.props.moveUp({ id: this.props.id });
-          evt.preventDefault();
-        }
-        return;
-      case "ArrowDown":
-        if (!this.props.ignoredKeys?.has(evt.key) && items.length - 1 > location.row) {
-          moveDown({ id: this.props.id });
-          evt.preventDefault();
-        }
-        return;
-      default:
-      // noop
+    if (this.props.isDisabled !== true) {
+      switch (evt.key) {
+        case "ArrowUp":
+          if (!this.props.ignoredKeys?.has(evt.key) && this.props.location.row > 0) {
+            this.props.moveUp({ id: this.props.id });
+            evt.preventDefault();
+          }
+          break;
+        case "ArrowDown":
+          if (
+            !this.props.ignoredKeys?.has(evt.key) &&
+            this.props.items.length - 1 > this.props.location.row
+          ) {
+            this.props.moveDown({ id: this.props.id });
+            evt.preventDefault();
+          }
+          break;
+        default:
+        // noop
+      }
     }
   };
 

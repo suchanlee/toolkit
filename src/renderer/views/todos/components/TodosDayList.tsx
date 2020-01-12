@@ -4,7 +4,11 @@ import { v4 as uuid } from "uuid";
 import { createKNL } from "../../../shared-components/KeyNavList";
 import { RootState } from "../../../states/rootState";
 import { TodosActions } from "../redux/todosActions";
-import { selectTodosDays, selectTodosSundaysByDateDateStr } from "../redux/todosSelectors";
+import {
+  selectTodosDays,
+  selectTodosHasActive,
+  selectTodosSundaysByDateDateStr
+} from "../redux/todosSelectors";
 import { TodosDay } from "../redux/todosTypes";
 import { createTodoDate, todoDateToStr } from "../utils/todoDateUtils";
 import { TodosDayItem } from "./TodosDayItem";
@@ -17,6 +21,7 @@ export namespace TodosDayList {
   export interface StoreProps {
     days: readonly TodosDay[];
     sundaysByDateDateStr: Map<string, Date>;
+    hasActive: boolean;
   }
 
   export interface DispatchProps {
@@ -35,6 +40,7 @@ class TodosDayListInternal extends React.PureComponent<TodosDayList.Props> {
         className="todos-day-list"
         id={this.listId}
         items={this.props.days}
+        isDisabled={this.props.hasActive}
         getItemKey={getItemKey}
         onItemSelect={this.handleSelect}
         renderItem={this.renderItem}
@@ -67,7 +73,8 @@ function getItemKey(day: TodosDay) {
 function mapStateToProps(state: RootState): TodosDayList.StoreProps {
   return {
     days: selectTodosDays(state),
-    sundaysByDateDateStr: selectTodosSundaysByDateDateStr(state)
+    sundaysByDateDateStr: selectTodosSundaysByDateDateStr(state),
+    hasActive: selectTodosHasActive(state)
   };
 }
 

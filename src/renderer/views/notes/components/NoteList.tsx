@@ -10,8 +10,6 @@ import { NoteItem } from "./NoteItem";
 
 const KNL = createKNL<Note>();
 
-const IGNORED_KEYS = new Set<"Enter" | "ArrowUp" | "ArrowDown">(["Enter", "ArrowUp", "ArrowDown"]);
-
 export namespace NoteList {
   export interface StoreProps {
     notes: readonly Note[];
@@ -35,7 +33,7 @@ class NoteListInternal extends React.PureComponent<NoteList.Props> {
         className="note-list"
         id={this.listId}
         items={this.props.notes}
-        ignoredKeys={this.getIgnoredKeys()}
+        isDisabled={this.props.hasActive}
         getItemKey={getItemKey}
         onItemSelect={this.handleSelect}
         renderItem={this.renderItem}
@@ -46,14 +44,6 @@ class NoteListInternal extends React.PureComponent<NoteList.Props> {
   private handleSelect = (note: Note) => {
     this.props.setActive(note.id);
   };
-
-  private getIgnoredKeys() {
-    if (this.props.hasActive) {
-      return IGNORED_KEYS;
-    } else {
-      return undefined;
-    }
-  }
 
   private renderItem = (note: Note) => {
     return <NoteItem note={note} setArchiveStatus={this.props.setArchiveStatus} />;
