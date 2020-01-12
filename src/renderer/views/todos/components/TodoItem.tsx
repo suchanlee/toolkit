@@ -1,5 +1,6 @@
 import { Checkbox, Icon } from "@blueprintjs/core";
 import classNames from "classnames";
+import { noop } from "lodash-es";
 import * as React from "react";
 import { connect } from "react-redux";
 import { selectKeyNavListLocations } from "../../../selectors/keyNavListSelectors";
@@ -15,6 +16,7 @@ export namespace TodoItem {
     todo: Todo;
     listId: string;
     rowIndex: number;
+    isReadonly: boolean;
   }
 
   export interface StoreProps {
@@ -49,9 +51,9 @@ class TodoItemInternal extends React.PureComponent<TodoItem.Props> {
   }
 
   public render() {
-    const { todo } = this.props;
+    const { todo, isReadonly } = this.props;
     return (
-      <div className="todos-todo-item" onClick={this.handleItemClick}>
+      <div className="todos-todo-item" onClick={isReadonly ? noop : this.handleItemClick}>
         <Checkbox
           checked={todo.status === TodoStatus.FINISHED}
           indeterminate={todo.status === TodoStatus.IN_PROGRESS}
@@ -67,12 +69,14 @@ class TodoItemInternal extends React.PureComponent<TodoItem.Props> {
           }
         />
 
-        <Icon
-          className="todos-todo-remove-icon"
-          icon="cross"
-          title="Click to remove this todo"
-          onClick={this.handleRemoveClick}
-        />
+        {!isReadonly && (
+          <Icon
+            className="todos-todo-remove-icon"
+            icon="cross"
+            title="Click to remove this todo"
+            onClick={this.handleRemoveClick}
+          />
+        )}
       </div>
     );
   }

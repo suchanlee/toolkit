@@ -96,5 +96,5 @@ export const selectTodosSundaysByTodoDateStr = createSelector(selectTodosDaysAsA
 
 export const selectTodosIsReadonly = createSelector(
   selectTodosActiveDate,
-  activeDate => activeDate == null || isDateToday(todoDateToDate(activeDate))
+  activeDate => activeDate == null || !isDateToday(todoDateToDate(activeDate))
 );

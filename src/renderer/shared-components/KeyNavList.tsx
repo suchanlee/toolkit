@@ -58,7 +58,8 @@ class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
             row={index}
             item={item}
             isSelectionDisabled={
-              this.props.ignoredKeys != null && this.props.ignoredKeys.has("Enter")
+              (this.props.ignoredKeys != null && this.props.ignoredKeys.has("Enter")) ||
+              this.props.isDisabled === true
             }
             onItemSelect={this.props.onItemSelect}
           >

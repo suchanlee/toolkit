@@ -10,6 +10,7 @@ const KNL = createKNL<Todo>();
 
 export namespace TodosList {
   export interface Props {
+    isReadonly: boolean;
     day: TodosDay;
   }
 }
@@ -25,6 +26,7 @@ export class TodosList extends React.PureComponent<TodosList.Props> {
         className="todos-list"
         id={this.listId}
         items={groupOrderedTodos}
+        isDisabled={this.props.isReadonly}
         onItemSelect={noop}
         getItemKey={getItemKey}
         renderItem={this.renderItem}
@@ -35,7 +37,13 @@ export class TodosList extends React.PureComponent<TodosList.Props> {
   private renderItem = (todo: Todo, index: number, listId: string) => {
     const groupedTodosByType = this.getGroupedTodosByType(this.props.day.todos);
     const todoElement = (
-      <TodoItem todo={todo} date={this.props.day.date} listId={listId} rowIndex={index} />
+      <TodoItem
+        todo={todo}
+        date={this.props.day.date}
+        isReadonly={this.props.isReadonly}
+        listId={listId}
+        rowIndex={index}
+      />
     );
     if (groupedTodosByType.DAY[0]?.id === todo.id) {
       return (

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { PanelContainer } from "../../../shared-components/PanelContainer";
 import { RootState } from "../../../states/rootState";
 import { TodosActions } from "../redux/todosActions";
-import { selectActiveTodosDay } from "../redux/todosSelectors";
+import { selectActiveTodosDay, selectTodosIsReadonly } from "../redux/todosSelectors";
 import { TodosDay } from "../redux/todosTypes";
 import { todoDateToStr } from "../utils/todoDateUtils";
 import { TodoInput } from "./TodoInput";
@@ -14,6 +14,7 @@ require("./TodosPanel.scss");
 export namespace TodosPanel {
   export interface StoreProps {
     active: TodosDay | undefined;
+    isReadonly: boolean;
   }
 
   export interface DispatchProps {
@@ -26,7 +27,7 @@ export namespace TodosPanel {
 
 class TodosPanelInternal extends React.PureComponent<TodosPanel.Props> {
   public render() {
-    const { active } = this.props;
+    const { active, isReadonly } = this.props;
 
     return (
       <PanelContainer
@@ -37,8 +38,10 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props> {
       >
         {active != null && (
           <div className="todos-panel">
-            <TodoInput addTodo={this.props.addTodo} onPanelClose={this.handleClose} />
-            <TodosList day={active} />
+            {!isReadonly && (
+              <TodoInput addTodo={this.props.addTodo} onPanelClose={this.handleClose} />
+            )}
+            <TodosList isReadonly={isReadonly} day={active} />
           </div>
         )}
       </PanelContainer>
@@ -52,7 +55,8 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props> {
 
 function mapStateToProps(state: RootState): TodosPanel.StoreProps {
   return {
-    active: selectActiveTodosDay(state)
+    active: selectActiveTodosDay(state),
+    isReadonly: selectTodosIsReadonly(state)
   };
 }
 

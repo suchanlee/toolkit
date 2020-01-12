@@ -67,11 +67,13 @@ class KeyNavListItemInternal extends React.PureComponent<KeyNavListItem.Props<an
   }
 
   private handleClick = () => {
-    this.props.set({
-      id: this.props.listId,
-      location: { row: this.props.row }
-    });
-    this.props.onItemSelect(this.props.item);
+    if (!this.props.isSelectionDisabled) {
+      this.props.set({
+        id: this.props.listId,
+        location: { row: this.props.row }
+      });
+      this.props.onItemSelect(this.props.item);
+    }
   };
 
   private handleKeyUp = (evt: KeyboardEvent) => {
