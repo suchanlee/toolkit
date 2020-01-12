@@ -8,6 +8,11 @@
 .reading-input-container {
   position: relative;
 
+  .reading-input {
+    font-family: "Menlo";
+    font-size: 12px;
+  }
+
   .reading-input-add-button {
     position: absolute;
     right: 5px;
