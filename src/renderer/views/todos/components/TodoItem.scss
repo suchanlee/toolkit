@@ -8,8 +8,6 @@
 
 .todos-todo-item {
   position: relative;
-  display: flex;
-  justify-content: space-between;
   padding: 5px 8px 5px 0;
   cursor: pointer;
 
@@ -49,6 +47,9 @@
   }
 
   .todos-todo-remove-icon {
+    position: absolute;
+    top: 6px;
+    right: 8px;
     display: none;
     cursor: pointer;
     opacity: 0.6;
