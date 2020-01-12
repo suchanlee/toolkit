@@ -4,7 +4,6 @@ import { AppContainer } from "react-hot-loader";
 import { Provider } from "react-redux";
 
 import { Application } from "./components/Application";
-import { FloatingMenu } from "./components/floating-menu/FloatingMenu";
 import { KeyboardShortcuts } from "./components/keyboard/KeyboardShortcuts";
 import { store } from "./store/store";
 
@@ -18,7 +17,7 @@ ReactDOM.render(
     <Provider store={store}>
       <React.Fragment>
         <KeyboardShortcuts />
-        <FloatingMenu />
+        {/* <FloatingMenu /> disable for now */}
         <Application />
       </React.Fragment>
     </Provider>
