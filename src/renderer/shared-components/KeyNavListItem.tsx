@@ -76,7 +76,6 @@ class KeyNavListItemInternal extends React.PureComponent<KeyNavListItem.Props<an
 
   private handleKeyUp = (evt: KeyboardEvent) => {
     if (evt.key === "Enter" && !this.props.isSelectionDisabled) {
-      console.log(this.props.listId, this.props.item);
       this.props.onItemSelect(this.props.item);
     }
   };

@@ -59,7 +59,7 @@ function getItemKey(reading: Reading) {
   return reading.id;
 }
 
-function renderItem(reading: Reading, listId: string, index: number) {
+function renderItem(reading: Reading, index: number, listId: string) {
   return <ReadingItem reading={reading} listId={listId} index={index} />;
 }
 

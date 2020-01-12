@@ -32,24 +32,25 @@ export class TodosList extends React.PureComponent<TodosList.Props> {
     );
   }
 
-  private renderItem = (todo: Todo) => {
+  private renderItem = (todo: Todo, index: number, listId: string) => {
     const groupedTodosByType = this.getGroupedTodosByType(this.props.day.todos);
+    const todoElement = <TodoItem todo={todo} listId={listId} rowIndex={index} />;
     if (groupedTodosByType.DAY[0]?.id === todo.id) {
       return (
         <React.Fragment>
           <div className="todos-list-group">DAY TODOS</div>
-          <TodoItem todo={todo} />
+          {todoElement}
         </React.Fragment>
       );
     } else if (groupedTodosByType.WEEK[0]?.id === todo.id) {
       return (
         <React.Fragment>
           <div className="todos-list-group">WEEK TODOS</div>
-          <TodoItem todo={todo} />
+          {todoElement}
         </React.Fragment>
       );
     }
-    return <TodoItem todo={todo} />;
+    return todoElement;
   };
 
   private getGroupedTodosByType = defaultMemoize((todos: readonly Todo[]) => {
