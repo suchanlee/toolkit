@@ -4,7 +4,7 @@ import { TodoDate } from "../redux/todosTypes";
 export function todoDateToStr(todoDate: TodoDate): string {
   const date = todoDateToDate(todoDate);
   if (isDateToday(date)) {
-    return "Today";
+    return "* Today";
   } else if (isDateYesterday(date)) {
     return "Yesterday";
   }
