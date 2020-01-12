@@ -5,12 +5,13 @@ import { connect } from "react-redux";
 import { selectKeyNavListLocations } from "../../../selectors/keyNavListSelectors";
 import { RootState } from "../../../states/rootState";
 import { TodosActions } from "../redux/todosActions";
-import { Todo, TodoStatus } from "../redux/todosTypes";
+import { Todo, TodoDate, TodoStatus } from "../redux/todosTypes";
 
 require("./TodoItem.scss");
 
 export namespace TodoItem {
   export interface OwnProps {
+    date: TodoDate;
     todo: Todo;
     listId: string;
     rowIndex: number;
@@ -81,13 +82,13 @@ class TodoItemInternal extends React.PureComponent<TodoItem.Props> {
   };
 
   private handleRemoveClick = (evt: React.SyntheticEvent) => {
-    this.props.remove({ id: this.props.todo.id });
+    this.props.remove({ date: this.props.date, todoId: this.props.todo.id });
     // prevent propagation to the item element
     evt.stopPropagation();
   };
 
   private handleKeyUp = (evt: KeyboardEvent) => {
-    if (evt.key === "Enter" || evt.key === " " /* space */) {
+    if (evt.key === "Enter") {
       this.changeStatus();
     }
   };
@@ -101,14 +102,14 @@ class TodoItemInternal extends React.PureComponent<TodoItem.Props> {
   }
 
   private changeStatus() {
-    const { setStatus, todo } = this.props;
+    const { setStatus, todo, date } = this.props;
     const newStatus =
       todo.status === TodoStatus.NOT_STARTED
         ? TodoStatus.IN_PROGRESS
-        : TodoStatus.IN_PROGRESS
+        : todo.status === TodoStatus.IN_PROGRESS
         ? TodoStatus.FINISHED
         : TodoStatus.NOT_STARTED;
-    setStatus({ id: todo.id, status: newStatus });
+    setStatus({ date, todoId: todo.id, status: newStatus });
   }
 }
 

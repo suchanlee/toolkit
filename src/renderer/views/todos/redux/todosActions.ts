@@ -1,5 +1,5 @@
 import { TypedAction } from "redoodle";
-import { TodoDate, TodoGroupsById, TodosDay, TodoStatus, TodoType } from "./todosTypes";
+import { TodoDate, TodoGroupsById, TodosDaysByDateStrs, TodoStatus, TodoType } from "./todosTypes";
 
 export namespace TodosActions {
   export const setActive = TypedAction.define("todos::set-active")<TodoDate | undefined>();
@@ -14,18 +14,21 @@ export namespace TodosActions {
   }
 
   export interface RemoveTodoPayload {
-    id: string;
+    date: TodoDate;
+    todoId: string;
   }
 
   export interface SetTodoStatusPayload {
-    id: string;
+    date: TodoDate;
+    todoId: string;
     status: TodoStatus;
   }
 }
 
 export namespace InternalTodosActions {
-  export const setTodosDays = TypedAction.define("internal-todos::set-todos-days")<
-    readonly TodosDay[]
-  >();
+  export const setTodos = TypedAction.define("internal-todos::set-todos-days")<{
+    days?: TodosDaysByDateStrs;
+    dateStrs?: readonly string[];
+  }>();
   export const setGroups = TypedAction.define("internal-todos::set-groups")<TodoGroupsById>();
 }

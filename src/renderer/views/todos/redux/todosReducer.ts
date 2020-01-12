@@ -3,9 +3,10 @@ import { InternalTodosActions, TodosActions } from "./todosActions";
 import { TodosState } from "./todosState";
 
 export const todosReducer = TypedReducer.builder<TodosState>()
-  .withHandler(InternalTodosActions.setTodosDays.TYPE, (state, payload) => {
+  .withHandler(InternalTodosActions.setTodos.TYPE, (state, payload) => {
     return setWith(state, {
-      todosDays: payload
+      days: payload.days ?? state.days,
+      dateStrs: payload.dateStrs ?? state.dateStrs
     });
   })
   .withHandler(InternalTodosActions.setGroups.TYPE, (state, payload) => {

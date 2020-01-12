@@ -34,7 +34,9 @@ export class TodosList extends React.PureComponent<TodosList.Props> {
 
   private renderItem = (todo: Todo, index: number, listId: string) => {
     const groupedTodosByType = this.getGroupedTodosByType(this.props.day.todos);
-    const todoElement = <TodoItem todo={todo} listId={listId} rowIndex={index} />;
+    const todoElement = (
+      <TodoItem todo={todo} date={this.props.day.date} listId={listId} rowIndex={index} />
+    );
     if (groupedTodosByType.DAY[0]?.id === todo.id) {
       return (
         <React.Fragment>

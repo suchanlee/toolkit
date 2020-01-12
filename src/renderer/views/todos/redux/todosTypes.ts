@@ -23,6 +23,10 @@ export interface TodosDay {
   todos: readonly Todo[];
 }
 
+export type TodosDaysByDateStrs = {
+  [id: string]: TodosDay;
+};
+
 export type TodoGroupsById = {
   [id: string]: TodoGroup;
 };

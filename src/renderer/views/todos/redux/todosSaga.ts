@@ -1,16 +1,18 @@
 import { ipcRenderer } from "electron-better-ipc";
-import { TypedAction } from "redoodle";
+import { setWith, TypedAction } from "redoodle";
 import { put, select, takeLatest } from "redux-saga/effects";
 import { IpcEvent } from "../../../../shared/ipcEvent";
 import { createTodo, createTodosDay } from "../todosObjects";
+import { todoDateToStr } from "../utils/todoDateUtils";
 import { InternalTodosActions, TodosActions } from "./todosActions";
 import {
+  selectTodosDateStrs,
   selectTodosDays,
   selectTodosHasToday,
   selectTodosPersist,
   selectTodosToday
 } from "./todosSelectors";
-import { PersistedTodos, TodosDay } from "./todosTypes";
+import { PersistedTodos, TodosDay, TodosDaysByDateStrs } from "./todosTypes";
 
 const TODOS_FILE_NAME = "todos";
 
@@ -18,6 +20,8 @@ export function* todosSaga() {
   yield initializeTodos();
   yield takeLatest(TodosActions.initToday.TYPE, createTodosToday);
   yield takeLatest(TodosActions.addTodo.TYPE, addTodo);
+  yield takeLatest(TodosActions.removeTodo.TYPE, removeTodo);
+  yield takeLatest(TodosActions.setTodoStatus.TYPE, setTodoStatus);
 }
 
 function* initializeTodos() {
@@ -34,7 +38,21 @@ function* initializeTodos() {
     yield writeTodos(persisted);
   }
 
-  yield put(InternalTodosActions.setTodosDays(persisted.todosDays));
+  const days: TodosDaysByDateStrs = {};
+  const dateStrs: string[] = [];
+
+  for (const day of persisted.todosDays) {
+    const dateStr = todoDateToStr(day.date);
+    dateStrs.push(dateStr);
+    days[dateStr] = day;
+  }
+
+  yield put(
+    InternalTodosActions.setTodos({
+      days,
+      dateStrs
+    })
+  );
   yield put(InternalTodosActions.setGroups(persisted.groups));
 }
 
@@ -45,10 +63,21 @@ function* createTodosToday() {
   }
 
   const today = createTodosDay({});
-  const todosDays: readonly TodosDay[] = yield select(selectTodosDays);
-  const newDays = [today, ...todosDays];
+  const todayDateStr = todoDateToStr(today.date);
+  const days: TodosDaysByDateStrs = yield select(selectTodosDays);
+  const dateStrs: readonly string[] = yield select(selectTodosDateStrs);
 
-  yield put(InternalTodosActions.setTodosDays(newDays));
+  const newDays = setWith(days, {
+    [todayDateStr]: today
+  });
+  const newDateStrs = [todayDateStr, ...dateStrs];
+
+  yield put(
+    InternalTodosActions.setTodos({
+      days: newDays,
+      dateStrs: newDateStrs
+    })
+  );
   yield put(TodosActions.setActive(today.date));
   yield writeTodos();
 }
@@ -62,16 +91,65 @@ function* addTodo(action: TypedAction<TodosActions.AddTodoPayload>) {
   }
 
   const { value, type } = action.payload;
-  const todo = createTodo({ value, todoType: type });
-  const newToday: TodosDay = {
-    ...today,
-    todos: [todo, ...today.todos]
-  };
+  const days: TodosDaysByDateStrs = yield select(selectTodosDays);
+  const newDays = setWith(days, {
+    [todoDateToStr(today.date)]: {
+      ...today,
+      todos: [createTodo({ value, todoType: type }), ...today.todos]
+    }
+  });
+  yield put(InternalTodosActions.setTodos({ days: newDays }));
+  yield writeTodos();
+}
 
-  const todoDays: readonly TodosDay[] = yield select(selectTodosDays);
-  // know that today will always be the latest day, meaning first item in array
-  const newTodosDays: readonly TodosDay[] = [newToday, ...todoDays.slice(1)];
-  yield put(InternalTodosActions.setTodosDays(newTodosDays));
+function* removeTodo(action: TypedAction<TodosActions.RemoveTodoPayload>) {
+  const { date, todoId } = action.payload;
+  const days: TodosDaysByDateStrs = yield select(selectTodosDays);
+  const dateStr = todoDateToStr(date);
+  const day = days[dateStr];
+
+  if (day == null) {
+    return;
+  }
+
+  const newDays = setWith(days, {
+    [dateStr]: {
+      ...day,
+      todos: day.todos.filter(todo => todo.id !== todoId)
+    }
+  });
+
+  yield put(InternalTodosActions.setTodos({ days: newDays }));
+  yield writeTodos();
+}
+
+function* setTodoStatus(action: TypedAction<TodosActions.SetTodoStatusPayload>) {
+  const { date, todoId, status } = action.payload;
+  const days: TodosDaysByDateStrs = yield select(selectTodosDays);
+  const dateStr = todoDateToStr(date);
+  const day = days[dateStr];
+
+  if (day == null) {
+    return;
+  }
+
+  const newDays = setWith(days, {
+    [dateStr]: {
+      ...day,
+      todos: day.todos.map(todo => {
+        if (todo.id !== todoId) {
+          return todo;
+        } else {
+          return {
+            ...todo,
+            status
+          };
+        }
+      })
+    }
+  });
+
+  yield put(InternalTodosActions.setTodos({ days: newDays }));
   yield writeTodos();
 }
 

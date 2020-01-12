@@ -1,17 +1,7 @@
-import { isDateToday, isDateYesterday } from "../../../utils/dateUtils";
 import { TodoDate } from "../redux/todosTypes";
 
 export function todoDateToStr(todoDate: TodoDate): string {
-  const date = todoDateToDate(todoDate);
-  if (isDateToday(date)) {
-    return "* Today";
-  } else if (isDateYesterday(date)) {
-    return "Yesterday";
-  }
-  return `${todoDate.year}/${`${todoDate.month}`.padStart(2, "0")}/${`${todoDate.day}`.padStart(
-    2,
-    "0"
-  )}`;
+  return `${todoDate.year}/${todoDate.month}/${todoDate.day}`;
 }
 
 export function todoDateToNumber(date: TodoDate): number {
@@ -23,6 +13,15 @@ export function todoDateToNumber(date: TodoDate): number {
 
 export function todoDateToDate(tododate: TodoDate): Date {
   return new Date(tododate.year, tododate.month - 1, tododate.day);
+}
+
+export function todoDateStrToTodoDate(todoDateStr: string): TodoDate {
+  const [year, month, day] = todoDateStr.split("/");
+  return {
+    year: parseInt(year, 10),
+    month: parseInt(month, 10),
+    day: parseInt(day, 10)
+  };
 }
 
 export function createTodayTodoDate(): TodoDate {

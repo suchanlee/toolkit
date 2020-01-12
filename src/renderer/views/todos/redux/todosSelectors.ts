@@ -1,18 +1,35 @@
 import { createSelector } from "reselect";
 import { RootState } from "../../../states/rootState";
-import { DAY_IN_MILLIS } from "../../../utils/dateUtils";
+import { DAY_IN_MILLIS, isDateToday } from "../../../utils/dateUtils";
 import {
   createTodayTodoDate,
   isTodoDatesEqual,
+  todoDateStrToTodoDate,
   todoDateToDate,
   todoDateToStr
 } from "../utils/todoDateUtils";
 import { PersistedTodos } from "./todosTypes";
 
 export const selectTodos = (state: RootState) => state.todos;
-export const selectTodosDays = (state: RootState) => state.todos.todosDays;
+export const selectTodosDays = (state: RootState) => state.todos.days;
+export const selectTodosDateStrs = (state: RootState) => state.todos.dateStrs;
 export const selectTodosGroups = (state: RootState) => state.todos.groups;
 export const selectTodosActiveDate = (state: RootState) => state.todos.activeDate;
+
+export const selectTodosDaysAsArray = createSelector(
+  selectTodosDays,
+  selectTodosDateStrs,
+  (days, dateStrs) => {
+    const daysArray = [];
+    for (const dateStr of dateStrs) {
+      const day = days[dateStr];
+      if (day != null) {
+        daysArray.push(day);
+      }
+    }
+    return daysArray;
+  }
+);
 
 export const selectActiveTodosDay = createSelector(
   selectTodosDays,
@@ -22,36 +39,45 @@ export const selectActiveTodosDay = createSelector(
       return undefined;
     }
 
-    return days.find(day => isTodoDatesEqual(day.date, activeDate));
+    return days[todoDateToStr(activeDate)];
   }
 );
 
 export const selectTodosHasActive = createSelector(selectTodosActiveDate, active => active != null);
 
-export const selectTodosToday = createSelector(selectTodosDays, days => {
-  const todayDate = createTodayTodoDate();
-  const lastDay = days[0];
+export const selectTodosToday = createSelector(
+  selectTodosDateStrs,
+  selectTodosDays,
+  (dateStrs, days) => {
+    const todayDate = createTodayTodoDate();
+    const latestDateStr = dateStrs[0];
 
-  if (lastDay != null && isTodoDatesEqual(lastDay.date, todayDate)) {
-    return lastDay;
-  } else {
-    return undefined;
+    if (latestDateStr == null) {
+      return undefined;
+    }
+
+    const latestDay = days[latestDateStr];
+    if (isTodoDatesEqual(latestDay.date, todayDate)) {
+      return latestDay;
+    } else {
+      return undefined;
+    }
   }
-});
+);
 
 export const selectTodosPersist = createSelector(
-  selectTodosDays,
+  selectTodosDaysAsArray,
   selectTodosGroups,
   (days, groups): PersistedTodos => ({ todosDays: days, groups: groups })
 );
 
-export const selectTodosHasToday = createSelector(selectTodosDays, days => {
+export const selectTodosHasToday = createSelector(selectTodosDateStrs, dateStrs => {
   const todayDate = createTodayTodoDate();
-  const lastDay = days[0];
-  return lastDay != null && isTodoDatesEqual(todayDate, lastDay.date);
+  const lastDateStr = dateStrs[0];
+  return lastDateStr != null && isTodoDatesEqual(todayDate, todoDateStrToTodoDate(lastDateStr));
 });
 
-export const selectTodosSundaysByDateDateStr = createSelector(selectTodosDays, days => {
+export const selectTodosSundaysByTodoDateStr = createSelector(selectTodosDaysAsArray, days => {
   const sundaysByDayDateStr = new Map<string, Date>();
   let currentSunday: Date | undefined;
 
@@ -67,3 +93,8 @@ export const selectTodosSundaysByDateDateStr = createSelector(selectTodosDays, d
 
   return sundaysByDayDateStr;
 });
+
+export const selectTodosIsReadonly = createSelector(
+  selectTodosActiveDate,
+  activeDate => activeDate == null || isDateToday(todoDateToDate(activeDate))
+);
