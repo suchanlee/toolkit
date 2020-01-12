@@ -1,5 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
+import { v4 as uuid } from "uuid";
+import { KeyNavListActions } from "../../../actions/keyNavListActions";
 import { PanelContainer } from "../../../shared-components/PanelContainer";
 import { RootState } from "../../../states/rootState";
 import { TodosActions } from "../redux/todosActions";
@@ -20,12 +22,15 @@ export namespace TodosPanel {
   export interface DispatchProps {
     setActive: typeof TodosActions.setActive;
     addTodo: typeof TodosActions.addTodo;
+    initLocation: typeof KeyNavListActions.init;
   }
 
   export type Props = StoreProps & DispatchProps;
 }
 
 class TodosPanelInternal extends React.PureComponent<TodosPanel.Props> {
+  private listId = uuid();
+
   public render() {
     const { active, isReadonly } = this.props;
 
@@ -39,9 +44,14 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props> {
         {active != null && (
           <div className="todos-panel">
             {!isReadonly && (
-              <TodoInput addTodo={this.props.addTodo} onPanelClose={this.handleClose} />
+              <TodoInput
+                listId={this.listId}
+                addTodo={this.props.addTodo}
+                initLocation={this.props.initLocation}
+                onPanelClose={this.handleClose}
+              />
             )}
-            <TodosList isReadonly={isReadonly} day={active} />
+            <TodosList listId={this.listId} day={active} isReadonly={isReadonly} />
           </div>
         )}
       </PanelContainer>
@@ -62,7 +72,8 @@ function mapStateToProps(state: RootState): TodosPanel.StoreProps {
 
 const mapDispatchToProps: TodosPanel.DispatchProps = {
   setActive: TodosActions.setActive,
-  addTodo: TodosActions.addTodo
+  addTodo: TodosActions.addTodo,
+  initLocation: KeyNavListActions.init
 };
 
 const enhance = connect(mapStateToProps, mapDispatchToProps);

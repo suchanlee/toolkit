@@ -4,7 +4,6 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { selectKeyNavListLocations } from "../../../selectors/keyNavListSelectors";
 import { ItemActionButton } from "../../../shared-components/ItemActionButton";
-import { createInitialKeyNavListLocation } from "../../../states/keyNavListState";
 import { RootState } from "../../../states/rootState";
 import { ArchiveStatus } from "../../../types/types";
 import { Reading } from "../readingsTypes";
@@ -100,10 +99,9 @@ class ReadingItemInternal extends React.PureComponent<ReadingItem.Props> {
 }
 
 function mapStateToProps(state: RootState, ownProps: ReadingItem.OwnProps): ReadingItem.StoreProps {
-  const location =
-    selectKeyNavListLocations(state)[ownProps.listId] ?? createInitialKeyNavListLocation();
+  const location = selectKeyNavListLocations(state)[ownProps.listId];
   return {
-    isKeyNavListActive: location.row === ownProps.index
+    isKeyNavListActive: location?.row === ownProps.index
   };
 }
 

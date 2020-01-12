@@ -2,8 +2,14 @@ import { setWith, TypedReducer } from "redoodle";
 import { KeyNavListActions } from "../actions/keyNavListActions";
 import { createInitialKeyNavListLocation, KeyNavListState } from "../states/keyNavListState";
 
+const INITIAL_ROW = createInitialKeyNavListLocation().row;
+
 export const keyNavListReducer = TypedReducer.builder<KeyNavListState>()
   .withHandler(KeyNavListActions.init.TYPE, (state, payload) => {
+    if (state.locationsById[payload.id]?.row === INITIAL_ROW) {
+      return state;
+    }
+
     return setWith(state, {
       locationsById: {
         ...state.locationsById,

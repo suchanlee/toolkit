@@ -1,4 +1,5 @@
 import * as React from "react";
+import { KeyNavListActions } from "../../../actions/keyNavListActions";
 import { KeyboardNavSupportedInput } from "../../../shared-components/KeyboardNavSupportedInput";
 import { TodosActions } from "../redux/todosActions";
 import { TodoType } from "../redux/todosTypes";
@@ -7,9 +8,12 @@ require("./TodoInput.scss");
 
 export namespace TodoInput {
   export interface Props {
+    listId: string;
     addTodo: typeof TodosActions.addTodo;
+    initLocation: typeof KeyNavListActions.init;
     onPanelClose(): void;
   }
+
   export interface State {
     value: string;
   }
@@ -37,7 +41,10 @@ export class TodoInput extends React.PureComponent<TodoInput.Props, TodoInput.St
   }
 
   private handleChange = (evt: React.SyntheticEvent<HTMLInputElement>) => {
-    this.setState({ value: evt.currentTarget.value });
+    const { value } = evt.currentTarget;
+    this.setState({ value });
+    // reset location to prevent clashing with todo item interaction
+    this.props.initLocation({ id: this.props.listId });
   };
 
   private handleKeyUp = (evt: React.KeyboardEvent) => {

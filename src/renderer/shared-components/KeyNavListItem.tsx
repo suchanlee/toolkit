@@ -3,7 +3,6 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { KeyNavListActions } from "../actions/keyNavListActions";
 import { selectKeyNavListLocations } from "../selectors/keyNavListSelectors";
-import { createInitialKeyNavListLocation } from "../states/keyNavListState";
 import { RootState } from "../states/rootState";
 
 require("./KeyNavListItem.scss");
@@ -103,10 +102,9 @@ function mapStateToProps(
   state: RootState,
   ownProps: KeyNavListItem.OwnProps<any>
 ): KeyNavListItem.StoreProps {
-  const location =
-    selectKeyNavListLocations(state)[ownProps.listId] ?? createInitialKeyNavListLocation();
+  const location = selectKeyNavListLocations(state)[ownProps.listId];
   return {
-    isActive: location.row === ownProps.row
+    isActive: location?.row === ownProps.row
   };
 }
 

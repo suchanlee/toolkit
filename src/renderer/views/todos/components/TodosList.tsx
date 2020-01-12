@@ -1,7 +1,6 @@
 import { noop } from "lodash-es";
 import * as React from "react";
 import { defaultMemoize } from "reselect";
-import { v4 as uuid } from "uuid";
 import { createKNL } from "../../../shared-components/KeyNavList";
 import { Todo, TodosDay, TodoType } from "../redux/todosTypes";
 import { TodoItem } from "./TodoItem";
@@ -10,21 +9,20 @@ const KNL = createKNL<Todo>();
 
 export namespace TodosList {
   export interface Props {
+    listId: string;
     isReadonly: boolean;
     day: TodosDay;
   }
 }
 
 export class TodosList extends React.PureComponent<TodosList.Props> {
-  private listId = uuid();
-
   public render() {
     const groupedTodosByType = this.getGroupedTodosByType(this.props.day.todos);
     const groupOrderedTodos = groupedTodosByType.DAY.concat(groupedTodosByType.WEEK);
     return (
       <KNL
         className="todos-list"
-        id={this.listId}
+        id={this.props.listId}
         items={groupOrderedTodos}
         isDisabled={this.props.isReadonly}
         onItemSelect={noop}
