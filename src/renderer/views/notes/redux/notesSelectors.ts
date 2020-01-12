@@ -31,7 +31,7 @@ export const selectFilteredNotes = createSelector(
     let filteredNotes = values(notes).filter(n => n.archiveStatus === ArchiveStatus.ACTIVE);
 
     if (q.length > 0) {
-      filteredNotes = filteredNotes.filter(n => n.value.indexOf(q) > -1);
+      filteredNotes = filteredNotes.filter(n => normalizeString(n.value).indexOf(q) > -1);
     }
 
     return sortBy(filteredNotes, note => -new Date(note.lastModified).getTime());
