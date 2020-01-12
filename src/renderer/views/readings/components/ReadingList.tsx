@@ -10,13 +10,12 @@ import { ReadingItem } from "./ReadingItem";
 
 const KNL = createKNL<Reading>();
 
-const IGNORED_KEYS = new Set(["Enter"]);
+const IGNORED_KEYS = new Set<"Enter">(["Enter"]);
 
 export namespace ReadingList {
   export interface StoreProps {
     readings: readonly Reading[];
     isInputValueUrl: boolean;
-    // getActiveReading(): Reading | undefined;
   }
 
   export interface DispatchProps {

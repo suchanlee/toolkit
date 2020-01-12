@@ -10,7 +10,7 @@ import { NoteItem } from "./NoteItem";
 
 const KNL = createKNL<Note>();
 
-const IGNORED_KEYS = new Set(["Enter", "Up", "Down"]);
+const IGNORED_KEYS = new Set<"Enter" | "ArrowUp" | "ArrowDown">(["Enter", "ArrowUp", "ArrowDown"]);
 
 export namespace NoteList {
   export interface StoreProps {

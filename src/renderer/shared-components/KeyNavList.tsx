@@ -13,7 +13,7 @@ export namespace KeyNavList {
     className?: string;
     id: string;
     itemClassName?: string;
-    ignoredKeys?: Set<string>;
+    ignoredKeys?: Set<"ArrowUp" | "ArrowDown" | "Enter">;
     items: readonly T[];
     onItemSelect: (item: T) => void;
     getItemKey: (item: T) => string;
@@ -81,8 +81,8 @@ class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
       case "ArrowDown":
         if (!this.props.ignoredKeys?.has(evt.key) && items.length - 1 > location.row) {
           moveDown({ id: this.props.id });
+          evt.preventDefault();
         }
-        evt.preventDefault();
         return;
       default:
       // noop
