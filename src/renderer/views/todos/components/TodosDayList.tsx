@@ -9,6 +9,8 @@ import { TodosDay } from "../redux/todosTypes";
 import { createTodoDate, todoDateToStr } from "../utils/todoDateUtils";
 import { TodosDayItem } from "./TodosDayItem";
 
+require("./TodosDayList.scss");
+
 const KNL = createKNL<TodosDay>();
 
 export namespace TodosDayList {
@@ -49,7 +51,7 @@ class TodosDayListInternal extends React.PureComponent<TodosDayList.Props> {
     if (sunday != null) {
       return (
         <React.Fragment>
-          <div>Week of {todoDateToStr(createTodoDate(sunday))}</div>
+          <div className="todos-day-week">Week of {todoDateToStr(createTodoDate(sunday))}</div>
           <TodosDayItem day={day} />
         </React.Fragment>
       );

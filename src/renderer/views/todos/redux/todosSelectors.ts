@@ -1,6 +1,12 @@
 import { createSelector } from "reselect";
 import { RootState } from "../../../states/rootState";
-import { createTodayTodoDate, isTodoDatesEqual, todoDateToStr } from "../utils/todoDateUtils";
+import { DAY_IN_MILLIS } from "../../../utils/dateUtils";
+import {
+  createTodayTodoDate,
+  isTodoDatesEqual,
+  todoDateToDate,
+  todoDateToStr
+} from "../utils/todoDateUtils";
 import { PersistedTodos } from "./todosTypes";
 
 export const selectTodos = (state: RootState) => state.todos;
@@ -44,15 +50,14 @@ export const selectTodosHasToday = createSelector(selectTodosDays, days => {
 });
 
 export const selectTodosSundaysByDateDateStr = createSelector(selectTodosDays, days => {
-  const dayInMillis = 60 * 60 * 24 * 1000;
   const sundaysByDayDateStr = new Map<string, Date>();
   let currentSunday: Date | undefined;
 
   for (const day of days) {
-    const date = new Date(day.date.year, day.date.month - 1, day.date.day);
+    const date = todoDateToDate(day.date);
 
     if (currentSunday == null || date.getTime() < currentSunday.getTime()) {
-      const sunday = new Date(date.getTime() - date.getDay() * dayInMillis);
+      const sunday = new Date(date.getTime() - date.getDay() * DAY_IN_MILLIS);
       currentSunday = sunday;
       sundaysByDayDateStr.set(todoDateToStr(day.date), sunday);
     }

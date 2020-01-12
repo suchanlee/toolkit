@@ -2,6 +2,7 @@ import { Colors } from "@blueprintjs/core";
 import * as React from "react";
 import { ItemActionButton } from "../../../shared-components/ItemActionButton";
 import { ArchiveStatus } from "../../../types/types";
+import { formatDate } from "../../../utils/dateUtils";
 import { Note } from "../notesTypes";
 import { NotesActions } from "../redux/notesActions";
 import { getNoteParts } from "../utils/notesUtils";
@@ -53,20 +54,4 @@ export class NoteItem extends React.PureComponent<NoteItem.Props> {
     // prevent KNLItem selection
     evt.stopPropagation();
   };
-}
-
-function formatDate(date: Date) {
-  if (isToday(date)) {
-    const hour = date.getHours();
-    const isPm = hour >= 12;
-    return `${isPm ? hour - 12 : hour}:${`${date.getMinutes()}`.padStart(2, "0")} ${
-      isPm ? "PM" : "AM"
-    }`;
-  } else {
-    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-  }
-}
-
-function isToday(date: Date) {
-  return date.toDateString() === new Date().toDateString();
 }
