@@ -5,6 +5,8 @@ import { createKNL } from "../../../shared-components/KeyNavList";
 import { Todo, TodosDay, TodoType } from "../redux/todosTypes";
 import { TodoItem } from "./TodoItem";
 
+require("./TodosList.scss");
+
 const KNL = createKNL<Todo>();
 
 export namespace TodosList {
