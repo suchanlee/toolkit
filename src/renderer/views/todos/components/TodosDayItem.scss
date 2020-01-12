@@ -1,5 +1,37 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
 .todos-day-item {
   position: relative;
-  padding: 10px;
+  padding: 8px 10px;
   font-size: 12px;
+
+  .todos-day-item-status {
+    margin-top: 6px;
+    font-size: 10px;
+  }
+
+  .todos-day-item-status-item {
+    margin-left: 10px;
+    margin-right: 5px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &.-finished {
+      color: $green4;
+    }
+
+    &.-in-progress {
+      color: $gold4;
+    }
+
+    &.-not-started {
+      color: $red4;
+    }
+  }
 }
