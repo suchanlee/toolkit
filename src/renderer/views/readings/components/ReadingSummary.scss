@@ -4,6 +4,7 @@
   display: flex;
   padding: 3px;
   height: 70px;
+  font-size: 12px;
 
   .reading-summary-img {
     flex-basis: 80px;
@@ -21,8 +22,6 @@
     overflow: hidden;
 
     .reading-summary-title {
-      font-size: 13px;
-      font-weight: 600;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -52,7 +51,6 @@
     .reading-summary-description {
       display: -webkit-box;
       margin-top: 3px;
-      font-size: 12px;
       color: $light-gray1;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
