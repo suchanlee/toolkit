@@ -3,6 +3,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { FloatingMenuActions } from "../../actions/floatingMenuActions";
 import { NavigationActions } from "../../actions/navigationActions";
+import { View } from "../../types/viewTypes";
 import { Views } from "../../views/view";
 
 export namespace KeyboardShortcuts {
@@ -16,6 +17,8 @@ export namespace KeyboardShortcuts {
 }
 
 class KeyboardShortcutsInternal extends React.PureComponent<KeyboardShortcuts.Props> {
+  private navListenerUnsubscribeCallbacks: (() => void)[] = [];
+
   public componentDidMount() {
     this.registerKeyboardListeners();
   }
@@ -36,12 +39,19 @@ class KeyboardShortcutsInternal extends React.PureComponent<KeyboardShortcuts.Pr
     // navigation
     Views.forEach((view, index) => {
       // start from index 1 for easier keyboard nav
-      mousetrap.bind(`command+${index + 1}`, () => this.props.setNav(view.name));
+      const callback = this.createNavCallback(index + 1, view);
+      // use document.addEventListener over mousetrap so that it's listened to
+      // regardless of context (e.g. input, textarea, etc.)
+      document.addEventListener("keydown", callback);
+      this.navListenerUnsubscribeCallbacks.push(() =>
+        document.removeEventListener("keydown", callback)
+      );
     });
   }
 
   private unregisterKeyboardListeners() {
     mousetrap.reset();
+    this.navListenerUnsubscribeCallbacks.forEach(callback => callback());
   }
 
   private handleSlashKeyUp = (evt: ExtendedKeyboardEvent) => {
@@ -54,6 +64,14 @@ class KeyboardShortcutsInternal extends React.PureComponent<KeyboardShortcuts.Pr
       evt.preventDefault();
     }
   };
+
+  private createNavCallback(index: number, view: View<any>) {
+    return (evt: KeyboardEvent) => {
+      if (evt.key === `${index}` && evt.metaKey) {
+        this.props.setNav(view.name);
+      }
+    };
+  }
 }
 
 const SLASH_IGNORED_TAG_NAMES = new Set(["input", "textarea", "select"]);
