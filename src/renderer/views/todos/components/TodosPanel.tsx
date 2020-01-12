@@ -10,6 +10,7 @@ import { TodosDay } from "../redux/todosTypes";
 import { todoDateToStr } from "../utils/todoDateUtils";
 import { TodoInput } from "./TodoInput";
 import { TodosList } from "./TodosList";
+import { TodosPanelBanner } from "./TodosPanelBanner";
 
 require("./TodosPanel.scss");
 
@@ -43,6 +44,7 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props> {
       >
         {active != null && (
           <div className="todos-panel">
+            <TodosPanelBanner listId={this.listId} isReadonly={isReadonly} />
             {!isReadonly && (
               <TodoInput
                 listId={this.listId}
