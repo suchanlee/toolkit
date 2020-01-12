@@ -2,8 +2,11 @@ import { app, BrowserWindow } from "electron";
 import * as path from "path";
 import * as url from "url";
 import { registerMainIpcListeners } from "./ipc";
+import { registerMenu } from "./menu/registerMenu";
 
 let win: BrowserWindow | null;
+
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
 const installExtensions = async () => {
   const installer = require("electron-devtools-installer");
@@ -16,13 +19,13 @@ const installExtensions = async () => {
 };
 
 const createWindow = async () => {
-  if (process.env.NODE_ENV !== "production") {
+  if (!IS_PRODUCTION) {
     await installExtensions();
   }
 
   win = new BrowserWindow({ width: 800, height: 600 });
 
-  if (process.env.NODE_ENV !== "production") {
+  if (!IS_PRODUCTION) {
     process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "1";
     win.loadURL(`http://localhost:2003`);
   } else {
@@ -35,12 +38,14 @@ const createWindow = async () => {
     );
   }
 
-  if (process.env.NODE_ENV !== "production") {
+  if (!IS_PRODUCTION) {
     // Open DevTools, see https://github.com/electron/electron/issues/12438 for why we wait for dom-ready
     win.webContents.once("dom-ready", () => {
       win!.webContents.openDevTools();
     });
   }
+
+  registerMenu();
 
   win.on("closed", () => {
     win = null;
@@ -61,7 +66,7 @@ app.on("activate", () => {
   }
 });
 
-if (process.env.NODE_ENV === "development") {
+if (!IS_PRODUCTION) {
   app.setName("Toolkit");
   app.setPath("userData", path.join(app.getPath("appData"), app.getName()));
 }
