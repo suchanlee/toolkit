@@ -7,9 +7,10 @@
 }
 
 .todos-todo-item {
+  position: relative;
   display: flex;
   justify-content: space-between;
-  padding: 5px 8px;
+  padding: 5px 8px 5px 0;
   cursor: pointer;
 
   &:hover {
@@ -18,9 +19,27 @@
     }
   }
 
+  .todos-todo-item-status-indicator {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+
+    &.-finished {
+      background-color: $green4;
+    }
+
+    &.-in-progress {
+      background-color: $gold4;
+    }
+
+    &.-not-started {
+      background-color: $red4;
+    }
+  }
+
   .todos-todo-checkbox {
-    margin-top: 2px;
-    margin-bottom: 0;
+    margin: 2px 0 0 10px;
   }
 
   .todos-todo-item-label {
