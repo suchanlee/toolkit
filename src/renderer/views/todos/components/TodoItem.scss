@@ -1,0 +1,41 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.todos-list-group {
+  padding: 15px 8px 5px;
+  border-bottom: 1px solid #232830;
+  background-color: #323744;
+}
+
+.todos-todo-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 8px;
+  cursor: pointer;
+
+  &:hover {
+    .todos-todo-remove-icon {
+      display: inline;
+    }
+  }
+
+  .todos-todo-checkbox {
+    margin-top: 2px;
+    margin-bottom: 0;
+  }
+
+  .todos-todo-item-label {
+    &.-finished {
+      text-decoration: line-through;
+    }
+  }
+
+  .todos-todo-remove-icon {
+    display: none;
+    cursor: pointer;
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

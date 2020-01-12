@@ -49,11 +49,13 @@ export class TodoInput extends React.PureComponent<TodoInput.Props, TodoInput.St
   // command + key doesn't get triggered in key up, so use key down
   private handleKeyDown = (evt: React.KeyboardEvent) => {
     if (evt.key === "Enter") {
-      this.props.addTodo({
-        value: this.state.value,
-        type: evt.metaKey ? TodoType.WEEK : TodoType.DAY
-      });
-      this.setState({ value: "" });
+      if (this.state.value.trim().length > 0) {
+        this.props.addTodo({
+          value: this.state.value,
+          type: evt.metaKey ? TodoType.WEEK : TodoType.DAY
+        });
+        this.setState({ value: "" });
+      }
     }
   };
 }
