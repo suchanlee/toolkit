@@ -1,9 +1,9 @@
 @import "~@blueprintjs/core/lib/scss/variables";
 
 .todos-day-week {
-  padding: 20px 0 3px 10px;
+  padding: 15px 0 5px 10px;
   font-weight: 600;
   font-size: 13px;
-  border-bottom: 1px solid $dark-gray1;
-  background-color: #2b303b;
+  border-bottom: 1px solid transparentize($color: $dark-gray1, $amount: 0.5);
+  background-color: #323744;
 }
