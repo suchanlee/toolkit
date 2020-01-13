@@ -9,6 +9,9 @@ export const notesReducer = TypedReducer.builder<NotesState>()
   .withHandler(NotesActions.setQuery.TYPE, (state, query) => {
     return setWith(state, { query });
   })
+  .withHandler(NotesActions.setFilter.TYPE, (state, filter) => {
+    return setWith(state, { filter });
+  })
   .withHandler(NotesInternalActions.setNotes.TYPE, (state, notes) => {
     return setWith(state, { notes });
   })

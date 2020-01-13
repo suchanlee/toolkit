@@ -7,9 +7,10 @@ export namespace NotesActions {
   export const setQuery = TypedAction.define("notes::set-query")<string>();
   export const addNote = TypedAction.define("notes::add-note")<Note>();
   export const setNoteValue = TypedAction.define("notes::set-note-value")<SetNoteValuePayload>();
-  export const setArchiveStatus = TypedAction.define("readings::set-reading-status")<
+  export const setArchiveStatus = TypedAction.define("notes::set-reading-status")<
     SetStatusPayload
   >();
+  export const setFilter = TypedAction.define("notes::set-filter")<ArchiveStatus>();
 
   export interface SetStatusPayload {
     id: string;

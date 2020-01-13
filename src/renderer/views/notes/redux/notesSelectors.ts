@@ -1,13 +1,13 @@
 import { sortBy, values } from "lodash-es";
 import { createSelector } from "reselect";
 import { RootState } from "../../../states/rootState";
-import { ArchiveStatus } from "../../../types/types";
 import { normalizeString } from "../../../utils/stringUtils";
 
 export const selectNotes = (state: RootState) => state.notes;
 export const selectNotesNotes = (state: RootState) => state.notes.notes;
 export const selectNotesActiveId = (state: RootState) => state.notes.activeId;
 export const selectNotesQuery = (state: RootState) => state.notes.query;
+export const selectNotesFilter = (state: RootState) => state.notes.filter;
 
 export const selectNotesActiveNote = createSelector(
   selectNotesNotes,
@@ -26,9 +26,10 @@ export const selectNotesHasActive = createSelector(selectNotesActiveId, active =
 export const selectFilteredNotes = createSelector(
   selectNotesNotes,
   selectNotesQuery,
-  (notes, query) => {
+  selectNotesFilter,
+  (notes, query, filter) => {
     const q = normalizeString(query);
-    let filteredNotes = values(notes).filter(n => n.archiveStatus === ArchiveStatus.ACTIVE);
+    let filteredNotes = values(notes).filter(n => n.archiveStatus === filter);
 
     if (q.length > 0) {
       filteredNotes = filteredNotes.filter(n => normalizeString(n.value).indexOf(q) > -1);
