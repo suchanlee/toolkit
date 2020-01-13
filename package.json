@@ -19,6 +19,7 @@
     "test:e2e": "jest '(\\/test\\/e2e/).*'",
     "pack": "npm run build && electron-builder --dir",
     "dist": "npm run build && electron-builder",
+    "release": "npm run build && electron-builder --mac --publish always",
     "postinstall": "electron-builder install-app-deps"
   },
   "husky": {
@@ -55,9 +56,9 @@
   },
   "build": {
     "productName": "Toolkit",
-    "appId": "org.suchanl.toolkit",
+    "appId": "com.suchanlee.toolkit",
     "mac": {
-      "category": "Productivity"
+      "category": "public.app-category.productivity"
     },
     "directories": {
       "output": "release"
