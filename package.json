@@ -58,7 +58,8 @@
     "productName": "Toolkit",
     "appId": "com.suchanlee.toolkit",
     "mac": {
-      "category": "public.app-category.productivity"
+      "category": "public.app-category.productivity",
+      "gatekeeperAssess" : false
     },
     "directories": {
       "output": "release"
