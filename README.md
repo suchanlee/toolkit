@@ -1,10 +1,5 @@
 # toolkit
 
-## TODOs
-
-- [ ] Add Todos feature
-- [ ] Webpack treeshake
-
 ## Install
 Clone the repository with Git:
 
