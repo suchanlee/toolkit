@@ -1,9 +1,12 @@
 import { keyBy } from "lodash-es";
 import { View } from "../types/viewTypes";
-import { NotesView } from "./notes/notesView";
-import { ReadingsView } from "./readings/readingsView";
-import { TodosView } from "./todos/todosView";
+import { createNotesView } from "./notes/notesView";
+import { createReadingsView } from "./readings/readingsView";
+import { createTodosView } from "./todos/todosView";
 
-export const Views: readonly View<any>[] = [TodosView, ReadingsView, NotesView];
-
+export const Views: readonly View<any>[] = [
+  createTodosView(),
+  createReadingsView(),
+  createNotesView()
+];
 export const ViewsByName = keyBy(Views, v => v.name);

@@ -8,6 +8,12 @@ export interface NotesState {
   filter: ArchiveStatus;
 }
 
+export const NOTES_STATE_KEY = "notes" as "notes";
+
+export type WithNotesState = {
+  [NOTES_STATE_KEY]: NotesState;
+};
+
 export function createInitialNotesState(): NotesState {
   return {
     query: "",

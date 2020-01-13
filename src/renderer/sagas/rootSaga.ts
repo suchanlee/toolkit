@@ -1,10 +1,14 @@
-import { all, Effect, spawn } from "redux-saga/effects";
-import { notesSaga } from "../views/notes/redux/notesSaga";
-import { readingsSaga } from "../views/readings/redux/readingsSaga";
-import { todosSaga } from "../views/todos/redux/todosSaga";
+import { all, Effect } from "redux-saga/effects";
+import { View } from "../types/viewTypes";
 
-export function* rootSaga() {
-  const effects: Effect[] = [spawn(readingsSaga), spawn(notesSaga), spawn(todosSaga)];
-
-  yield all(effects);
+export function createRootSaga(views: readonly View<any, any>[]) {
+  return function*() {
+    const effects: Effect[] = [];
+    for (const view of views) {
+      if (view.redux?.saga != null) {
+        effects.push(view.redux.saga);
+      }
+    }
+    yield all(effects);
+  };
 }

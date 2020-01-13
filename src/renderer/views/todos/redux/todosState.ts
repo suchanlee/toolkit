@@ -8,6 +8,12 @@ export interface TodosState {
   groups: TodoGroupsById;
 }
 
+export const TODOS_STATE_KEY = "todos" as "todos";
+
+export type WithTodosState = {
+  [TODOS_STATE_KEY]: TodosState;
+};
+
 export function createInitialTodosState(): TodosState {
   return {
     activeDate: undefined,

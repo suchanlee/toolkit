@@ -1,17 +1,22 @@
 import { combineReducers } from "redoodle";
-import { RootState } from "../states/rootState";
-import { notesReducer } from "../views/notes/redux/notesReducer";
-import { readingsReducer } from "../views/readings/redux/readingsReducer";
-import { todosReducer } from "../views/todos/redux/todosReducer";
+import { Reducer } from "redux";
+import { View } from "../types/viewTypes";
 import { floatingMenuReducer } from "./floatingMenuReducer";
 import { keyNavListReducer } from "./keyNavListReducer";
 import { navigationReducer } from "./navigationReducer";
 
-export const rootReducer = combineReducers<RootState>({
-  floatingMenu: floatingMenuReducer,
-  todos: todosReducer,
-  navigation: navigationReducer,
-  readings: readingsReducer,
-  notes: notesReducer,
-  keyNavList: keyNavListReducer
-});
+export function createRootReducer(views: readonly View<any, any>[]) {
+  const reducersByKey: Record<string, Reducer> = {
+    floatingMenu: floatingMenuReducer,
+    navigation: navigationReducer,
+    keyNavList: keyNavListReducer
+  };
+
+  for (const view of views) {
+    if (view.redux != null) {
+      reducersByKey[view.redux.stateKey] = view.redux.reducer;
+    }
+  }
+
+  return combineReducers<any>(reducersByKey);
+}

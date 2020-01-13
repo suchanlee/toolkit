@@ -8,6 +8,12 @@ export interface ReadingsState {
   active: Reading | undefined;
 }
 
+export const READINGS_STATE_KEY = "readings" as "readings";
+
+export type WithReadingsState = {
+  [READINGS_STATE_KEY]: ReadingsState;
+};
+
 export function createInitialReadingsState(): ReadingsState {
   return {
     readings: {},
