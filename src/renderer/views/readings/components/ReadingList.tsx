@@ -8,6 +8,8 @@ import { ReadingsActions } from "../redux/readingsActions";
 import { selectFilteredReadings, selectReadingsInputValueIsUrl } from "../redux/readingsSelectors";
 import { ReadingItem } from "./ReadingItem";
 
+require("./ReadingList.scss");
+
 const KNL = createKNL<Reading>();
 
 const IGNORED_KEYS = new Set<"Enter">(["Enter"]);
@@ -29,6 +31,10 @@ class ReadingListInternal extends React.PureComponent<ReadingList.Props> {
   private listId = uuid();
 
   public render() {
+    if (this.props.readings.length === 0) {
+      return <p className="reading-list-non-ideal-state">No readings.</p>;
+    }
+
     return (
       <KNL
         className="reading-list"

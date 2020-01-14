@@ -8,6 +8,8 @@ import { NotesActions } from "../redux/notesActions";
 import { selectFilteredNotes, selectNotesHasActive } from "../redux/notesSelectors";
 import { NoteItem } from "./NoteItem";
 
+require("./NoteList.scss");
+
 const KNL = createKNL<Note>();
 
 export namespace NoteList {
@@ -28,6 +30,9 @@ class NoteListInternal extends React.PureComponent<NoteList.Props> {
   private listId = uuid();
 
   public render() {
+    if (this.props.notes.length === 0) {
+      return <p className="note-list-non-ideal-state">No notes.</p>;
+    }
     return (
       <KNL
         className="note-list"
