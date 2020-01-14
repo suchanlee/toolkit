@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from "electron";
+import { autoUpdater } from "electron-updater";
 import * as path from "path";
 import * as url from "url";
 import { registerMainIpcListeners } from "./ipc";
@@ -47,6 +48,7 @@ const createWindow = async () => {
 
   registerMenu();
   registerMainIpcListeners();
+  autoUpdater.checkForUpdatesAndNotify();
 
   win.on("closed", () => {
     win = null;
