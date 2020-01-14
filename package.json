@@ -59,7 +59,7 @@
     "appId": "com.suchanlee.toolkit",
     "mac": {
       "category": "public.app-category.productivity",
-      "gatekeeperAssess" : false
+      "gatekeeperAssess": false
     },
     "directories": {
       "output": "release"

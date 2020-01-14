@@ -7,6 +7,7 @@ import { selectKeyNavListLocations } from "../../../selectors/keyNavListSelector
 import { RootState } from "../../../states/rootState";
 import { TodosActions } from "../redux/todosActions";
 import { Todo, TodoDate, TodoStatus } from "../redux/todosTypes";
+import { linkifyText } from "../utils/linkifyText";
 
 require("./TodoItem.scss");
 
@@ -72,7 +73,7 @@ class TodoItemInternal extends React.PureComponent<TodoItem.Props> {
                 "-finished": todo.status === TodoStatus.FINISHED
               })}
             >
-              {todo.value}
+              {linkifyText(todo.value)}
             </span>
           }
         />
