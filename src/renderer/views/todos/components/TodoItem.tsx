@@ -53,7 +53,7 @@ class TodoItemInternal extends React.PureComponent<TodoItem.Props> {
   public render() {
     const { todo, isReadonly } = this.props;
     return (
-      <div className="todos-todo-item" onClick={isReadonly ? noop : this.handleItemClick}>
+      <div className="todos-todo-item">
         <span
           className={classNames("todos-todo-item-status-indicator", {
             "-not-started": todo.status === TodoStatus.NOT_STARTED,
@@ -64,6 +64,7 @@ class TodoItemInternal extends React.PureComponent<TodoItem.Props> {
         <Checkbox
           checked={todo.status === TodoStatus.FINISHED}
           indeterminate={todo.status === TodoStatus.IN_PROGRESS}
+          onChange={isReadonly ? noop : this.handleItemClick}
           className="todos-todo-checkbox"
           labelElement={
             <span
