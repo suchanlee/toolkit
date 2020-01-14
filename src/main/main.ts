@@ -46,6 +46,7 @@ const createWindow = async () => {
   }
 
   registerMenu();
+  registerMainIpcListeners();
 
   win.on("closed", () => {
     win = null;
@@ -70,5 +71,3 @@ if (!IS_PRODUCTION) {
   app.setName("Toolkit");
   app.setPath("userData", path.join(app.getPath("appData"), app.getName()));
 }
-
-registerMainIpcListeners();
