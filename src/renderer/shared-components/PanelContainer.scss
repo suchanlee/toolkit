@@ -2,7 +2,7 @@
 
 .panel-container-overlay {
   position: fixed;
-  top: 0;
+  top: 35px;
   right: 0;
   bottom: 0;
   left: 0;
@@ -12,7 +12,7 @@
   position: absolute;
   height: calc(100% - 38px);
   width: 100%;
-  top: 38px;
+  top: 0;
   background-color: $white;
   border-radius: 5px;
 
