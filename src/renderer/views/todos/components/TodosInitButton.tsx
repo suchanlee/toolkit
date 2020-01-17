@@ -54,6 +54,8 @@ class TodosInitButtonInternal extends React.PureComponent<
           isOpen={this.state.isOpen}
           onClose={this.handleClose}
           onOpened={this.handleOpened}
+          onCancel={this.handleCancel}
+          onConfirm={this.handleConfirm}
           canEscapeKeyCancel={true}
           intent="primary"
           confirmButtonText="Yes (Y or Enter)"
@@ -70,8 +72,10 @@ class TodosInitButtonInternal extends React.PureComponent<
   }
 
   private handleKeyDown = () => this.setState({ isOpen: true });
-
   private handleClose = () => this.setState({ isOpen: false });
+
+  private handleCancel = () => this.props.initToday({ shouldInherit: false });
+  private handleConfirm = () => this.props.initToday({ shouldInherit: true });
 
   private handleOpened = () => {
     mousetrap.bind(["y", "enter"], (evt: KeyboardEvent) => {
