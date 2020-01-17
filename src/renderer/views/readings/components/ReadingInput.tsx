@@ -3,9 +3,10 @@ import classNames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
 import { AsyncValue } from "../../../async/asyncTypes";
-import { asyncLoading, isLoaded } from "../../../async/asyncUtils";
+import { asyncLoading, isFailedLoading, isLoaded } from "../../../async/asyncUtils";
 import { KeyboardNavSupportedInput } from "../../../shared-components/KeyboardNavSupportedInput";
 import { RootState } from "../../../states/rootState";
+import { createReadingObject } from "../readingObject";
 import { Reading } from "../readingsTypes";
 import { ReadingsActions } from "../redux/readingsActions";
 import {
@@ -92,6 +93,16 @@ class ReadingInputInternal extends React.PureComponent<ReadingInput.Props, Readi
   private maybeAddReading() {
     if (isLoaded(this.state.reading)) {
       this.props.addReading(this.state.reading.value);
+      this.setState({ reading: asyncLoading() });
+    } else if (isFailedLoading(this.state.reading) && this.props.isValueUrl) {
+      // sometimes websites don't allow you to fetch info, in which case
+      // we should still support adding urls
+      const reading = createReadingObject({
+        url: this.props.value,
+        title: this.props.value,
+        description: "No description"
+      });
+      this.props.addReading(reading);
       this.setState({ reading: asyncLoading() });
     }
   }
