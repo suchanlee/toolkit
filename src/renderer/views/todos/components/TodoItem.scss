@@ -44,6 +44,10 @@
     &.-finished {
       text-decoration: line-through;
     }
+
+    a {
+      word-break: break-all;
+    }
   }
 
   .todos-todo-remove-icon {
