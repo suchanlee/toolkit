@@ -1,5 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
+import { CodeMirrorEditor } from "../../../shared-components/CodeMirrorEditor";
 import { PanelContainer } from "../../../shared-components/PanelContainer";
 import { RootState } from "../../../states/rootState";
 import { Note } from "../notesTypes";
@@ -33,10 +34,7 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
         title={note != null ? getNoteTitle(note) : ""}
       >
         {note != null && (
-          <textarea
-            className="note-panel-textarea"
-            placeholder="Write note here..."
-            autoFocus={true}
+          <CodeMirrorEditor
             value={note.value}
             onChange={this.handleChange}
             onKeyUp={this.handleKeyUp}
@@ -50,16 +48,16 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
     this.closePanel();
   };
 
-  private handleChange = (evt: React.SyntheticEvent<HTMLTextAreaElement>) => {
+  private handleChange = (value: string) => {
     if (this.props.note != null) {
       this.props.setNoteValue({
         id: this.props.note.id,
-        value: evt.currentTarget.value
+        value: value
       });
     }
   };
 
-  private handleKeyUp = (evt: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  private handleKeyUp = (evt: KeyboardEvent) => {
     if (evt.key === "Escape") {
       this.closePanel();
     }
