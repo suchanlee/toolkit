@@ -17,6 +17,7 @@ export namespace NotePanel {
   export interface DispatchProps {
     setActiveId: typeof NotesActions.setActiveId;
     setNoteValue: typeof NotesActions.setNoteValue;
+    removeNote: typeof NotesActions.removeNote;
   }
 
   export type Props = StoreProps & DispatchProps;
@@ -46,7 +47,7 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
   }
 
   private handleClose = () => {
-    this.props.setActiveId(undefined);
+    this.closePanel();
   };
 
   private handleChange = (evt: React.SyntheticEvent<HTMLTextAreaElement>) => {
@@ -60,9 +61,22 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
 
   private handleKeyUp = (evt: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (evt.key === "Escape") {
-      this.props.setActiveId(undefined);
+      this.closePanel();
     }
   };
+
+  private closePanel() {
+    // keep track fo this now since when active id is unset,
+    // the `note` value becomes undefined
+    const shouldDeleteNote = this.props.note?.value.trim().length === 0;
+    const noteId = this.props.note?.id;
+
+    this.props.setActiveId(undefined);
+
+    if (noteId != null && shouldDeleteNote) {
+      this.props.removeNote({ id: noteId });
+    }
+  }
 }
 
 function mapStateToProps(state: RootState): NotePanel.StoreProps {
@@ -73,7 +87,8 @@ function mapStateToProps(state: RootState): NotePanel.StoreProps {
 
 const mapDispatchToProps: NotePanel.DispatchProps = {
   setActiveId: NotesActions.setActiveId,
-  setNoteValue: NotesActions.setNoteValue
+  setNoteValue: NotesActions.setNoteValue,
+  removeNote: NotesActions.removeNote
 };
 
 const enhanceWithRedux = connect(mapStateToProps, mapDispatchToProps);

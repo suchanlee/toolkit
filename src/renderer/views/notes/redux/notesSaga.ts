@@ -12,6 +12,7 @@ const NOTES_FILE_NAME = "notes";
 export function* notesSaga() {
   yield initializeNotes();
   yield takeEvery(NotesActions.addNote.TYPE, addNote);
+  yield takeEvery(NotesActions.removeNote.TYPE, removeNote);
   yield takeEvery(NotesActions.setNoteValue.TYPE, setNoteValue);
   yield takeEvery(NotesActions.setArchiveStatus.TYPE, setNoteStatus);
 }
@@ -34,6 +35,14 @@ function* addNote(action: TypedAction<Note>) {
     ...currentNotes,
     [action.payload.id]: action.payload
   };
+  yield put(NotesInternalActions.setNotes(newNotes));
+  writeNotes(newNotes);
+}
+
+function* removeNote(action: TypedAction<NotesActions.RemoveNotePayload>) {
+  const currentNotes: NotesById = yield select(selectNotesNotes);
+  const newNotes: NotesById = { ...currentNotes };
+  delete newNotes[action.payload.id];
   yield put(NotesInternalActions.setNotes(newNotes));
   writeNotes(newNotes);
 }
