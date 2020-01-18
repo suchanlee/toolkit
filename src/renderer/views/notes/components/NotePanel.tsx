@@ -49,6 +49,7 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
             <NoteTabs
               activeNoteId={note.id}
               noteIdentifiers={openedNoteIdentifiers}
+              onNavTab={this.handleTabNav}
               onClickTab={this.handleTabClick}
               onCloseTab={this.handleTabClose}
             />
@@ -107,6 +108,24 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
 
     this.props.deleteNotesIfEmpty({ ids: [id] });
     this.props.removeOpenedId(id);
+  };
+
+  private handleTabNav = (direction: "left" | "right") => {
+    const { note, openedNoteIdentifiers, setActiveId } = this.props;
+
+    if (note == null) {
+      return;
+    }
+
+    const currentIndex = openedNoteIdentifiers.findIndex(identifier => identifier.id === note.id);
+    const nextNoteIdentifier =
+      direction === "left"
+        ? openedNoteIdentifiers[currentIndex - 1]
+        : openedNoteIdentifiers[currentIndex + 1];
+
+    if (nextNoteIdentifier != null) {
+      setActiveId(nextNoteIdentifier.id);
+    }
   };
 
   private closePanel() {

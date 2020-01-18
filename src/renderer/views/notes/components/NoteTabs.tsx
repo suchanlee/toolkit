@@ -10,6 +10,7 @@ export namespace NoteTabs {
   export interface Props {
     activeNoteId: string;
     noteIdentifiers: readonly NoteIdentifier[];
+    onNavTab(direction: "left" | "right"): void;
     onClickTab(id: string): void;
     onCloseTab(id: string): void;
   }
@@ -18,6 +19,7 @@ export namespace NoteTabs {
 export class NoteTabs extends React.PureComponent<NoteTabs.Props> {
   public componentDidMount() {
     disableCommandWCloseApp();
+    document.addEventListener("keydown", this.handleKeydown);
   }
 
   public componentWillUnmount() {
@@ -26,6 +28,7 @@ export class NoteTabs extends React.PureComponent<NoteTabs.Props> {
     setTimeout(() => {
       enableCommandWCloseApp();
     }, 100);
+    document.removeEventListener("keydown", this.handleKeydown);
   }
 
   public render() {
@@ -59,6 +62,16 @@ export class NoteTabs extends React.PureComponent<NoteTabs.Props> {
       </div>
     );
   }
+
+  private handleKeydown = (evt: KeyboardEvent) => {
+    if (evt.metaKey && evt.altKey) {
+      if (evt.key === "ArrowLeft") {
+        this.props.onNavTab("left");
+      } else if (evt.key === "ArrowRight") {
+        this.props.onNavTab("right");
+      }
+    }
+  };
 
   private handleTabClick = (id: string) => {
     this.props.onClickTab(id);
