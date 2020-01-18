@@ -1,6 +1,6 @@
 {
   "name": "toolkit",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "",
   "main": "./dist/main.js",
   "productName": "Toolkit",
