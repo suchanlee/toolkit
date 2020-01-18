@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron-better-ipc";
 import { setWith, TypedAction } from "redoodle";
-import { put, select, takeEvery } from "redux-saga/effects";
+import { all, put, select, takeEvery } from "redux-saga/effects";
 import { IpcEvent } from "../../../../shared/ipcEvent";
 import { Iso8601String } from "../../../types/types";
 import { Note, NotesById } from "../notesTypes";
@@ -11,11 +11,13 @@ const NOTES_FILE_NAME = "notes";
 
 export function* notesSaga() {
   yield initializeNotes();
-  yield takeEvery(NotesActions.addNote.TYPE, addNote);
-  yield takeEvery(NotesActions.deleteNote.TYPE, deleteNote);
-  yield takeEvery(NotesActions.deleteNotesIfEmpty.TYPE, deleteNotesIfEmpty);
-  yield takeEvery(NotesActions.setNoteValue.TYPE, setNoteValue);
-  yield takeEvery(NotesActions.setArchiveStatus.TYPE, setNoteStatus);
+  yield all([
+    yield takeEvery(NotesActions.addNote.TYPE, addNote),
+    yield takeEvery(NotesActions.deleteNote.TYPE, deleteNote),
+    yield takeEvery(NotesActions.deleteNotesIfEmpty.TYPE, deleteNotesIfEmpty),
+    yield takeEvery(NotesActions.setNoteValue.TYPE, setNoteValue),
+    yield takeEvery(NotesActions.setArchiveStatus.TYPE, setNoteStatus)
+  ]);
 }
 
 function* initializeNotes() {

@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron-better-ipc";
 import { setWith, TypedAction } from "redoodle";
-import { delay, put, select, takeLatest } from "redux-saga/effects";
+import { all, delay, fork, put, select, takeLatest } from "redux-saga/effects";
 import { IpcEvent } from "../../../../shared/ipcEvent";
 import { DAY_IN_MILLIS, getSundayDate } from "../../../utils/dateUtils";
 import { createTodo, createTodosDay } from "../todosObjects";
@@ -27,10 +27,13 @@ const TODOS_FILE_NAME = "todos";
 
 export function* todosSaga() {
   yield initializeTodos();
-  yield takeLatest(TodosActions.initToday.TYPE, createTodosToday);
-  yield takeLatest(TodosActions.addTodo.TYPE, addTodo);
-  yield takeLatest(TodosActions.removeTodo.TYPE, removeTodo);
-  yield takeLatest(TodosActions.setTodoStatus.TYPE, setTodoStatus);
+  yield all([
+    yield fork(initializeTodayUpdater),
+    yield takeLatest(TodosActions.initToday.TYPE, createTodosToday),
+    yield takeLatest(TodosActions.addTodo.TYPE, addTodo),
+    yield takeLatest(TodosActions.removeTodo.TYPE, removeTodo),
+    yield takeLatest(TodosActions.setTodoStatus.TYPE, setTodoStatus)
+  ]);
 }
 
 function* initializeTodos() {
@@ -63,7 +66,6 @@ function* initializeTodos() {
     })
   );
   yield put(InternalTodosActions.setGroups(persisted.groups));
-  yield initializeTodayUpdater();
 }
 
 function* initializeTodayUpdater() {

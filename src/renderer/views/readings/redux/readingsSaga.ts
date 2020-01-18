@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron-better-ipc";
 import { setWith, TypedAction } from "redoodle";
-import { put, select, takeEvery } from "redux-saga/effects";
+import { all, put, select, takeEvery } from "redux-saga/effects";
 import { IpcEvent } from "../../../../shared/ipcEvent";
 import { Reading, ReadingsById } from "../readingsTypes";
 import { ReadingsActions, ReadingsInternalActions } from "./readingsActions";
@@ -10,8 +10,10 @@ const READINGS_FILE_NAME = "readings";
 
 export function* readingsSaga() {
   yield initializeReadings();
-  yield takeEvery(ReadingsActions.addReading.TYPE, addReading);
-  yield takeEvery(ReadingsActions.setArchiveStatus.TYPE, setReadingStatus);
+  yield all([
+    yield takeEvery(ReadingsActions.addReading.TYPE, addReading),
+    yield takeEvery(ReadingsActions.setArchiveStatus.TYPE, setReadingStatus)
+  ]);
 }
 
 function* initializeReadings() {
