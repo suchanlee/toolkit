@@ -1,3 +1,4 @@
+import { Menu } from "electron";
 import { ipcMain } from "electron-better-ipc";
 import { grabIt, GrabItResponse } from "grabity";
 import { IpcEvent } from "../shared/ipcEvent";
@@ -16,5 +17,17 @@ export function registerMainIpcListeners() {
 
   ipcMain.answerRenderer<object>(IpcEvent.READ_DATA, (fileName: unknown) => {
     return readData(fileName as string);
+  });
+
+  ipcMain.answerRenderer<void>(IpcEvent.SET_MENU_ENABLED, (args: unknown) => {
+    const { menuId, enabled } = args as { menuId: string; enabled: boolean };
+    const menu = Menu.getApplicationMenu();
+
+    if (menu != null) {
+      const menuItem = menu.getMenuItemById(menuId);
+      if (menuItem != null) {
+        menuItem.enabled = enabled;
+      }
+    }
   });
 }

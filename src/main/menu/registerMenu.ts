@@ -26,7 +26,21 @@ export function registerMenu() {
       : []),
     {
       label: "File",
-      submenu: [isMac ? { role: "close" } : { role: "quit" }]
+      submenu: [
+        isMac
+          ? {
+              label: "Close Window",
+              accelerator: "CommandOrControl+W",
+              id: "close",
+              registerAccelerator: true,
+              click: (_menuItem, browserWindow) => {
+                if (browserWindow != null) {
+                  browserWindow.close();
+                }
+              }
+            }
+          : { role: "quit" }
+      ]
     },
     {
       label: "Edit",

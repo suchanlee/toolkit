@@ -5,6 +5,7 @@ export interface NotesState {
   query: string;
   notes: NotesById;
   activeId: string | undefined;
+  openedIds: readonly string[];
   filter: ArchiveStatus;
 }
 
@@ -19,6 +20,7 @@ export function createInitialNotesState(): NotesState {
     query: "",
     notes: {},
     activeId: undefined,
+    openedIds: [],
     filter: ArchiveStatus.ACTIVE
   };
 }

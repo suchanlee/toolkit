@@ -4,6 +4,8 @@ import { Note, NotesById } from "../notesTypes";
 
 export namespace NotesActions {
   export const setActiveId = TypedAction.define("notes::set-active-id")<string | undefined>();
+  export const addOpenedId = TypedAction.define("notes::add-opened-id")<string>();
+  export const removeOpenedId = TypedAction.define("notes::remove-opened-id")<string>();
   export const setQuery = TypedAction.define("notes::set-query")<string>();
   export const addNote = TypedAction.define("notes::add-note")<Note>();
   export const removeNote = TypedAction.define("notes::remove-note")<RemoveNotePayload>();

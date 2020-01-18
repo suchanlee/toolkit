@@ -16,7 +16,7 @@ export namespace CodeMirrorEditor {
     className?: string;
     value: string;
     onChange(value: string): void;
-    onKeyUp?(event: KeyboardEvent): void;
+    onKeyDown?(event: KeyboardEvent): void;
   }
 }
 
@@ -53,9 +53,9 @@ export class CodeMirrorEditor extends React.PureComponent<CodeMirrorEditor.Props
         this.props.onChange(editor.getValue());
       });
 
-      if (this.props.onKeyUp != null) {
-        codeMirror.on("keyup", (_editor, event) => {
-          this.props.onKeyUp!(event);
+      if (this.props.onKeyDown != null) {
+        codeMirror.on("keydown", (_editor, event) => {
+          this.props.onKeyDown!(event);
         });
       }
     }

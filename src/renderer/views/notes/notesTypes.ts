@@ -14,3 +14,8 @@ export interface NoteParts {
   title: string;
   summary: string;
 }
+
+export interface NoteIdentifier {
+  title: string;
+  id: string;
+}

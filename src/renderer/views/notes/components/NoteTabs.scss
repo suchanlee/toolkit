@@ -1,0 +1,49 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.note-tabs {
+  display: flex;
+  background-color: $dark-gray1;
+
+  .note-tab {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 0;
+    min-width: 120px;
+    max-width: 200px;
+    padding: 8px 10px 5px;
+    cursor: pointer;
+
+    &.-active {
+      background-color: #2b303b;
+
+      .note-tab-close {
+        display: inline;
+      }
+
+      &:hover {
+        .note-tab-close {
+          color: inherit;
+        }
+      }
+    }
+
+    &:hover {
+      .note-tab-close {
+        display: inline;
+        color: $gray3;
+      }
+    }
+
+    .note-tab-title {
+      flex-grow: 1;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .note-tab-close {
+      display: none;
+      flex-grow: 0;
+    }
+  }
+}
