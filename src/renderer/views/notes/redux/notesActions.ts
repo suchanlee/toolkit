@@ -8,12 +8,15 @@ export namespace NotesActions {
   export const removeOpenedId = TypedAction.define("notes::remove-opened-id")<string>();
   export const setQuery = TypedAction.define("notes::set-query")<string>();
   export const addNote = TypedAction.define("notes::add-note")<Note>();
-  export const removeNote = TypedAction.define("notes::remove-note")<RemoveNotePayload>();
   export const setNoteValue = TypedAction.define("notes::set-note-value")<SetNoteValuePayload>();
   export const setArchiveStatus = TypedAction.define("notes::set-reading-status")<
     SetStatusPayload
   >();
   export const setFilter = TypedAction.define("notes::set-filter")<ArchiveStatus>();
+  export const deleteNote = TypedAction.define("notes::delete-note")<DeleteNotePayload>();
+  export const deleteNotesIfEmpty = TypedAction.define("notes::delete-notes-if-empty")<
+    DeleteNotesIfEmptyPayload
+  >();
 
   export interface SetStatusPayload {
     id: string;
@@ -25,8 +28,12 @@ export namespace NotesActions {
     value: string;
   }
 
-  export interface RemoveNotePayload {
+  export interface DeleteNotePayload {
     id: string;
+  }
+
+  export interface DeleteNotesIfEmptyPayload {
+    ids: readonly string[];
   }
 }
 

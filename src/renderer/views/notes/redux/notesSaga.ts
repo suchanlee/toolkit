@@ -12,7 +12,8 @@ const NOTES_FILE_NAME = "notes";
 export function* notesSaga() {
   yield initializeNotes();
   yield takeEvery(NotesActions.addNote.TYPE, addNote);
-  yield takeEvery(NotesActions.removeNote.TYPE, removeNote);
+  yield takeEvery(NotesActions.deleteNote.TYPE, deleteNote);
+  yield takeEvery(NotesActions.deleteNotesIfEmpty.TYPE, deleteNotesIfEmpty);
   yield takeEvery(NotesActions.setNoteValue.TYPE, setNoteValue);
   yield takeEvery(NotesActions.setArchiveStatus.TYPE, setNoteStatus);
 }
@@ -39,10 +40,25 @@ function* addNote(action: TypedAction<Note>) {
   writeNotes(newNotes);
 }
 
-function* removeNote(action: TypedAction<NotesActions.RemoveNotePayload>) {
+function* deleteNote(action: TypedAction<NotesActions.DeleteNotePayload>) {
   const currentNotes: NotesById = yield select(selectNotesNotes);
   const newNotes: NotesById = { ...currentNotes };
   delete newNotes[action.payload.id];
+  yield put(NotesInternalActions.setNotes(newNotes));
+  writeNotes(newNotes);
+}
+
+function* deleteNotesIfEmpty(action: TypedAction<NotesActions.DeleteNotesIfEmptyPayload>) {
+  const currentNotes: NotesById = yield select(selectNotesNotes);
+  const newNotes: NotesById = { ...currentNotes };
+
+  for (const id of action.payload.ids) {
+    const note = currentNotes[id];
+    if (note?.value.trim().length === 0) {
+      delete newNotes[id];
+    }
+  }
+
   yield put(NotesInternalActions.setNotes(newNotes));
   writeNotes(newNotes);
 }

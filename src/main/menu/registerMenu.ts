@@ -29,6 +29,7 @@ export function registerMenu() {
       submenu: [
         isMac
           ? {
+              // can't use "close" role as that doesn't support disabling menu item
               label: "Close Window",
               accelerator: "CommandOrControl+W",
               id: "close",

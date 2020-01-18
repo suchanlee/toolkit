@@ -22,7 +22,7 @@ export namespace NotePanel {
     setActiveId: typeof NotesActions.setActiveId;
     setNoteValue: typeof NotesActions.setNoteValue;
     addNote: typeof NotesActions.addNote;
-    removeNote: typeof NotesActions.removeNote;
+    deleteNotesIfEmpty: typeof NotesActions.deleteNotesIfEmpty;
     removeOpenedId: typeof NotesActions.removeOpenedId;
   }
 
@@ -99,12 +99,12 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
       this.props.setActiveId(nextActiveId);
     }
 
-    this.maybeDeleteNote();
+    this.props.deleteNotesIfEmpty({ ids: [id] });
     this.props.removeOpenedId(id);
   };
 
   private closePanel() {
-    this.maybeDeleteNote();
+    this.maybeDeleteNotes();
     this.props.setActiveId(undefined);
   }
 
@@ -114,14 +114,10 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
     this.props.setActiveId(note.id);
   }
 
-  private maybeDeleteNote() {
-    if (this.props.note == null) {
-      return;
-    }
-
-    if (this.props.note.value.trim().length === 0) {
-      this.props.removeNote({ id: this.props.note.id });
-    }
+  private maybeDeleteNotes() {
+    this.props.deleteNotesIfEmpty({
+      ids: this.props.openedNoteIdentifiers.map(identifier => identifier.id)
+    });
   }
 }
 
@@ -136,7 +132,7 @@ const mapDispatchToProps: NotePanel.DispatchProps = {
   addNote: NotesActions.addNote,
   setActiveId: NotesActions.setActiveId,
   setNoteValue: NotesActions.setNoteValue,
-  removeNote: NotesActions.removeNote,
+  deleteNotesIfEmpty: NotesActions.deleteNotesIfEmpty,
   removeOpenedId: NotesActions.removeOpenedId
 };
 

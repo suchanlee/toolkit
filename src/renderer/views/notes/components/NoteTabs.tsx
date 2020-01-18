@@ -21,6 +21,8 @@ export class NoteTabs extends React.PureComponent<NoteTabs.Props> {
   }
 
   public componentWillUnmount() {
+    // want to delay a bit before calling so that the cmd+W command doesn't
+    // close the application
     setTimeout(() => {
       enableCommandWCloseApp();
     }, 100);
