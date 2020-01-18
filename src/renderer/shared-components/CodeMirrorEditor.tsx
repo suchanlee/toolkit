@@ -14,7 +14,6 @@ import "codemirror/addon/selection/active-line.js";
 export namespace CodeMirrorEditor {
   export interface Props {
     className?: string;
-    value: string;
     onChange(value: string): void;
     onKeyDown?(event: KeyboardEvent): void;
   }
@@ -27,6 +26,7 @@ type ExtendedCodeMirrorConfiguration = CodeMirror.EditorConfiguration & {
 
 export class CodeMirrorEditor extends React.PureComponent<CodeMirrorEditor.Props> {
   private divRef = React.createRef<HTMLDivElement>();
+  private codeMirror!: CodeMirror.Editor;
 
   public componentDidMount() {
     if (this.divRef.current != null) {
@@ -47,7 +47,7 @@ export class CodeMirrorEditor extends React.PureComponent<CodeMirrorEditor.Props
       };
 
       const codeMirror = CodeMirror(this.divRef.current, configurations);
-      codeMirror.setValue(this.props.value);
+      this.codeMirror = codeMirror;
 
       codeMirror.on("changes", editor => {
         this.props.onChange(editor.getValue());
@@ -65,5 +65,10 @@ export class CodeMirrorEditor extends React.PureComponent<CodeMirrorEditor.Props
     return (
       <div className={classNames("code-mirror-editor", this.props.className)} ref={this.divRef} />
     );
+  }
+
+  // imperatively setting the editor value for performance reasons
+  public setValue(value: string) {
+    this.codeMirror?.setValue(value);
   }
 }

@@ -30,6 +30,12 @@ export namespace NotePanel {
 }
 
 class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
+  private editorRef = React.createRef<CodeMirrorEditor>();
+
+  public componentDidUpdate(prevProps: NotePanel.Props) {
+    this.maybeSetEditorValue(prevProps.note);
+  }
+
   public render() {
     const { note, openedNoteIdentifiers } = this.props;
     return (
@@ -47,7 +53,7 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
               onCloseTab={this.handleTabClose}
             />
             <CodeMirrorEditor
-              value={note.value}
+              ref={this.editorRef}
               onChange={this.handleChange}
               onKeyDown={this.handleKeyDown}
             />
@@ -118,6 +124,19 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
     this.props.deleteNotesIfEmpty({
       ids: this.props.openedNoteIdentifiers.map(identifier => identifier.id)
     });
+  }
+
+  private maybeSetEditorValue(prevNote: Note | undefined) {
+    if (this.props.note == null) {
+      return;
+    }
+
+    const isActiveNoteSet = prevNote == null;
+    const isNoteChanged = prevNote?.id !== this.props.note.id;
+
+    if (isActiveNoteSet || isNoteChanged) {
+      this.editorRef.current?.setValue(this.props.note.value);
+    }
   }
 }
 
