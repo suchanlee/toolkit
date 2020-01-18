@@ -1,6 +1,8 @@
+import { createTodayTodoDate } from "../utils/todoDateUtils";
 import { TodoDate, TodoGroupsById, TodosDaysByDateStrs } from "./todosTypes";
 
 export interface TodosState {
+  today: TodoDate;
   activeDate: TodoDate | undefined;
   days: TodosDaysByDateStrs;
   // always sorted in descending order
@@ -16,6 +18,7 @@ export type WithTodosState = {
 
 export function createInitialTodosState(): TodosState {
   return {
+    today: createTodayTodoDate(),
     activeDate: undefined,
     days: {},
     dateStrs: [],
