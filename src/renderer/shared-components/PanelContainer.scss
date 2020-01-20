@@ -27,6 +27,13 @@
     border-bottom: 1px solid $light-gray1;
     font-size: 12px;
 
+    .panel-container-title {
+      padding-right: 5px;
+      text-overflow: ellipsis;
+      overflow-x: hidden;
+      white-space: nowrap;
+    }
+
     .panel-container-close {
       display: flex;
       flex-shrink: 0;
