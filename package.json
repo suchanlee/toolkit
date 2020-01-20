@@ -1,6 +1,6 @@
 {
   "name": "toolkit",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "",
   "main": "./dist/main.js",
   "productName": "Toolkit",
@@ -105,6 +105,7 @@
     "@types/jest": "^24.0.13",
     "@types/lodash-es": "^4.17.3",
     "@types/mousetrap": "^1.6.3",
+    "@types/node-fetch": "^2.5.4",
     "@types/react": "^16.8.18",
     "@types/react-dom": "^16.8.4",
     "@types/react-hot-loader": "^4.1.0",
@@ -159,6 +160,7 @@
     "is-url": "^1.2.4",
     "lodash-es": "^4.17.15",
     "mousetrap": "^1.6.3",
+    "node-fetch": "^2.6.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.3",
