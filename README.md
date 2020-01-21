@@ -1,10 +1,9 @@
 # toolkit
 
-
-
-
+![][./assets/intro.png]
 
 ## Install
+
 Clone the repository with Git:
 
 ```bash
