@@ -2,7 +2,9 @@
 
 .note-tabs {
   display: flex;
+  width: 100%;
   background-color: $dark-gray1;
+  overflow-x: auto;
 
   .note-tab {
     display: flex;
