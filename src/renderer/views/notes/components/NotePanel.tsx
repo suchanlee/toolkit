@@ -8,6 +8,7 @@ import { Note, NoteIdentifier } from "../notesTypes";
 import { NotesActions } from "../redux/notesActions";
 import { selectNotesActiveNote, selectOpenedNoteIdentifiers } from "../redux/notesSelectors";
 import { getNoteTitle } from "../utils/notesUtils";
+import { InfoBanner } from "./InfoBanner";
 import { NoteTabs } from "./NoteTabs";
 
 require("./NotePanel.scss");
@@ -44,6 +45,7 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
         onClose={this.handleClose}
         title={note != null ? getNoteTitle(note) : ""}
       >
+        <InfoBanner text="⌘+N FOR NEW, ⌘+W TO CLOSE TAB, ⌘+⌥+←→ TO NAV" />
         {note != null && (
           <React.Fragment>
             <NoteTabs
