@@ -64,6 +64,10 @@ npm run dist -- -mwl
 
 ## TODOS Tab
 
+| Description                                                                    | Keyboard    |
+| ------------------------------------------------------------------------------ | ----------- |
+| Navigate between todos                                                         | Up/Down     |
+| Rotate the todo state of the current item (todo -> in progress -> not started) | Enter       |
 
 ## READINGS Tab
 
