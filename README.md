@@ -50,8 +50,6 @@ You can make builds for specific platforms (or multiple platforms) by using the 
 npm run dist -- -mwl
 ```
 
-
-
 # Keyboard Shortcuts
 
 
