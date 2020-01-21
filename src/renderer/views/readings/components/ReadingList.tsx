@@ -1,6 +1,5 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { v4 as uuid } from "uuid";
 import { createKNL } from "../../../shared-components/KeyNavList";
 import { RootState } from "../../../states/rootState";
 import { Reading } from "../readingsTypes";
@@ -24,12 +23,14 @@ export namespace ReadingList {
     setActive: typeof ReadingsActions.setActive;
   }
 
-  export type Props = StoreProps & DispatchProps;
+  export interface OwnProps {
+    listId: string;
+  }
+
+  export type Props = StoreProps & DispatchProps & OwnProps;
 }
 
 class ReadingListInternal extends React.PureComponent<ReadingList.Props> {
-  private listId = uuid();
-
   public render() {
     if (this.props.readings.length === 0) {
       return <p className="reading-list-non-ideal-state">No readings.</p>;
@@ -38,7 +39,7 @@ class ReadingListInternal extends React.PureComponent<ReadingList.Props> {
     return (
       <KNL
         className="reading-list"
-        id={this.listId}
+        id={this.props.listId}
         items={this.props.readings}
         ignoredKeys={this.getIgnoredKeys()}
         getItemKey={getItemKey}

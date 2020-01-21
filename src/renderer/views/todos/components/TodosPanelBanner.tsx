@@ -1,12 +1,10 @@
-import classNames from "classnames";
+import { Intent } from "@blueprintjs/core";
 import * as React from "react";
 import { connect } from "react-redux";
 import { selectKeyNavListLocations } from "../../../selectors/keyNavListSelectors";
 import { KNL_NON_SELECTING_ROW } from "../../../states/keyNavListState";
 import { RootState } from "../../../states/rootState";
 import { InfoBanner } from "../../notes/components/InfoBanner";
-
-require("./TodosPanelBanner.scss");
 
 export namespace TodosPanelBanner {
   export interface OwnProps {
@@ -23,17 +21,20 @@ export namespace TodosPanelBanner {
 
 class TodosPanelBannerInternal extends React.PureComponent<TodosPanelBanner.Props> {
   public render() {
+    return <InfoBanner intent={this.getIntent()} text={this.getText()} />;
+  }
+
+  private getIntent() {
     const { isReadonly, isSelectingTodo } = this.props;
-    return (
-      <InfoBanner
-        className={classNames("todos-panel-banner", {
-          "-readonly": isReadonly,
-          "-selection": !isReadonly && isSelectingTodo,
-          "-input": !isReadonly && !isSelectingTodo
-        })}
-        text={this.getText()}
-      />
-    );
+    if (isReadonly) {
+      return Intent.DANGER;
+    } else if (!isReadonly && isSelectingTodo) {
+      return Intent.PRIMARY;
+    } else if (!isReadonly && !isSelectingTodo) {
+      return Intent.SUCCESS;
+    } else {
+      return undefined;
+    }
   }
 
   private getText() {

@@ -2,6 +2,7 @@ import { Button, Classes } from "@blueprintjs/core";
 import classNames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
+import { KeyNavListActions } from "../../../actions/keyNavListActions";
 import { AsyncValue } from "../../../async/asyncTypes";
 import { asyncLoading, isFailedLoading, isLoaded } from "../../../async/asyncUtils";
 import { KeyboardNavSupportedInput } from "../../../shared-components/KeyboardNavSupportedInput";
@@ -15,7 +16,7 @@ import {
 } from "../redux/readingsSelectors";
 import { ReadingUrlPreview } from "./ReadingUrlPreview";
 
-require("./ReadingInput.scss");
+import "./ReadingInput.scss";
 
 export namespace ReadingInput {
   export interface StoreProps {
@@ -26,9 +27,14 @@ export namespace ReadingInput {
   export interface DispatchProps {
     setValue: typeof ReadingsActions.setInputValue;
     addReading: typeof ReadingsActions.addReading;
+    initLocation: typeof KeyNavListActions.init;
   }
 
-  export type Props = StoreProps & DispatchProps;
+  export interface OwnProps {
+    listId: string;
+  }
+
+  export type Props = StoreProps & DispatchProps & OwnProps;
 
   export interface State {
     reading: AsyncValue<Reading>;
@@ -72,6 +78,8 @@ class ReadingInputInternal extends React.PureComponent<ReadingInput.Props, Readi
 
   private handleChange = (evt: React.SyntheticEvent<HTMLInputElement>) => {
     this.props.setValue(evt.currentTarget.value);
+    // reset location to prevent as changing value un/filters items
+    this.props.initLocation({ id: this.props.listId });
   };
 
   private handleKeyUp = (evt: React.KeyboardEvent<HTMLInputElement>) => {
@@ -117,7 +125,8 @@ function mapStateToProps(state: RootState): ReadingInput.StoreProps {
 
 const mapDispatchToProps: ReadingInput.DispatchProps = {
   setValue: ReadingsActions.setInputValue,
-  addReading: ReadingsActions.addReading
+  addReading: ReadingsActions.addReading,
+  initLocation: KeyNavListActions.init
 };
 
 const enhanceWithRedux = connect(mapStateToProps, mapDispatchToProps);

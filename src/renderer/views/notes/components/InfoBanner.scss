@@ -1,6 +1,24 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
 .info-banner {
   padding: 3px 0 1px;
   text-align: center;
   font-size: 10px;
   color: white;
+
+  &.-danger {
+    background-color: $red3;
+  }
+
+  &.-primary {
+    background-color: $blue3;
+  }
+
+  &.-success {
+    background-color: $green3;
+  }
+
+  &.-warning {
+    background-color: $gold3;
+  }
 }
