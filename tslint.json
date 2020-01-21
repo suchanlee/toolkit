@@ -7,6 +7,7 @@
   ],
   "jsRules": {},
   "rules": {
+    "function-name": false,
     "import-name": false,
     "indent": [true, "spaces", 2],
     "jsx-alignment": true,
@@ -18,7 +19,6 @@
     "no-else-after-return": false,
     "object-literal-shorthand": false,
     "ordered-imports": [true, {
-      
     }],
     "quotemark": [true, "double"],
     "ter-indent": false,
