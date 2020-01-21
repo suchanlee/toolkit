@@ -71,3 +71,6 @@ npm run dist -- -mwl
 
 ## NOTES Tab
 
+| Description          | Keyboard    |
+| -------------------- | ----------- |
+| Create a new note    | Cmd + N     |
