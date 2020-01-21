@@ -1,5 +1,9 @@
 # toolkit
 
+
+
+
+
 ## Install
 Clone the repository with Git:
 
@@ -44,3 +48,27 @@ You can make builds for specific platforms (or multiple platforms) by using the 
 ```bash
 npm run dist -- -mwl
 ```
+
+
+
+# Keyboard Shortcuts
+
+
+| Description          | Keyboard    |
+| -------------------- | ----------- |
+| Go to "TODOS" Tab    | Cmd + 1     |
+| Go to "READINGS" Tab | Cmd + 2     |
+| Go to "NOTES" Tab    | Cmd + 3     |
+
+
+## TODOS Tab
+
+
+## READINGS Tab
+
+| Description          | Keyboard    |
+| -------------------- | ----------- |
+| Open a page          | Cmd + Enter |
+
+## NOTES Tab
+
