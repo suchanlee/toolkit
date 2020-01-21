@@ -18,7 +18,7 @@
       background-color: #2b303b;
 
       .note-tab-close {
-        display: inline;
+        visibility: visible;
       }
 
       &:hover {
@@ -30,7 +30,7 @@
 
     &:hover {
       .note-tab-close {
-        display: inline;
+        visibility: visible;
         color: $gray3;
       }
     }
@@ -43,7 +43,7 @@
     }
 
     .note-tab-close {
-      display: none;
+      visibility: hidden;
       flex-grow: 0;
     }
   }
