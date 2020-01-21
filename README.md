@@ -49,11 +49,13 @@ npm run dist -- -mwl
 ```
 
 # Keyboard Shortcuts
+
 | Description          | Keyboard    |
 | -------------------- | ----------- |
 | Go to "TODOS" Tab    | Cmd + 1     |
 | Go to "READINGS" Tab | Cmd + 2     |
 | Go to "NOTES" Tab    | Cmd + 3     |
+| Zoom in / Out        | Cmd + +/-   |
 
 
 ## TODOS Tab
