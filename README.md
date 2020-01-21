@@ -1,6 +1,8 @@
 # toolkit
 
-![][./assets/intro.png]
+Toolkit is a set of tools that help my day job.
+
+![](./assets/intro.png)
 
 ## Install
 
