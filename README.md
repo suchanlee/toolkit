@@ -1,11 +1,9 @@
 # toolkit
-
 Toolkit is a set of tools that help my day job.
 
 ![](./assets/intro.png)
 
 ## Install
-
 Clone the repository with Git:
 
 ```bash
@@ -51,7 +49,6 @@ npm run dist -- -mwl
 ```
 
 # Keyboard Shortcuts
-
 | Description          | Keyboard    |
 | -------------------- | ----------- |
 | Go to "TODOS" Tab    | Cmd + 1     |
