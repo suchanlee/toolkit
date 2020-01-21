@@ -75,7 +75,7 @@ class ReadingInputInternal extends React.PureComponent<ReadingInput.Props, Readi
   };
 
   private handleKeyUp = (evt: React.KeyboardEvent<HTMLInputElement>) => {
-    if (evt.key === "Enter" && isLoaded(this.state.reading)) {
+    if (evt.key === "Enter") {
       this.maybeAddReading();
       // stopPropagation to stop key nav list item from selecting
       evt.stopPropagation();
