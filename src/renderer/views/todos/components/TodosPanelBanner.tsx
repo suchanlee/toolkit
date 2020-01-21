@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { selectKeyNavListLocations } from "../../../selectors/keyNavListSelectors";
 import { KNL_NON_SELECTING_ROW } from "../../../states/keyNavListState";
 import { RootState } from "../../../states/rootState";
+import { InfoBanner } from "../../notes/components/InfoBanner";
 
 require("./TodosPanelBanner.scss");
 
@@ -24,19 +25,18 @@ class TodosPanelBannerInternal extends React.PureComponent<TodosPanelBanner.Prop
   public render() {
     const { isReadonly, isSelectingTodo } = this.props;
     return (
-      <div
+      <InfoBanner
         className={classNames("todos-panel-banner", {
           "-readonly": isReadonly,
           "-selection": !isReadonly && isSelectingTodo,
           "-input": !isReadonly && !isSelectingTodo
         })}
-      >
-        {this.renderContent()}
-      </div>
+        text={this.getText()}
+      />
     );
   }
 
-  private renderContent() {
+  private getText() {
     if (this.props.isReadonly) {
       return "NON-TODAY TODOS ARE READ ONLY";
     } else if (this.props.isSelectingTodo) {
