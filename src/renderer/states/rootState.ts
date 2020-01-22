@@ -2,6 +2,7 @@ import { View } from "../types/viewTypes";
 import { WithNotesState } from "../views/notes/redux/notesState";
 import { WithReadingsState } from "../views/readings/redux/readingsState";
 import { WithTodosState } from "../views/todos/redux/todosState";
+import { BannerState, createInitialBannerState } from "./bannerState";
 import {
   createInitiailFloatingMenuState as createInitialFloatingMenuState,
   FloatingMenuState
@@ -13,6 +14,7 @@ export type RootState = {
   navigation: NavigationState;
   floatingMenu: FloatingMenuState;
   keyNavList: KeyNavListState;
+  banner: BannerState;
 } & WithNotesState &
   WithReadingsState &
   WithTodosState;
@@ -21,7 +23,8 @@ export function createInitialRootState(views: readonly View<any, any>[]): RootSt
   const rootState: Record<string, any> = {
     navigation: createInitialNavigationState(),
     floatingMenu: createInitialFloatingMenuState(),
-    keyNavList: createInitialKeyNavListState()
+    keyNavList: createInitialKeyNavListState(),
+    banner: createInitialBannerState()
   };
 
   for (const view of views) {

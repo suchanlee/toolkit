@@ -6,8 +6,9 @@ import { NavigationActions } from "../../actions/navigationActions";
 import { selectNavigationActiveView } from "../../selectors/navigationSelectors";
 import { RootState } from "../../states/rootState";
 import { Views } from "../../views/view";
+import { BannerMenuItem } from "./BannerMenuItem";
 
-require("./TopMenu.scss");
+import "./TopMenu.scss";
 
 export namespace TopMenu {
   export interface StoreProps {
@@ -25,7 +26,10 @@ class TopMenuInternal extends React.PureComponent<TopMenu.Props> {
   public render() {
     return (
       <div className={classNames("top-menu", Classes.ELEVATION_0)}>
-        {Views.map(view => this.renderMenuItem(view.name))}
+        <span className="top-menu-views">{Views.map(view => this.renderMenuItem(view.name))}</span>
+        <span className="top-menu-others">
+          <BannerMenuItem />
+        </span>
       </div>
     );
   }

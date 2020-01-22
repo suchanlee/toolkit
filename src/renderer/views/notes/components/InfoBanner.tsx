@@ -7,11 +7,11 @@ export namespace InfoBanner {
   export interface Props {
     className?: string;
     intent?: Intent;
-    text: string;
+    value: string | JSX.Element;
   }
 }
 
-export function InfoBanner(props: InfoBanner.Props) {
+export const InfoBanner = React.memo((props: InfoBanner.Props) => {
   return (
     <div
       className={classNames("info-banner", props.className, {
@@ -21,7 +21,7 @@ export function InfoBanner(props: InfoBanner.Props) {
         "-warning": props.intent === Intent.WARNING
       })}
     >
-      {props.text}
+      {props.value}
     </div>
   );
-}
+});

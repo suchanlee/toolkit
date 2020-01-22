@@ -1,0 +1,7 @@
+.banner-info-banner {
+  // can't text-align:center :(
+  // https://github.com/palantir/blueprint/issues/2021#issuecomment-393744854
+  text-align: left;
+  display: flex;
+  justify-content: center;
+}

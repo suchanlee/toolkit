@@ -23,7 +23,7 @@ function ReadingBannerInternal(props: ReadingBanner.Props) {
     ? "ENTER TO OPEN IN PANEL / ⌘+ENTER TO OPEN IN BROWSER"
     : "PASTE URL AND PRESS ENTER TO ADD";
 
-  return <InfoBanner intent={props.isSelectingReading ? Intent.PRIMARY : undefined} text={text} />;
+  return <InfoBanner intent={props.isSelectingReading ? Intent.PRIMARY : undefined} value={text} />;
 }
 
 function mapStoreProps(

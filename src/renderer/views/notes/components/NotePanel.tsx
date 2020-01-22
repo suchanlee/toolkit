@@ -49,7 +49,7 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
         onClose={this.handleClose}
         title={note != null ? getNoteTitle(note) : ""}
       >
-        <InfoBanner text="⌘+N FOR NEW, ⌘+W TO CLOSE TAB, ⌘+⌥+←→ TO NAV" />
+        <InfoBanner value="⌘+N FOR NEW, ⌘+W TO CLOSE TAB, ⌘+⌥+←→ TO NAV" />
         {note != null && (
           <React.Fragment>
             <NoteTabs

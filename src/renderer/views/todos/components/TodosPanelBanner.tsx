@@ -21,7 +21,7 @@ export namespace TodosPanelBanner {
 
 class TodosPanelBannerInternal extends React.PureComponent<TodosPanelBanner.Props> {
   public render() {
-    return <InfoBanner intent={this.getIntent()} text={this.getText()} />;
+    return <InfoBanner intent={this.getIntent()} value={this.getText()} />;
   }
 
   private getIntent() {
