@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron-better-ipc";
 import { setWith, TypedAction } from "redoodle";
-import { all, put, select, takeEvery } from "redux-saga/effects";
+import { all, debounce, put, select, takeEvery } from "redux-saga/effects";
 import { IpcEvent } from "../../../../shared/ipcEvent";
 import { Iso8601String } from "../../../types/types";
 import { Note, NotesById } from "../notesTypes";
@@ -16,7 +16,8 @@ export function* notesSaga() {
     yield takeEvery(NotesActions.deleteNote.TYPE, deleteNote),
     yield takeEvery(NotesActions.deleteNotesIfEmpty.TYPE, deleteNotesIfEmpty),
     yield takeEvery(NotesActions.setNoteValue.TYPE, setNoteValue),
-    yield takeEvery(NotesActions.setArchiveStatus.TYPE, setNoteStatus)
+    yield takeEvery(NotesActions.setArchiveStatus.TYPE, setNoteStatus),
+    yield debounce(300, DEBOUNCED_WRITE_NOTES, writeNotes)
   ]);
 }
 
@@ -39,7 +40,7 @@ function* addNote(action: TypedAction<Note>) {
     [action.payload.id]: action.payload
   };
   yield put(NotesInternalActions.setNotes(newNotes));
-  writeNotes(newNotes);
+  yield writeNotes();
 }
 
 function* deleteNote(action: TypedAction<NotesActions.DeleteNotePayload>) {
@@ -47,22 +48,28 @@ function* deleteNote(action: TypedAction<NotesActions.DeleteNotePayload>) {
   const newNotes: NotesById = { ...currentNotes };
   delete newNotes[action.payload.id];
   yield put(NotesInternalActions.setNotes(newNotes));
-  writeNotes(newNotes);
+  yield writeNotes();
 }
 
 function* deleteNotesIfEmpty(action: TypedAction<NotesActions.DeleteNotesIfEmptyPayload>) {
   const currentNotes: NotesById = yield select(selectNotesNotes);
   const newNotes: NotesById = { ...currentNotes };
 
+  let hasDeleted = false;
   for (const id of action.payload.ids) {
     const note = currentNotes[id];
     if (note?.value.trim().length === 0) {
       delete newNotes[id];
+      hasDeleted = true;
     }
   }
 
+  if (!hasDeleted) {
+    return;
+  }
+
   yield put(NotesInternalActions.setNotes(newNotes));
-  writeNotes(newNotes);
+  yield writeNotes();
 }
 
 function* setNoteValue(action: TypedAction<NotesActions.SetNoteValuePayload>) {
@@ -77,7 +84,7 @@ function* setNoteValue(action: TypedAction<NotesActions.SetNoteValuePayload>) {
   };
 
   yield put(NotesInternalActions.setNotes(newNotes));
-  writeNotes(newNotes);
+  yield put({ type: DEBOUNCED_WRITE_NOTES });
 }
 
 function* setNoteStatus(action: TypedAction<NotesActions.SetStatusPayload>) {
@@ -95,12 +102,15 @@ function* setNoteStatus(action: TypedAction<NotesActions.SetStatusPayload>) {
   });
 
   yield put(NotesInternalActions.setNotes(newNotes));
-  writeNotes(newNotes);
+  yield writeNotes();
 }
 
-function writeNotes(notes: NotesById) {
+function* writeNotes() {
+  const notes: NotesById = yield select(selectNotesNotes);
   ipcRenderer.callMain(IpcEvent.WRITE_DATA, {
     fileName: NOTES_FILE_NAME,
     data: notes
   });
 }
+
+const DEBOUNCED_WRITE_NOTES = "DEBOUNCED_WRITE_NOTES";

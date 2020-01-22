@@ -30,6 +30,12 @@ class NoteListInternal extends React.PureComponent<NoteList.Props> {
   private listId = uuid();
 
   public render() {
+    if (this.props.hasActive) {
+      // don't render NoteItems, which has potentially expensive computation,
+      // when it's not even displayed
+      return null;
+    }
+
     if (this.props.notes.length === 0) {
       return <p className="note-list-non-ideal-state">No notes.</p>;
     }
