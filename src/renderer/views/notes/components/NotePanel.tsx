@@ -33,6 +33,10 @@ export namespace NotePanel {
 class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
   private editorRef = React.createRef<CodeMirrorEditor>();
 
+  public componentDidMount() {
+    this.maybeSetEditorValue(undefined);
+  }
+
   public componentDidUpdate(prevProps: NotePanel.Props) {
     this.maybeSetEditorValue(prevProps.note);
   }
