@@ -20,7 +20,7 @@ export namespace ReadingBanner {
 
 function ReadingBannerInternal(props: ReadingBanner.Props) {
   const text = props.isSelectingReading
-    ? "ENTER TO OPEN IN PANEL, ⌘+ENTER TO OPEN IN BROWSER"
+    ? "ENTER TO OPEN IN PANEL / ⌘+ENTER TO OPEN IN BROWSER"
     : "PASTE URL AND PRESS ENTER TO ADD";
 
   return <InfoBanner intent={props.isSelectingReading ? Intent.PRIMARY : undefined} text={text} />;

@@ -106,12 +106,20 @@ class TodoItemInternal extends React.PureComponent<TodoItem.Props> {
     }
   };
 
+  private handleKeyDown = (evt: KeyboardEvent) => {
+    if (evt.metaKey && evt.key === "Backspace") {
+      this.props.remove({ date: this.props.date, todoId: this.props.todo.id });
+    }
+  };
+
   private bindKeyUp() {
     document.addEventListener("keyup", this.handleKeyUp);
+    document.addEventListener("keydown", this.handleKeyDown);
   }
 
   private unbindKeyUp() {
     document.removeEventListener("keyup", this.handleKeyUp);
+    document.removeEventListener("keydown", this.handleKeyDown);
   }
 
   private changeStatus() {
