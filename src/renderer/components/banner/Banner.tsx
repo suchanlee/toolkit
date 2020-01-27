@@ -49,7 +49,6 @@ const BannerInternal = React.memo((props: Banner.Props) => {
       evt.nativeEvent.stopPropagation();
       evt.nativeEvent.stopImmediatePropagation();
       evt.preventDefault();
-      console.log(evt.key);
     }
   }, []);
 
