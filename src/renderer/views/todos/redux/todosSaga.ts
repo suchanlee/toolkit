@@ -1,10 +1,10 @@
 import { ipcRenderer } from "electron-better-ipc";
 import { setWith, TypedAction } from "redoodle";
-import { all, delay, fork, put, select, takeLatest } from "redux-saga/effects";
+import { all, put, select, takeLatest } from "redux-saga/effects";
 import { IpcEvent } from "../../../../shared/ipcEvent";
-import { DAY_IN_MILLIS, getSundayDate } from "../../../utils/dateUtils";
+import { getSundayDate } from "../../../utils/dateUtils";
 import { createTodo, createTodosDay } from "../todosObjects";
-import { createTodayTodoDate, todoDateToDate, todoDateToStr } from "../utils/todoDateUtils";
+import { todoDateToDate, todoDateToStr } from "../utils/todoDateUtils";
 import { InternalTodosActions, TodosActions } from "./todosActions";
 import {
   selectTodosDateStrs,
@@ -28,7 +28,6 @@ const TODOS_FILE_NAME = "todos";
 export function* todosSaga() {
   yield initializeTodos();
   yield all([
-    yield fork(initializeTodayUpdater),
     yield takeLatest(TodosActions.initToday.TYPE, createTodosToday),
     yield takeLatest(TodosActions.addTodo.TYPE, addTodo),
     yield takeLatest(TodosActions.removeTodo.TYPE, removeTodo),
@@ -66,22 +65,6 @@ function* initializeTodos() {
     })
   );
   yield put(InternalTodosActions.setGroups(persisted.groups));
-}
-
-function* initializeTodayUpdater() {
-  const tomorrowDateInMillis = todoDateToDate(createTodayTodoDate()).getTime() + DAY_IN_MILLIS;
-  const slackTimeInMillis = 5 * 1000; // 5 seconds slack
-
-  // set timeout until midnight and then set next timeout for updating each day
-  let delayTimeMillis = tomorrowDateInMillis - Date.now() + slackTimeInMillis;
-
-  while (true) {
-    yield delay(delayTimeMillis);
-    yield put(TodosActions.updateTodayDate());
-
-    // set delayTimeMillis to be 1 day after this
-    delayTimeMillis = DAY_IN_MILLIS;
-  }
 }
 
 function* createTodosToday(action: TypedAction<TodosActions.InitTodayPayload>) {

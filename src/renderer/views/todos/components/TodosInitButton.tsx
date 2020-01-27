@@ -15,6 +15,7 @@ export namespace TodosInitButton {
 
   export interface DispatchProps {
     initToday: typeof TodosActions.initToday;
+    updateTodayDate: typeof TodosActions.updateTodayDate;
   }
 
   export type Props = StoreProps & DispatchProps;
@@ -33,6 +34,7 @@ class TodosInitButtonInternal extends React.PureComponent<
   };
 
   public componentDidMount() {
+    this.props.updateTodayDate();
     mousetrap.bind("command+n", this.handleKeyDown);
   }
 
@@ -105,7 +107,8 @@ function mapStateToProps(state: RootState): TodosInitButton.StoreProps {
 }
 
 const mapDispatchToProps: TodosInitButton.DispatchProps = {
-  initToday: TodosActions.initToday
+  initToday: TodosActions.initToday,
+  updateTodayDate: TodosActions.updateTodayDate
 };
 
 const enhance = connect(mapStateToProps, mapDispatchToProps);
