@@ -19,4 +19,11 @@
       border-bottom: 2px solid $light-gray5;
     }
   }
+
+  .top-menu-others {
+    .top-menu-item {
+      margin-right: 0;
+      margin-left: 20px;
+    }
+  }
 }
