@@ -5,5 +5,18 @@
     height: 100%;
     font-family: "Menlo", monospace;
     font-size: 12px;
+
+    .CodeMirror-selected {
+      color: red;
+      background-color: white;
+    }
+  }
+
+  .CodeMirror-dialog {
+    background-color: #182026;
+
+    input {
+      font-family: "Menlo", monospace;
+    }
   }
 }

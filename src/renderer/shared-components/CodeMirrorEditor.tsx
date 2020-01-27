@@ -8,7 +8,11 @@ import "./CodeMirrorEditor.scss";
 
 // no mode yet
 // import "codemirror/mode/javascript/javascript.js";
+import "codemirror/addon/dialog/dialog.css";
+import "codemirror/addon/dialog/dialog.js";
 import "codemirror/addon/edit/closebrackets.js";
+import "codemirror/addon/search/search.js";
+import "codemirror/addon/search/searchcursor.js";
 import "codemirror/addon/selection/active-line.js";
 
 export namespace CodeMirrorEditor {
@@ -38,7 +42,10 @@ export class CodeMirrorEditor extends React.PureComponent<CodeMirrorEditor.Props
         styleActiveLine: true,
         lineWrapping: true,
         autoCloseBrackets: true,
-        mode: ""
+        mode: "",
+        extraKeys: {
+          "Cmd-F": "findPersistent"
+        }
         // no modes for now
         // mode: {
         //   name: "javascript",
