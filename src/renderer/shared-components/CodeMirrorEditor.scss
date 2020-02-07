@@ -4,12 +4,11 @@
   .CodeMirror {
     height: 100%;
     font-family: "Menlo", monospace;
-    font-size: 12px;
+    font-size: 14px;
+  }
 
-    .CodeMirror-selected {
-      color: red;
-      background-color: white;
-    }
+  .CodeMirror-linenumber {
+    padding-right: 15px;
   }
 
   .CodeMirror-dialog {
