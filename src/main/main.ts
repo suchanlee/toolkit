@@ -1,9 +1,10 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, Notification } from "electron";
 import { autoUpdater } from "electron-updater";
 import * as path from "path";
 import * as url from "url";
 import { registerMainIpcListeners } from "./ipc";
 import { registerMenu } from "./menu/registerMenu";
+import { registerMorningNotification } from "./notification/registerMorningNotification";
 
 let win: BrowserWindow | null;
 
@@ -52,7 +53,13 @@ const createWindow = async () => {
     });
   }
 
+  new Notification({
+    title: "This is an notification",
+    body: "Test test test"
+  }).show();
+
   registerMenu();
+  registerMorningNotification();
   registerMainIpcListeners();
   autoUpdater.checkForUpdatesAndNotify();
 
