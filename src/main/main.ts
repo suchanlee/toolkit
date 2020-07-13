@@ -24,7 +24,13 @@ const createWindow = async () => {
     await installExtensions();
   }
 
-  win = new BrowserWindow({ width: 400, height: 650 });
+  win = new BrowserWindow({
+    width: 400,
+    height: 650,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
 
   if (!IS_PRODUCTION) {
     process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "1";
@@ -70,6 +76,6 @@ app.on("activate", () => {
 });
 
 if (!IS_PRODUCTION) {
-  app.setName("Toolkit");
-  app.setPath("userData", path.join(app.getPath("appData"), app.getName()));
+  app.name = "Toolkit";
+  app.setPath("userData", path.join(app.getPath("appData"), app.name));
 }

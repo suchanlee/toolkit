@@ -9,17 +9,17 @@ export function registerMenu() {
     ...(isMac
       ? [
           {
-            label: app.getName(),
+            label: app.name,
             submenu: [
-              { role: "about" },
+              { role: "about" as "about" },
               { type: separator },
-              { role: "services" },
+              { role: "services" as "services" },
               { type: separator },
-              { role: "hide" },
-              { role: "hideothers" },
-              { role: "unhide" },
+              { role: "hide" as "hide" },
+              { role: "hideOthers" as "hideOthers" },
+              { role: "unhide" as "unhide" },
               { type: separator },
-              { role: "quit" }
+              { role: "quit" as "quit" }
             ]
           }
         ]
@@ -34,60 +34,72 @@ export function registerMenu() {
               accelerator: "CommandOrControl+W",
               id: "close",
               registerAccelerator: true,
-              click: (_menuItem, browserWindow) => {
+              click: (_menuItem: Electron.MenuItem, browserWindow: Electron.BrowserWindow) => {
                 if (browserWindow != null) {
                   browserWindow.close();
                 }
               }
             }
-          : { role: "quit" }
+          : { role: "quit" as "quit" }
       ]
     },
     {
       label: "Edit",
       submenu: [
-        { role: "undo" },
-        { role: "redo" },
+        { role: "undo" as "undo" },
+        { role: "redo" as "redo" },
         { type: separator },
-        { role: "cut" },
-        { role: "copy" },
-        { role: "paste" },
+        { role: "cut" as "cut" },
+        { role: "copy" as "copy" },
+        { role: "paste" as "paste" },
         ...(isMac
           ? [
-              { role: "pasteAndMatchStyle" },
-              { role: "delete" },
-              { role: "selectAll" },
+              { role: "pasteAndMatchStyle" as "pasteAndMatchStyle" },
+              { role: "delete" as "delete" },
+              { role: "selectAll" as "selectAll" },
               { type: separator },
               {
                 label: "Speech",
-                submenu: [{ role: "startspeaking" }, { role: "stopspeaking" }]
+                submenu: [
+                  { role: "startSpeaking" as "startSpeaking" },
+                  { role: "stopSpeaking" as "stopSpeaking" }
+                ]
               }
             ]
-          : [{ role: "delete" }, { type: separator }, { role: "selectAll" }])
+          : [
+              { role: "delete" as "delete" },
+              { type: separator },
+              { role: "selectAll" as "selectAll" }
+            ])
       ]
     },
     {
       label: "View",
       submenu: [
-        { role: "reload" },
-        { role: "forcereload" },
-        { role: "toggledevtools" },
+        { role: "reload" as "reload" },
+        { role: "forceReload" as "forceReload" },
+        { role: "toggleDevTools" as "toggleDevTools" },
         { type: separator },
-        { role: "resetzoom" },
-        { role: "zoomin", accelerator: "CommandOrControl+=" },
-        { role: "zoomout" },
+        { role: "resetZoom" as "resetZoom" },
+        { role: "zoomIn" as "zoomIn", accelerator: "CommandOrControl+=" },
+        { role: "zoomOut" as "zoomOut" },
         { type: separator },
-        { role: "togglefullscreen" }
+        { role: "togglefullscreen" as "togglefullscreen" }
       ]
     },
     {
       label: "Window",
       submenu: [
-        { role: "minimize" },
-        { role: "zoom" },
+        { role: "minimize" as "minimize" },
+        { role: "zoom" as "zoom" },
         ...(isMac
-          ? [{ type: separator }, { role: "front" }, { type: separator }, { role: "window" }]
-          : [{ role: "close" }])
+          ? [
+              { type: separator },
+              { role: "front" as "front" },
+              { type: separator },
+              { role: "window" as "window" }
+            ]
+          : [{ role: "close" as "close" }])
       ]
     }
   ];
