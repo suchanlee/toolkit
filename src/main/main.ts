@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Notification } from "electron";
+import { app, BrowserWindow } from "electron";
 import { autoUpdater } from "electron-updater";
 import * as path from "path";
 import * as url from "url";
@@ -52,11 +52,6 @@ const createWindow = async () => {
       win!.webContents.openDevTools();
     });
   }
-
-  new Notification({
-    title: "This is an notification",
-    body: "Test test test"
-  }).show();
 
   registerMenu();
   registerMorningNotification();
