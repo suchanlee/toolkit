@@ -3,6 +3,7 @@ import { TodoDate, TodoGroupsById, TodosDaysByDateStrs, TodoStatus, TodoType } f
 
 export namespace TodosActions {
   export const setActive = TypedAction.define("todos::set-active")<TodoDate | undefined>();
+  export const setSummary = TypedAction.define("todos::set-summary")<TodoDate | undefined>();
   export const initToday = TypedAction.define("todos::init-today")<InitTodayPayload>();
   export const addTodo = TypedAction.define("todos::add-todo")<AddTodoPayload>();
   export const removeTodo = TypedAction.define("todos::remove-todo")<RemoveTodoPayload>();

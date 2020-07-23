@@ -1,0 +1,33 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.todos-week-summary-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: #2b303b;
+  color: #c0c5ce;
+  padding: 20px;
+
+  h4 {
+    margin: 10px 0;
+  }
+
+  ul {
+    margin-top: 0;
+    padding-left: 25px;
+    font-size: 14px;
+  }
+
+  li {
+    padding: 2px 0;
+  }
+
+  .todos-week-summary-panel-finished {
+    color: $green4;
+  }
+
+  .todos-week-summary-panel-in-progress {
+    color: $gold4;
+  }
+}

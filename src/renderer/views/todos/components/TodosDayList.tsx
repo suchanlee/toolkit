@@ -12,6 +12,7 @@ import {
 import { TodosDay } from "../redux/todosTypes";
 import { createTodoDate, todoDateToStr } from "../utils/todoDateUtils";
 import { TodosDayItem } from "./TodosDayItem";
+import { TodosWeekSummaryButton } from "./TodosWeekSummaryButton";
 
 require("./TodosDayList.scss");
 
@@ -55,9 +56,13 @@ class TodosDayListInternal extends React.PureComponent<TodosDayList.Props> {
   private renderItem = (day: TodosDay) => {
     const sunday = this.props.sundaysByTodoDateStr.get(todoDateToStr(day.date));
     if (sunday != null) {
+      const sundayTodoDate = createTodoDate(sunday);
       return (
         <React.Fragment>
-          <div className="todos-day-week">Week of {todoDateToStr(createTodoDate(sunday))}</div>
+          <div className="todos-day-week">
+            <span>Week of {todoDateToStr(sundayTodoDate)}</span>
+            <TodosWeekSummaryButton date={sundayTodoDate} />
+          </div>
           <TodosDayItem day={day} />
         </React.Fragment>
       );

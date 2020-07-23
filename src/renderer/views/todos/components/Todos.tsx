@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TodosDayList } from "./TodosDayList";
 import { TodosInitButton } from "./TodosInitButton";
 import { TodosPanel } from "./TodosPanel";
+import { TodosWeekSummaryPanel } from "./TodosWeekSummaryPanel";
 
 export function Todos() {
   const [counter, setCounter] = useState<number>(0);
-  React.useEffect(() => {
+  useEffect(() => {
     const handler = () => setCounter(counter + 1);
     window.addEventListener("focus", handler);
     return () => {
@@ -21,6 +22,7 @@ export function Todos() {
       <TodosInitButton key={counter} />
       <TodosDayList />
       <TodosPanel />
+      <TodosWeekSummaryPanel />
     </div>
   );
 }

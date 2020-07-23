@@ -1,7 +1,10 @@
 @import "~@blueprintjs/core/lib/scss/variables";
 
 .todos-day-week {
-  padding: 15px 0 5px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 10px 5px;
   font-weight: 600;
   font-size: 13px;
   border-bottom: 1px solid #232830;

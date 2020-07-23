@@ -6,15 +6,17 @@ import {
   isTodoDatesEqual,
   todoDateStrToTodoDate,
   todoDateToDate,
+  todoDateToNumber,
   todoDateToStr
 } from "../utils/todoDateUtils";
-import { PersistedTodos } from "./todosTypes";
+import { PersistedTodos, TodoDate, TodosDay } from "./todosTypes";
 
 export const selectTodos = (state: RootState) => state.todos;
 export const selectTodosDays = (state: RootState) => state.todos.days;
 export const selectTodosDateStrs = (state: RootState) => state.todos.dateStrs;
 export const selectTodosGroups = (state: RootState) => state.todos.groups;
 export const selectTodosActiveDate = (state: RootState) => state.todos.activeDate;
+export const selectTodosSummaryDate = (state: RootState) => state.todos.summaryDate;
 
 export const selectTodosDaysAsArray = createSelector(
   selectTodosDays,
@@ -40,6 +42,34 @@ export const selectActiveTodosDay = createSelector(
     }
 
     return days[todoDateToStr(activeDate)];
+  }
+);
+
+export const selectSummaryTodosWeek = createSelector(
+  selectTodosDaysAsArray,
+  selectTodosSummaryDate,
+  (days, summaryDate) => {
+    const week: TodosDay[] = [];
+    if (summaryDate == null) {
+      return week;
+    }
+
+    const nextSunday: TodoDate = { ...summaryDate, day: summaryDate.day + 7 };
+    const currSundayDateNum = todoDateToNumber(summaryDate);
+    const nextSundayDateNum = todoDateToNumber(nextSunday);
+
+    for (const day of days) {
+      const dateNumber = todoDateToNumber(day.date);
+      if (currSundayDateNum > dateNumber) {
+        break;
+      }
+
+      if (nextSundayDateNum > dateNumber) {
+        week.push(day);
+      }
+    }
+
+    return week;
   }
 );
 
