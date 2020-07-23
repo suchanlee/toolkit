@@ -7,7 +7,8 @@
   width: 100%;
   background-color: #2b303b;
   color: #c0c5ce;
-  padding: 20px;
+  padding: 20px 20px 200px;
+  overflow-y: auto;
 
   h4 {
     margin: 10px 0;
@@ -21,6 +22,10 @@
 
   li {
     padding: 2px 0;
+  }
+
+  a {
+    word-break: break-all;
   }
 
   .todos-week-summary-panel-finished {
