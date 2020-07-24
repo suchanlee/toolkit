@@ -103,11 +103,12 @@ export const selectTodosPersist = createSelector(
   (days, groups): PersistedTodos => ({ todosDays: days, groups: groups })
 );
 
-export const selectTodosHasToday = createSelector(selectTodosDateStrs, dateStrs => {
+export const selectTodosHasToday = (state: RootState) => {
+  const dateStrs = selectTodosDateStrs(state);
   const todayDate = createTodayTodoDate();
   const lastDateStr = dateStrs[0];
   return lastDateStr != null && isTodoDatesEqual(todayDate, todoDateStrToTodoDate(lastDateStr));
-});
+};
 
 export const selectTodosSundaysByTodoDateStr = createSelector(selectTodosDaysAsArray, days => {
   const sundaysByDayDateStr = new Map<string, Date>();
