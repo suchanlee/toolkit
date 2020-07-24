@@ -1,4 +1,5 @@
 import { Alert, Button, Callout, Classes } from "@blueprintjs/core";
+import classNames from "classnames";
 import * as mousetrap from "mousetrap";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -49,7 +50,7 @@ class TodosInitButtonInternal extends React.PureComponent<
       <Callout className="todos-init-button" intent="primary" icon={null}>
         <Button text="Initialize todos for today (⌘N)" minimal={true} onClick={this.handleClick} />
         <Alert
-          className={Classes.DARK}
+          className={classNames(Classes.DARK, "todos-init-alert")}
           isOpen={this.state.isOpen}
           onClose={this.handleClose}
           onOpened={this.handleOpened}
