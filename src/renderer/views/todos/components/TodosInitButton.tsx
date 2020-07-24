@@ -62,10 +62,6 @@ class TodosInitButtonInternal extends React.PureComponent<
           cancelButtonText="No (N)"
         >
           <p>Would you like to inherit todos from the latest available todo day?</p>
-          <p>
-            WEEK TODOS will automatically be inherited if the latest available todo day is in the
-            same week as today.
-          </p>
         </Alert>
       </Callout>
     );
