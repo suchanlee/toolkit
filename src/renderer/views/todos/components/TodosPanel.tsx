@@ -31,7 +31,6 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props> {
 
   public render() {
     const { active, isReadonly } = this.props;
-
     return (
       <PanelContainer
         className="todos-panel-container"

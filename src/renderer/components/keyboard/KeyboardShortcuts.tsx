@@ -1,15 +1,12 @@
 import * as mousetrap from "mousetrap";
 import * as React from "react";
 import { connect } from "react-redux";
-import { FloatingMenuActions } from "../../actions/floatingMenuActions";
 import { NavigationActions } from "../../actions/navigationActions";
 import { View } from "../../types/viewTypes";
 import { Views } from "../../views/view";
 
 export namespace KeyboardShortcuts {
   export interface DispatchProps {
-    showFloatingMenu: typeof FloatingMenuActions.show;
-    hideFloatingMenu: typeof FloatingMenuActions.hide;
     setNav: typeof NavigationActions.setNav;
   }
 
@@ -32,10 +29,6 @@ class KeyboardShortcutsInternal extends React.PureComponent<KeyboardShortcuts.Pr
   }
 
   private registerKeyboardListeners() {
-    // floating menu
-    mousetrap.bind("esc", this.props.hideFloatingMenu);
-    mousetrap.bind("/", this.handleSlashKeyUp);
-
     // navigation
     Views.forEach((view, index) => {
       // start from index 1 for easier keyboard nav
@@ -54,17 +47,6 @@ class KeyboardShortcutsInternal extends React.PureComponent<KeyboardShortcuts.Pr
     this.navListenerUnsubscribeCallbacks.forEach(callback => callback());
   }
 
-  private handleSlashKeyUp = (evt: ExtendedKeyboardEvent) => {
-    const target = (evt.target ?? evt.srcElement) as HTMLElement | null;
-    if (target == null || !SLASH_IGNORED_TAG_NAMES.has(target.tagName?.toLowerCase())) {
-      this.props.showFloatingMenu();
-      // prevent default of this keyUp as it will cause the floating menu
-      // input to have the "/" key registered and set as value
-      // evt.stopPropagation();
-      evt.preventDefault();
-    }
-  };
-
   private createNavCallback(index: number, view: View<any>) {
     return (evt: KeyboardEvent) => {
       if (evt.key === `${index}` && evt.metaKey) {
@@ -74,11 +56,9 @@ class KeyboardShortcutsInternal extends React.PureComponent<KeyboardShortcuts.Pr
   }
 }
 
-const SLASH_IGNORED_TAG_NAMES = new Set(["input", "textarea", "select"]);
+// const SLASH_IGNORED_TAG_NAMES = new Set(["input", "textarea", "select"]);
 
 const mapDispatchToProps: KeyboardShortcuts.DispatchProps = {
-  showFloatingMenu: FloatingMenuActions.show,
-  hideFloatingMenu: FloatingMenuActions.hide,
   setNav: NavigationActions.setNav
 };
 

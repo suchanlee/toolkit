@@ -1,7 +1,6 @@
 import { Classes, Icon } from "@blueprintjs/core";
 import classNames from "classnames";
-import * as mousetrap from "mousetrap";
-import * as React from "react";
+import React from "react";
 
 require("./PanelContainer.scss");
 
@@ -16,11 +15,11 @@ export namespace PanelContainer {
 
 export class PanelContainer extends React.PureComponent<PanelContainer.Props> {
   public componentDidMount() {
-    mousetrap.bind("esc", this.props.onClose);
+    window.addEventListener("keyup", this.handleKeyUp);
   }
 
   public componentWillUnmount() {
-    mousetrap.unbind("esc");
+    window.removeEventListener("keyup", this.handleKeyUp);
   }
 
   public render() {
@@ -42,4 +41,10 @@ export class PanelContainer extends React.PureComponent<PanelContainer.Props> {
       </div>
     );
   }
+
+  private handleKeyUp = (evt: KeyboardEvent) => {
+    if (evt.key === "Escape" && this.props.isOpen) {
+      this.props.onClose();
+    }
+  };
 }
