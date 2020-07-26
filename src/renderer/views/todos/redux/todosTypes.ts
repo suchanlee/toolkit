@@ -7,7 +7,6 @@ export interface TodoGroup {
 
 export interface Todo extends Entry {
   groupId?: string;
-  todoType: TodoType;
   type: EntryType.TODO;
   status: TodoStatus;
 }
@@ -30,11 +29,6 @@ export type TodosDaysByDateStrs = {
 export type TodoGroupsById = {
   [id: string]: TodoGroup;
 };
-
-export enum TodoType {
-  WEEK = "WEEK",
-  DAY = "DAY"
-}
 
 export enum TodoStatus {
   NOT_STARTED = "NOT_STARTED",

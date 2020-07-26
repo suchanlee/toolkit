@@ -1,5 +1,5 @@
 import { TypedAction } from "redoodle";
-import { TodoDate, TodoGroupsById, TodosDaysByDateStrs, TodoStatus, TodoType } from "./todosTypes";
+import { TodoDate, TodoGroupsById, TodosDaysByDateStrs, TodoStatus } from "./todosTypes";
 
 export namespace TodosActions {
   export const setActive = TypedAction.define("todos::set-active")<TodoDate | undefined>();
@@ -15,7 +15,6 @@ export namespace TodosActions {
 
   export interface AddTodoPayload {
     value: string;
-    type: TodoType;
   }
 
   export interface RemoveTodoPayload {

@@ -2,9 +2,8 @@ import { ipcRenderer } from "electron-better-ipc";
 import { setWith, TypedAction } from "redoodle";
 import { all, put, select, takeLatest } from "redux-saga/effects";
 import { IpcEvent } from "../../../../shared/ipcEvent";
-import { getSundayDate } from "../../../utils/dateUtils";
 import { createTodo, createTodosDay } from "../todosObjects";
-import { todoDateToDate, todoDateToStr } from "../utils/todoDateUtils";
+import { todoDateToStr } from "../utils/todoDateUtils";
 import { InternalTodosActions, TodosActions } from "./todosActions";
 import {
   selectTodosDateStrs,
@@ -14,14 +13,7 @@ import {
   selectTodosPersist,
   selectTodosToday
 } from "./todosSelectors";
-import {
-  PersistedTodos,
-  Todo,
-  TodosDay,
-  TodosDaysByDateStrs,
-  TodoStatus,
-  TodoType
-} from "./todosTypes";
+import { PersistedTodos, Todo, TodosDay, TodosDaysByDateStrs, TodoStatus } from "./todosTypes";
 
 const TODOS_FILE_NAME = "todos";
 
@@ -78,15 +70,7 @@ function* createTodosToday(action: TypedAction<TodosActions.InitTodayPayload>) {
   let todos: readonly Todo[] = [];
 
   if (latestDay != null) {
-    // inherit WEEK todos regardless of `shouldInherit` value, if latestDay is same week
-    const isSameWeek =
-      getSundayDate(new Date()).getTime() ===
-      getSundayDate(todoDateToDate(latestDay.date)).getTime();
-    todos = latestDay.todos.filter(
-      todo =>
-        todo.status !== TodoStatus.FINISHED &&
-        (shouldInherit || (todo.todoType === TodoType.WEEK && isSameWeek))
-    );
+    todos = latestDay.todos.filter(todo => todo.status !== TodoStatus.FINISHED && shouldInherit);
   }
 
   const today = createTodosDay({ todos });
@@ -117,12 +101,12 @@ function* addTodo(action: TypedAction<TodosActions.AddTodoPayload>) {
     return;
   }
 
-  const { value, type } = action.payload;
+  const { value } = action.payload;
   const days: TodosDaysByDateStrs = yield select(selectTodosDays);
   const newDays = setWith(days, {
     [todoDateToStr(today.date)]: {
       ...today,
-      todos: [createTodo({ value, todoType: type }), ...today.todos]
+      todos: [createTodo({ value }), ...today.todos]
     }
   });
   yield put(InternalTodosActions.setTodos({ days: newDays }));

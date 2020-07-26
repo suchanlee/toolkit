@@ -6,7 +6,6 @@ import { KeyboardNavSupportedInput } from "../../../shared-components/KeyboardNa
 import { KNL_NON_SELECTING_ROW } from "../../../states/keyNavListState";
 import { RootState } from "../../../states/rootState";
 import { TodosActions } from "../redux/todosActions";
-import { TodoType } from "../redux/todosTypes";
 
 require("./TodoInput.scss");
 
@@ -44,10 +43,9 @@ class TodoInputInternal extends React.PureComponent<TodoInput.Props, TodoInput.S
           className="todos-todo-input"
           autoFocus={true}
           value={this.state.value}
-          placeholder="Write and press Enter to add day todo, ⌘+Enter for week todo"
+          placeholder="Write and press Enter to add todo"
           onChange={this.handleChange}
           onKeyUp={this.handleKeyUp}
-          onKeyDown={this.handleKeyDown}
         />
       </div>
     );
@@ -63,16 +61,10 @@ class TodoInputInternal extends React.PureComponent<TodoInput.Props, TodoInput.S
   private handleKeyUp = (evt: React.KeyboardEvent) => {
     if (evt.key === "Escape") {
       this.props.setActive(undefined);
-    }
-  };
-
-  // command + key doesn't get triggered in key up, so use key down
-  private handleKeyDown = (evt: React.KeyboardEvent) => {
-    if (evt.key === "Enter" && !this.props.isSelectingTodo) {
+    } else if (evt.key === "Enter" && !this.props.isSelectingTodo) {
       if (this.state.value.trim().length > 0) {
         this.props.addTodo({
-          value: this.state.value,
-          type: evt.metaKey ? TodoType.WEEK : TodoType.DAY
+          value: this.state.value
         });
         this.setState({ value: "" });
       }
