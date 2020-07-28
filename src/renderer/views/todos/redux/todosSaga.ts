@@ -36,7 +36,7 @@ function* initializeTodos() {
   if (persisted == null) {
     persisted = {
       todosDays: [],
-      groups: {}
+      groups: []
     };
     yield writeTodos(persisted);
   }
@@ -56,7 +56,9 @@ function* initializeTodos() {
       dateStrs
     })
   );
-  yield put(InternalTodosActions.setGroups(persisted.groups));
+
+  const groups = Array.isArray(persisted.groups) ? persisted.groups : [];
+  yield put(InternalTodosActions.setGroups(groups));
 }
 
 function* createTodosToday(action: TypedAction<TodosActions.InitTodayPayload>) {

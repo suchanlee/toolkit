@@ -1,5 +1,13 @@
 .todos-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   flex-grow: 1;
   overflow-y: auto;
-  padding-bottom: 50px;
+  padding-bottom: 40px;
+
+  .todos-list-nav-list {
+    width: 100%;
+  }
 }

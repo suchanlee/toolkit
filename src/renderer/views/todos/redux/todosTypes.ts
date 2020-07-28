@@ -38,5 +38,5 @@ export enum TodoStatus {
 
 export interface PersistedTodos {
   todosDays: readonly TodosDay[];
-  groups: TodoGroupsById;
+  groups: readonly TodoGroup[];
 }

@@ -2,6 +2,7 @@ import { noop } from "lodash-es";
 import * as React from "react";
 import { createKNL } from "../../../shared-components/KeyNavList";
 import { Todo, TodosDay } from "../redux/todosTypes";
+import { TodoGroupsButton } from "./TodoGroupsButton";
 import { TodoItem } from "./TodoItem";
 
 require("./TodosList.scss");
@@ -19,15 +20,18 @@ export namespace TodosList {
 export class TodosList extends React.PureComponent<TodosList.Props> {
   public render() {
     return (
-      <KNL
-        className="todos-list"
-        id={this.props.listId}
-        items={this.props.day.todos}
-        isDisabled={this.props.isReadonly}
-        onItemSelect={noop}
-        getItemKey={getItemKey}
-        renderItem={this.renderItem}
-      />
+      <div className="todos-list">
+        <KNL
+          className="todos-list-nav-list"
+          id={this.props.listId}
+          items={this.props.day.todos}
+          isDisabled={this.props.isReadonly}
+          onItemSelect={noop}
+          getItemKey={getItemKey}
+          renderItem={this.renderItem}
+        />
+        <TodoGroupsButton />
+      </div>
     );
   }
 
