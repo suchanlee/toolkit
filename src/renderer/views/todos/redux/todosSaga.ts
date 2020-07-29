@@ -2,18 +2,26 @@ import { ipcRenderer } from "electron-better-ipc";
 import { setWith, TypedAction } from "redoodle";
 import { all, put, select, takeLatest } from "redux-saga/effects";
 import { IpcEvent } from "../../../../shared/ipcEvent";
-import { createTodo, createTodosDay } from "../todosObjects";
+import { createGroup, createTodo, createTodosDay } from "../todosObjects";
 import { todoDateToStr } from "../utils/todoDateUtils";
 import { InternalTodosActions, TodosActions } from "./todosActions";
 import {
   selectTodosDateStrs,
   selectTodosDays,
+  selectTodosGroups,
   selectTodosHasToday,
   selectTodosLatestDay,
   selectTodosPersist,
   selectTodosToday
 } from "./todosSelectors";
-import { PersistedTodos, Todo, TodosDay, TodosDaysByDateStrs, TodoStatus } from "./todosTypes";
+import {
+  PersistedTodos,
+  Todo,
+  TodoGroup,
+  TodosDay,
+  TodosDaysByDateStrs,
+  TodoStatus
+} from "./todosTypes";
 
 const TODOS_FILE_NAME = "todos";
 
@@ -23,7 +31,11 @@ export function* todosSaga() {
     yield takeLatest(TodosActions.initToday.TYPE, createTodosToday),
     yield takeLatest(TodosActions.addTodo.TYPE, addTodo),
     yield takeLatest(TodosActions.removeTodo.TYPE, removeTodo),
-    yield takeLatest(TodosActions.setTodoStatus.TYPE, setTodoStatus)
+    yield takeLatest(TodosActions.setTodoStatus.TYPE, setTodoStatus),
+    yield takeLatest(TodosActions.addGroup.TYPE, addGroup),
+    yield takeLatest(TodosActions.updateGroup.TYPE, updateGroup),
+    yield takeLatest(TodosActions.removeGroup.TYPE, removeGroup),
+    yield takeLatest(TodosActions.moveGroup.TYPE, moveGroup)
   ]);
 }
 
@@ -163,6 +175,67 @@ function* setTodoStatus(action: TypedAction<TodosActions.SetTodoStatusPayload>) 
   });
 
   yield put(InternalTodosActions.setTodos({ days: newDays }));
+  yield writeTodos();
+}
+
+function* addGroup(action: TypedAction<string>) {
+  const groups: readonly TodoGroup[] = yield select(selectTodosGroups);
+  const newGroups = groups.concat(createGroup(action.payload));
+
+  yield put(InternalTodosActions.setGroups(newGroups));
+  yield writeTodos();
+}
+
+function* removeGroup(action: TypedAction<string>) {
+  const groups: readonly TodoGroup[] = yield select(selectTodosGroups);
+  const groupId = action.payload;
+  const newGroups = groups.filter(group => group.id !== groupId);
+
+  yield put(InternalTodosActions.setGroups(newGroups));
+  yield writeTodos();
+}
+
+function* updateGroup(action: TypedAction<TodoGroup>) {
+  const groups: readonly TodoGroup[] = yield select(selectTodosGroups);
+  const updatedGroup = action.payload;
+
+  const index = groups.findIndex(group => group.id === updatedGroup.id);
+  if (index < 0) {
+    return;
+  }
+
+  const newGroups = [...groups];
+  newGroups[index] = updatedGroup;
+
+  yield put(InternalTodosActions.setGroups(newGroups));
+  yield writeTodos();
+}
+
+function* moveGroup(action: TypedAction<TodosActions.MoveGroupPayload>) {
+  const groups: readonly TodoGroup[] = yield select(selectTodosGroups);
+  const { id, direction } = action.payload;
+
+  const index = groups.findIndex(group => group.id === id);
+  if (index < 0) {
+    return;
+  } else if (index === 0 && direction === "up") {
+    return;
+  } else if (index === groups.length - 1 && direction === "down") {
+    return;
+  }
+
+  const newGroups = [...groups];
+  if (direction === "up") {
+    const temp = newGroups[index - 1];
+    newGroups[index - 1] = newGroups[index];
+    newGroups[index] = temp;
+  } else if (direction === "down") {
+    const temp = newGroups[index + 1];
+    newGroups[index + 1] = newGroups[index];
+    newGroups[index] = temp;
+  }
+
+  yield put(InternalTodosActions.setGroups(newGroups));
   yield writeTodos();
 }
 

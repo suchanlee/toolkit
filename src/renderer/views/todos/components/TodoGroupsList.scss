@@ -1,0 +1,9 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.todo-groups-list {
+  .todo-groups-list-empty {
+    text-align: center;
+    margin-top: 20px;
+    color: $gray3;
+  }
+}
