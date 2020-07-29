@@ -4,8 +4,12 @@ import { v4 as uuid } from "uuid";
 import { PanelContainer } from "../../../shared-components/PanelContainer";
 import { RootState } from "../../../states/rootState";
 import { TodosActions } from "../redux/todosActions";
-import { selectActiveTodosDay, selectTodosIsReadonly } from "../redux/todosSelectors";
-import { TodosDay } from "../redux/todosTypes";
+import {
+  selectActiveTodosDay,
+  selectTodosGroups,
+  selectTodosIsReadonly
+} from "../redux/todosSelectors";
+import { TodoGroup, TodosDay } from "../redux/todosTypes";
 import { todoDateToStr } from "../utils/todoDateUtils";
 import { TodoInput } from "./TodoInput";
 import { TodosList } from "./TodosList";
@@ -17,6 +21,7 @@ export namespace TodosPanel {
   export interface StoreProps {
     active: TodosDay | undefined;
     isReadonly: boolean;
+    groups: readonly TodoGroup[];
   }
 
   export interface DispatchProps {
@@ -30,7 +35,7 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props> {
   private listId = uuid();
 
   public render() {
-    const { active, isReadonly } = this.props;
+    const { active, isReadonly, groups } = this.props;
     return (
       <PanelContainer
         className="todos-panel-container"
@@ -42,7 +47,7 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props> {
           <div className="todos-panel">
             <TodosPanelBanner listId={this.listId} isReadonly={isReadonly} />
             {!isReadonly && <TodoInput listId={this.listId} />}
-            <TodosList listId={this.listId} day={active} isReadonly={isReadonly} />
+            <TodosList listId={this.listId} day={active} isReadonly={isReadonly} groups={groups} />
           </div>
         )}
       </PanelContainer>
@@ -57,7 +62,8 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props> {
 function mapStateToProps(state: RootState): TodosPanel.StoreProps {
   return {
     active: selectActiveTodosDay(state),
-    isReadonly: selectTodosIsReadonly(state)
+    isReadonly: selectTodosIsReadonly(state),
+    groups: selectTodosGroups(state)
   };
 }
 
