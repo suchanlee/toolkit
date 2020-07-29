@@ -39,9 +39,14 @@ export const TodoGroupItem = memo(
           onConfirm={handleNameConfirm}
         />
         <ButtonGroup className="todo-group-item-button-group">
-          <Button className="first-button" icon="arrow-up" onClick={handleUpClick} />
-          <Button icon="arrow-down" onClick={handleDownClick} />
-          <Button icon="trash" onClick={handleRemoveClick} />
+          <Button
+            className="first-button"
+            icon="arrow-up"
+            onClick={handleUpClick}
+            title="Move group up"
+          />
+          <Button icon="arrow-down" onClick={handleDownClick} title="Move group down" />
+          <Button icon="trash" onClick={handleRemoveClick} title="Remove group" />
         </ButtonGroup>
       </div>
     );
