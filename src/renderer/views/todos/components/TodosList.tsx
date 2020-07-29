@@ -30,7 +30,7 @@ export class TodosList extends React.PureComponent<TodosList.Props> {
           getItemKey={getItemKey}
           renderItem={this.renderItem}
         />
-        <TodoGroupsButton />
+        {!this.props.isReadonly && <TodoGroupsButton />}
       </div>
     );
   }
