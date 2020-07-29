@@ -29,10 +29,18 @@ export namespace TodosPanel {
   }
 
   export type Props = StoreProps & DispatchProps;
+
+  export interface State {
+    isCloseDisabled: boolean;
+  }
 }
 
-class TodosPanelInternal extends React.PureComponent<TodosPanel.Props> {
+class TodosPanelInternal extends React.PureComponent<TodosPanel.Props, TodosPanel.State> {
   private listId = uuid();
+
+  public state: TodosPanel.State = {
+    isCloseDisabled: false
+  };
 
   public render() {
     const { active, isReadonly, groups } = this.props;
@@ -47,7 +55,13 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props> {
           <div className="todos-panel">
             <TodosPanelBanner listId={this.listId} isReadonly={isReadonly} />
             {!isReadonly && <TodoInput listId={this.listId} />}
-            <TodosList listId={this.listId} day={active} isReadonly={isReadonly} groups={groups} />
+            <TodosList
+              listId={this.listId}
+              day={active}
+              isReadonly={isReadonly}
+              groups={groups}
+              setEscapeKeyCloseDisabled={this.setEscapeKeyCloseDisabled}
+            />
           </div>
         )}
       </PanelContainer>
@@ -55,7 +69,13 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props> {
   }
 
   private handleClose = () => {
-    this.props.setActive(undefined);
+    if (!this.state.isCloseDisabled) {
+      this.props.setActive(undefined);
+    }
+  };
+
+  private setEscapeKeyCloseDisabled = (isDisabled: boolean) => {
+    this.setState({ isCloseDisabled: isDisabled });
   };
 }
 

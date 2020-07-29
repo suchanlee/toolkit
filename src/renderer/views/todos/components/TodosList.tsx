@@ -21,6 +21,7 @@ export namespace TodosList {
     isReadonly: boolean;
     day: TodosDay;
     groups: readonly TodoGroup[];
+    setEscapeKeyCloseDisabled(isDisabled: boolean): void;
   }
 }
 
@@ -38,7 +39,9 @@ export class TodosList extends React.PureComponent<TodosList.Props> {
           getItemKey={getItemKey}
           renderItem={this.renderItem}
         />
-        {!this.props.isReadonly && <TodoGroupsButton />}
+        {!this.props.isReadonly && (
+          <TodoGroupsButton setEscapeKeyCloseDisabled={this.props.setEscapeKeyCloseDisabled} />
+        )}
       </div>
     );
   }
