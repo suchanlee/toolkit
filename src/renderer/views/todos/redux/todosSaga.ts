@@ -115,12 +115,12 @@ function* addTodo(action: TypedAction<TodosActions.AddTodoPayload>) {
     return;
   }
 
-  const { value } = action.payload;
+  const { value, groupId } = action.payload;
   const days: TodosDaysByDateStrs = yield select(selectTodosDays);
   const newDays = setWith(days, {
     [todoDateToStr(today.date)]: {
       ...today,
-      todos: [createTodo({ value }), ...today.todos]
+      todos: [createTodo({ value, groupId }), ...today.todos]
     }
   });
   yield put(InternalTodosActions.setTodos({ days: newDays }));

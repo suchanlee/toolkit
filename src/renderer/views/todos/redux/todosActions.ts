@@ -19,6 +19,7 @@ export namespace TodosActions {
 
   export interface AddTodoPayload {
     value: string;
+    groupId?: string;
   }
 
   export interface RemoveTodoPayload {

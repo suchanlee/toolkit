@@ -10,11 +10,12 @@ export function createTodosDay(args: { date?: TodoDate; todos?: readonly Todo[] 
   };
 }
 
-export function createTodo(args: { value: string }): Todo {
+export function createTodo(args: { value: string; groupId?: string }): Todo {
   return {
     id: uuid(),
     type: EntryType.TODO,
     value: args.value,
+    groupId: args.groupId,
     status: TodoStatus.NOT_STARTED,
     date: new Date().toISOString() as Iso8601String
   };
