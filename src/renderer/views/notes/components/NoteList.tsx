@@ -26,16 +26,15 @@ export namespace NoteList {
   export type Props = StoreProps & DispatchProps;
 }
 
-class NoteListInternal extends React.PureComponent<NoteList.Props> {
+class NoteListInternal extends React.Component<NoteList.Props> {
   private listId = uuid();
 
-  public render() {
-    if (this.props.hasActive) {
-      // don't render NoteItems, which has potentially expensive computation,
-      // when it's not even displayed
-      return null;
-    }
+  public shouldComponentUpdate(nextProps: NoteList.Props) {
+    // we dont want to re-render everytime note value changes
+    return !nextProps.hasActive;
+  }
 
+  public render() {
     if (this.props.notes.length === 0) {
       return <p className="note-list-non-ideal-state">No notes.</p>;
     }
