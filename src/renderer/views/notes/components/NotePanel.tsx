@@ -32,13 +32,16 @@ export namespace NotePanel {
 
 class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
   private editorRef = React.createRef<CodeMirrorEditor>();
+  private didNoteChange: boolean = false;
 
   public componentDidMount() {
-    this.maybeSetEditorValue(undefined);
+    this.setDidNoteChange(undefined);
+    this.maybeSetEditorValue();
   }
 
   public componentDidUpdate(prevProps: NotePanel.Props) {
-    this.maybeSetEditorValue(prevProps.note);
+    this.setDidNoteChange(prevProps.note);
+    this.maybeSetEditorValue();
   }
 
   public render() {
@@ -75,6 +78,11 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
   };
 
   private handleChange = (value: string) => {
+    if (this.didNoteChange) {
+      this.didNoteChange = false;
+      return;
+    }
+
     if (this.props.note != null) {
       this.props.setNoteValue({
         id: this.props.note.id,
@@ -151,17 +159,20 @@ class NotePanelInternal extends React.PureComponent<NotePanel.Props> {
     });
   }
 
-  private maybeSetEditorValue(prevNote: Note | undefined) {
+  private maybeSetEditorValue() {
+    if (this.didNoteChange && this.props.note != null) {
+      this.editorRef.current?.setValue(this.props.note.value);
+    }
+  }
+
+  private setDidNoteChange(prevNote: Note | undefined) {
     if (this.props.note == null) {
       return;
     }
 
     const isActiveNoteSet = prevNote == null;
     const isNoteChanged = prevNote?.id !== this.props.note.id;
-
-    if (isActiveNoteSet || isNoteChanged) {
-      this.editorRef.current?.setValue(this.props.note.value);
-    }
+    this.didNoteChange = isActiveNoteSet || isNoteChanged;
   }
 }
 
