@@ -6,7 +6,7 @@ import { createTodosView } from "./todos/todosView";
 
 export const Views: readonly View<any>[] = [
   createTodosView(),
-  createReadingsView(),
-  createNotesView()
+  createNotesView(),
+  createReadingsView()
 ];
 export const ViewsByName = keyBy(Views, v => v.name);
