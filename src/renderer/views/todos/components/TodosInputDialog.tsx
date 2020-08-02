@@ -54,6 +54,10 @@ export const TodosInputDialog = ({ groups, isOpen, onClose, addTodo }: TodosInpu
       if (evt.key === "Enter") {
         addTodo(group);
       }
+
+      // prevent propagation as component binds to window keyup events to listen
+      // to numeric values for hotkeys support for adding todos to groups
+      evt.stopPropagation();
     },
     [group, addTodo]
   );
