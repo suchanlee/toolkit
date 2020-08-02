@@ -1,53 +1,43 @@
-import { keyBy, noop } from "lodash-es";
+import { groupBy, noop } from "lodash-es";
 import * as React from "react";
 import { defaultMemoize } from "reselect";
 import { createKNL } from "../../../shared-components/KeyNavList";
-import { Todo, TodoGroup, TodosDay } from "../redux/todosTypes";
-import { TodoGroupsButton } from "./TodoGroupsButton";
+import { Todo, TodosDay } from "../redux/todosTypes";
+import { TODO_DEFAULT_GROUP } from "../todosObjects";
 import { TodoItem } from "./TodoItem";
 
 require("./TodosList.scss");
 
 const KNL = createKNL<Todo>();
 
-const MISC_GROUP: TodoGroup = {
-  name: "Miscellaneous",
-  id: "☃"
-};
-
 export namespace TodosList {
   export interface Props {
     listId: string;
     isReadonly: boolean;
     day: TodosDay;
-    groups: readonly TodoGroup[];
     setEscapeKeyCloseDisabled(isDisabled: boolean): void;
   }
 }
 
 export class TodosList extends React.PureComponent<TodosList.Props> {
   public render() {
-    const groupOrderedTodos = this.getGroupOrderedTodos(this.props.day.todos, this.props.groups);
     return (
       <div className="todos-list">
         <KNL
           className="todos-list-nav-list"
           id={this.props.listId}
-          items={groupOrderedTodos}
+          items={this.props.day.todos}
           isDisabled={this.props.isReadonly}
           onItemSelect={noop}
           getItemKey={getItemKey}
           renderItem={this.renderItem}
         />
-        {!this.props.isReadonly && (
-          <TodoGroupsButton setEscapeKeyCloseDisabled={this.props.setEscapeKeyCloseDisabled} />
-        )}
       </div>
     );
   }
 
   private renderItem = (todo: Todo, index: number, listId: string) => {
-    const groupedTodos = this.getGroupedTodos(this.props.day.todos, this.props.groups);
+    const groupedTodos = this.getGroupedTodos(this.props.day.todos);
     const todoElement = (
       <TodoItem
         todo={todo}
@@ -58,12 +48,10 @@ export class TodosList extends React.PureComponent<TodosList.Props> {
       />
     );
 
-    const groupId = todo.groupId ?? MISC_GROUP.id;
-    if (this.hasGroupedTodos(groupedTodos) && groupedTodos[groupId][0].id === todo.id) {
-      const groupsById = this.getGroupsById(this.props.groups);
+    if (groupedTodos[todo.group!][0]?.id === todo.id) {
       return (
         <React.Fragment>
-          <div className="todos-list-group">{groupsById[groupId]?.name}</div>
+          <div className="todos-list-group">{todo.group ?? TODO_DEFAULT_GROUP}</div>
           {todoElement}
         </React.Fragment>
       );
@@ -71,49 +59,8 @@ export class TodosList extends React.PureComponent<TodosList.Props> {
     return todoElement;
   };
 
-  private getGroupedTodos = defaultMemoize(
-    (todos: readonly Todo[], groups: readonly TodoGroup[]) => {
-      const groupIds = new Set(groups.map(group => group.id));
-      const groupedTodos: Record<string, Todo[]> = {};
-      for (const todo of todos) {
-        if (todo.groupId != null && groupIds.has(todo.groupId)) {
-          if (groupedTodos[todo.groupId] == null) {
-            groupedTodos[todo.groupId] = [];
-          }
-          groupedTodos[todo.groupId].push(todo);
-        } else {
-          if (groupedTodos[MISC_GROUP.id] == null) {
-            groupedTodos[MISC_GROUP.id] = [];
-          }
-          groupedTodos[MISC_GROUP.id].push(todo);
-        }
-      }
-
-      return groupedTodos;
-    }
-  );
-
-  private hasGroupedTodos = defaultMemoize((groupedTodos: Record<string, readonly Todo[]>) => {
-    return Object.keys(groupedTodos).length > 1;
-  });
-
-  private getGroupOrderedTodos = defaultMemoize(
-    (todos: readonly Todo[], groups: readonly TodoGroup[]) => {
-      const groupedTodos = this.getGroupedTodos(todos, groups);
-      let groupOrderedTodos: Todo[] = [];
-
-      for (const group of groups.concat(MISC_GROUP)) {
-        if (groupedTodos[group.id] != null) {
-          groupOrderedTodos = groupOrderedTodos.concat(groupedTodos[group.id]);
-        }
-      }
-
-      return groupOrderedTodos;
-    }
-  );
-
-  private getGroupsById = defaultMemoize((groups: readonly TodoGroup[]) =>
-    keyBy(groups.concat(MISC_GROUP), group => group.id)
+  private getGroupedTodos = defaultMemoize((todos: readonly Todo[]) =>
+    groupBy(todos, todo => todo.group)
   );
 }
 

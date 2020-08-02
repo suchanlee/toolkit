@@ -43,7 +43,7 @@ class TodosPanelBannerInternal extends React.PureComponent<TodosPanelBanner.Prop
     } else if (this.props.isSelectingTodo) {
       return "PRESS ENTER TO UPDATE STATUS / ⌘+BACKSPACE TO DELETE";
     } else {
-      return "PRESS ENTER TO ADD DAY TODO ";
+      return "PRESS ENTER TO ADD DAY TODO / ⌘+ENTER TO ADD TO SPECIFIC GROUP";
     }
   }
 }

@@ -40,3 +40,7 @@ export function createTodoDate(date: Date) {
 export function isTodoDatesEqual(d1: TodoDate, d2: TodoDate) {
   return d1.year === d2.year && d1.month === d2.month && d1.day === d2.day;
 }
+
+export function isTodayTodoDate(todoDate: TodoDate): boolean {
+  return isTodoDatesEqual(todoDate, createTodayTodoDate());
+}

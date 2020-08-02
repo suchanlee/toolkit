@@ -1,27 +1,21 @@
 import { ipcRenderer } from "electron-better-ipc";
+import { groupBy } from "lodash-es";
 import { setWith, TypedAction } from "redoodle";
 import { all, put, select, takeLatest } from "redux-saga/effects";
 import { IpcEvent } from "../../../../shared/ipcEvent";
-import { createGroup, createTodo, createTodosDay } from "../todosObjects";
-import { todoDateToStr } from "../utils/todoDateUtils";
+import { createTodo, createTodosDay } from "../todosObjects";
+import { isTodayTodoDate, todoDateToStr } from "../utils/todoDateUtils";
+import { getTodoGroups } from "../utils/todoGroupUtils";
 import { InternalTodosActions, TodosActions } from "./todosActions";
 import {
   selectTodosDateStrs,
   selectTodosDays,
-  selectTodosGroups,
   selectTodosHasToday,
   selectTodosLatestDay,
   selectTodosPersist,
   selectTodosToday
 } from "./todosSelectors";
-import {
-  PersistedTodos,
-  Todo,
-  TodoGroup,
-  TodosDay,
-  TodosDaysByDateStrs,
-  TodoStatus
-} from "./todosTypes";
+import { PersistedTodos, Todo, TodosDay, TodosDaysByDateStrs, TodoStatus } from "./todosTypes";
 
 const TODOS_FILE_NAME = "todos";
 
@@ -32,9 +26,7 @@ export function* todosSaga() {
     yield takeLatest(TodosActions.addTodo.TYPE, addTodo),
     yield takeLatest(TodosActions.removeTodo.TYPE, removeTodo),
     yield takeLatest(TodosActions.setTodoStatus.TYPE, setTodoStatus),
-    yield takeLatest(TodosActions.addGroup.TYPE, addGroup),
     yield takeLatest(TodosActions.updateGroup.TYPE, updateGroup),
-    yield takeLatest(TodosActions.removeGroup.TYPE, removeGroup),
     yield takeLatest(TodosActions.moveGroup.TYPE, moveGroup)
   ]);
 }
@@ -47,8 +39,7 @@ function* initializeTodos() {
 
   if (persisted == null) {
     persisted = {
-      todosDays: [],
-      groups: []
+      todosDays: []
     };
     yield writeTodos(persisted);
   }
@@ -68,9 +59,6 @@ function* initializeTodos() {
       dateStrs
     })
   );
-
-  const groups = Array.isArray(persisted.groups) ? persisted.groups : [];
-  yield put(InternalTodosActions.setGroups(groups));
 }
 
 function* createTodosToday(action: TypedAction<TodosActions.InitTodayPayload>) {
@@ -115,12 +103,29 @@ function* addTodo(action: TypedAction<TodosActions.AddTodoPayload>) {
     return;
   }
 
-  const { value, groupId } = action.payload;
+  const { value, group: todoGroup } = action.payload;
   const days: TodosDaysByDateStrs = yield select(selectTodosDays);
+  const todosByGroup = groupBy(today.todos, todo => todo.group);
+  const groups = getTodoGroups(today.todos);
+
+  if (!groups.includes(todoGroup)) {
+    groups.push(todoGroup);
+  }
+
+  const newTodos: Todo[] = [];
+  for (const group of groups) {
+    const todos = todosByGroup[group!] ?? [];
+    if (group === todoGroup) {
+      newTodos.push(createTodo({ value, group: todoGroup }), ...todos);
+    } else {
+      newTodos.push(...todos);
+    }
+  }
+
   const newDays = setWith(days, {
     [todoDateToStr(today.date)]: {
       ...today,
-      todos: [createTodo({ value, groupId }), ...today.todos]
+      todos: newTodos
     }
   });
   yield put(InternalTodosActions.setTodos({ days: newDays }));
@@ -129,6 +134,10 @@ function* addTodo(action: TypedAction<TodosActions.AddTodoPayload>) {
 
 function* removeTodo(action: TypedAction<TodosActions.RemoveTodoPayload>) {
   const { date, todoId } = action.payload;
+  if (!isTodayTodoDate(date)) {
+    return;
+  }
+
   const days: TodosDaysByDateStrs = yield select(selectTodosDays);
   const dateStr = todoDateToStr(date);
   const day = days[dateStr];
@@ -150,6 +159,10 @@ function* removeTodo(action: TypedAction<TodosActions.RemoveTodoPayload>) {
 
 function* setTodoStatus(action: TypedAction<TodosActions.SetTodoStatusPayload>) {
   const { date, todoId, status } = action.payload;
+  if (!isTodayTodoDate(date)) {
+    return;
+  }
+
   const days: TodosDaysByDateStrs = yield select(selectTodosDays);
   const dateStr = todoDateToStr(date);
   const day = days[dateStr];
@@ -178,44 +191,62 @@ function* setTodoStatus(action: TypedAction<TodosActions.SetTodoStatusPayload>) 
   yield writeTodos();
 }
 
-function* addGroup(action: TypedAction<string>) {
-  const groups: readonly TodoGroup[] = yield select(selectTodosGroups);
-  const newGroups = groups.concat(createGroup(action.payload));
-
-  yield put(InternalTodosActions.setGroups(newGroups));
-  yield writeTodos();
-}
-
-function* removeGroup(action: TypedAction<string>) {
-  const groups: readonly TodoGroup[] = yield select(selectTodosGroups);
-  const groupId = action.payload;
-  const newGroups = groups.filter(group => group.id !== groupId);
-
-  yield put(InternalTodosActions.setGroups(newGroups));
-  yield writeTodos();
-}
-
-function* updateGroup(action: TypedAction<TodoGroup>) {
-  const groups: readonly TodoGroup[] = yield select(selectTodosGroups);
-  const updatedGroup = action.payload;
-
-  const index = groups.findIndex(group => group.id === updatedGroup.id);
-  if (index < 0) {
+function* updateGroup(action: TypedAction<TodosActions.UpdateGroupPayload>) {
+  const { date, curGroup, newGroup } = action.payload;
+  if (!isTodayTodoDate(date) || curGroup.trim() === newGroup.trim()) {
     return;
   }
 
-  const newGroups = [...groups];
-  newGroups[index] = updatedGroup;
+  const days: TodosDaysByDateStrs = yield select(selectTodosDays);
+  const dateStr = todoDateToStr(date);
+  const day = days[dateStr];
 
-  yield put(InternalTodosActions.setGroups(newGroups));
+  if (day == null) {
+    return;
+  }
+
+  let isUpdated = false;
+  const todos: Todo[] = [];
+  for (const todo of day.todos) {
+    if (todo.group === curGroup) {
+      todos.push({ ...todo, group: newGroup });
+      isUpdated = true;
+    } else {
+      todos.push(todo);
+    }
+  }
+
+  if (!isUpdated) {
+    return;
+  }
+
+  const newDays = setWith(days, {
+    [dateStr]: {
+      ...day,
+      todos
+    }
+  });
+
+  yield put(InternalTodosActions.setTodos({ days: newDays }));
   yield writeTodos();
 }
 
 function* moveGroup(action: TypedAction<TodosActions.MoveGroupPayload>) {
-  const groups: readonly TodoGroup[] = yield select(selectTodosGroups);
-  const { id, direction } = action.payload;
+  const { date, group, direction } = action.payload;
+  if (!isTodayTodoDate(date)) {
+    return;
+  }
 
-  const index = groups.findIndex(group => group.id === id);
+  const days: TodosDaysByDateStrs = yield select(selectTodosDays);
+  const dateStr = todoDateToStr(date);
+  const day = days[dateStr];
+
+  if (day == null) {
+    return;
+  }
+
+  const groups = getTodoGroups(day.todos);
+  const index = groups.findIndex(g => g === group);
   if (index < 0) {
     return;
   } else if (index === 0 && direction === "up") {
@@ -224,18 +255,31 @@ function* moveGroup(action: TypedAction<TodosActions.MoveGroupPayload>) {
     return;
   }
 
-  const newGroups = [...groups];
   if (direction === "up") {
-    const temp = newGroups[index - 1];
-    newGroups[index - 1] = newGroups[index];
-    newGroups[index] = temp;
+    const temp = groups[index - 1];
+    groups[index - 1] = groups[index];
+    groups[index] = temp;
   } else if (direction === "down") {
-    const temp = newGroups[index + 1];
-    newGroups[index + 1] = newGroups[index];
-    newGroups[index] = temp;
+    const temp = groups[index + 1];
+    groups[index + 1] = groups[index];
+    groups[index] = temp;
   }
 
-  yield put(InternalTodosActions.setGroups(newGroups));
+  const todosByGroup = groupBy(day.todos, todo => todo.group);
+  const newTodos: Todo[] = [];
+
+  for (const group of groups) {
+    newTodos.push(...todosByGroup[group!]);
+  }
+
+  const newDays = setWith(days, {
+    [dateStr]: {
+      ...day,
+      todos: newTodos
+    }
+  });
+
+  yield put(InternalTodosActions.setTodos({ days: newDays }));
   yield writeTodos();
 }
 

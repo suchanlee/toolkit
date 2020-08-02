@@ -9,12 +9,12 @@ import {
   todoDateToNumber,
   todoDateToStr
 } from "../utils/todoDateUtils";
+import { getTodoGroups } from "../utils/todoGroupUtils";
 import { PersistedTodos, TodoDate, TodosDay } from "./todosTypes";
 
 export const selectTodos = (state: RootState) => state.todos;
 export const selectTodosDays = (state: RootState) => state.todos.days;
 export const selectTodosDateStrs = (state: RootState) => state.todos.dateStrs;
-export const selectTodosGroups = (state: RootState) => state.todos.groups;
 export const selectTodosActiveDate = (state: RootState) => state.todos.activeDate;
 export const selectTodosSummaryDate = (state: RootState) => state.todos.summaryDate;
 
@@ -97,10 +97,17 @@ export const selectTodosToday = createSelector(selectTodosLatestDay, latestDay =
   }
 });
 
+export const selectTodosActiveDayGroups = createSelector(selectActiveTodosDay, active => {
+  if (active == null) {
+    return [];
+  }
+
+  return getTodoGroups(active.todos);
+});
+
 export const selectTodosPersist = createSelector(
   selectTodosDaysAsArray,
-  selectTodosGroups,
-  (days, groups): PersistedTodos => ({ todosDays: days, groups: groups })
+  (days): PersistedTodos => ({ todosDays: days })
 );
 
 export const selectTodosHasToday = (state: RootState) => {

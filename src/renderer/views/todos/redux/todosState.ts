@@ -1,4 +1,4 @@
-import { TodoDate, TodoGroup, TodosDaysByDateStrs } from "./todosTypes";
+import { TodoDate, TodosDaysByDateStrs } from "./todosTypes";
 
 export interface TodosState {
   activeDate: TodoDate | undefined;
@@ -6,7 +6,6 @@ export interface TodosState {
   days: TodosDaysByDateStrs;
   // always sorted in descending order
   dateStrs: readonly string[];
-  groups: readonly TodoGroup[];
 }
 
 export const TODOS_STATE_KEY = "todos" as "todos";
@@ -20,7 +19,6 @@ export function createInitialTodosState(): TodosState {
     activeDate: undefined,
     summaryDate: undefined,
     days: {},
-    dateStrs: [],
-    groups: []
+    dateStrs: []
   };
 }

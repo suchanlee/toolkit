@@ -1,5 +1,5 @@
 import { TypedAction } from "redoodle";
-import { TodoDate, TodoGroup, TodosDaysByDateStrs, TodoStatus } from "./todosTypes";
+import { TodoDate, TodosDaysByDateStrs, TodoStatus } from "./todosTypes";
 
 export namespace TodosActions {
   export const setActive = TypedAction.define("todos::set-active")<TodoDate | undefined>();
@@ -8,10 +8,8 @@ export namespace TodosActions {
   export const addTodo = TypedAction.define("todos::add-todo")<AddTodoPayload>();
   export const removeTodo = TypedAction.define("todos::remove-todo")<RemoveTodoPayload>();
   export const setTodoStatus = TypedAction.define("todos::set-todo-status")<SetTodoStatusPayload>();
-  export const addGroup = TypedAction.define("todos::add-group")<string>();
-  export const updateGroup = TypedAction.define("todos::update-group")<TodoGroup>();
+  export const updateGroup = TypedAction.define("todos::update-group")<string>();
   export const moveGroup = TypedAction.define("todos::move-group")<MoveGroupPayload>();
-  export const removeGroup = TypedAction.define("todos::remove-group")<string>();
 
   export interface InitTodayPayload {
     shouldInherit: boolean;
@@ -19,7 +17,7 @@ export namespace TodosActions {
 
   export interface AddTodoPayload {
     value: string;
-    groupId?: string;
+    group?: string;
   }
 
   export interface RemoveTodoPayload {
@@ -33,8 +31,15 @@ export namespace TodosActions {
     status: TodoStatus;
   }
 
+  export interface UpdateGroupPayload {
+    date: TodoDate;
+    curGroup: string;
+    newGroup: string;
+  }
+
   export interface MoveGroupPayload {
-    id: string;
+    date: TodoDate;
+    group: string;
     direction: "up" | "down";
   }
 }
@@ -44,5 +49,4 @@ export namespace InternalTodosActions {
     days?: TodosDaysByDateStrs;
     dateStrs?: readonly string[];
   }>();
-  export const setGroups = TypedAction.define("internal-todos::set-groups")<readonly TodoGroup[]>();
 }

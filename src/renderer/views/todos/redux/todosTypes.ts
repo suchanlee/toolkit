@@ -1,12 +1,7 @@
 import { Entry, EntryType } from "../../../types/types";
 
-export interface TodoGroup {
-  id: string;
-  name: string;
-}
-
 export interface Todo extends Entry {
-  groupId?: string;
+  group?: string;
   type: EntryType.TODO;
   status: TodoStatus;
 }
@@ -20,14 +15,11 @@ export interface TodoDate {
 export interface TodosDay {
   date: TodoDate;
   todos: readonly Todo[];
+  groups: readonly string[];
 }
 
 export type TodosDaysByDateStrs = {
   [id: string]: TodosDay;
-};
-
-export type TodoGroupsById = {
-  [id: string]: TodoGroup;
 };
 
 export enum TodoStatus {
@@ -38,5 +30,4 @@ export enum TodoStatus {
 
 export interface PersistedTodos {
   todosDays: readonly TodosDay[];
-  groups: readonly TodoGroup[];
 }

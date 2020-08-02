@@ -4,12 +4,8 @@ import { v4 as uuid } from "uuid";
 import { PanelContainer } from "../../../shared-components/PanelContainer";
 import { RootState } from "../../../states/rootState";
 import { TodosActions } from "../redux/todosActions";
-import {
-  selectActiveTodosDay,
-  selectTodosGroups,
-  selectTodosIsReadonly
-} from "../redux/todosSelectors";
-import { TodoGroup, TodosDay } from "../redux/todosTypes";
+import { selectActiveTodosDay, selectTodosIsReadonly } from "../redux/todosSelectors";
+import { TodosDay } from "../redux/todosTypes";
 import { todoDateToStr } from "../utils/todoDateUtils";
 import { TodoInput } from "./TodoInput";
 import { TodosList } from "./TodosList";
@@ -21,7 +17,6 @@ export namespace TodosPanel {
   export interface StoreProps {
     active: TodosDay | undefined;
     isReadonly: boolean;
-    groups: readonly TodoGroup[];
   }
 
   export interface DispatchProps {
@@ -43,7 +38,7 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props, TodosPane
   };
 
   public render() {
-    const { active, isReadonly, groups } = this.props;
+    const { active, isReadonly } = this.props;
     return (
       <PanelContainer
         className="todos-panel-container"
@@ -54,12 +49,16 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props, TodosPane
         {active != null && (
           <div className="todos-panel">
             <TodosPanelBanner listId={this.listId} isReadonly={isReadonly} />
-            {!isReadonly && <TodoInput listId={this.listId} />}
+            {!isReadonly && (
+              <TodoInput
+                listId={this.listId}
+                setEscapeKeyCloseDisabled={this.setEscapeKeyCloseDisabled}
+              />
+            )}
             <TodosList
               listId={this.listId}
               day={active}
               isReadonly={isReadonly}
-              groups={groups}
               setEscapeKeyCloseDisabled={this.setEscapeKeyCloseDisabled}
             />
           </div>
@@ -82,8 +81,7 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props, TodosPane
 function mapStateToProps(state: RootState): TodosPanel.StoreProps {
   return {
     active: selectActiveTodosDay(state),
-    isReadonly: selectTodosIsReadonly(state),
-    groups: selectTodosGroups(state)
+    isReadonly: selectTodosIsReadonly(state)
   };
 }
 

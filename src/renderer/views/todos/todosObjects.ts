@@ -1,29 +1,29 @@
 import { v4 as uuid } from "uuid";
 import { EntryType, Iso8601String } from "../../types/types";
-import { Todo, TodoDate, TodoGroup, TodosDay, TodoStatus } from "./redux/todosTypes";
+import { Todo, TodoDate, TodosDay, TodoStatus } from "./redux/todosTypes";
 import { createTodayTodoDate } from "./utils/todoDateUtils";
 
-export function createTodosDay(args: { date?: TodoDate; todos?: readonly Todo[] }): TodosDay {
+export function createTodosDay(args: {
+  date?: TodoDate;
+  todos?: readonly Todo[];
+  groups?: readonly string[];
+}): TodosDay {
   return {
     date: args.date ?? createTodayTodoDate(),
-    todos: args.todos ?? []
+    todos: args.todos ?? [],
+    groups: args.groups ?? []
   };
 }
 
-export function createTodo(args: { value: string; groupId?: string }): Todo {
+export function createTodo(args: { value: string; group?: string }): Todo {
   return {
     id: uuid(),
     type: EntryType.TODO,
     value: args.value,
-    groupId: args.groupId,
+    group: args.group,
     status: TodoStatus.NOT_STARTED,
     date: new Date().toISOString() as Iso8601String
   };
 }
 
-export function createGroup(name: string): TodoGroup {
-  return {
-    name,
-    id: uuid()
-  };
-}
+export const TODO_DEFAULT_GROUP = "Day Todos";

@@ -9,11 +9,6 @@ export const todosReducer = TypedReducer.builder<TodosState>()
       dateStrs: payload.dateStrs ?? state.dateStrs
     });
   })
-  .withHandler(InternalTodosActions.setGroups.TYPE, (state, payload) => {
-    return setWith(state, {
-      groups: payload
-    });
-  })
   .withHandler(TodosActions.setActive.TYPE, (state, payload) => {
     return setWith(state, {
       activeDate: payload
