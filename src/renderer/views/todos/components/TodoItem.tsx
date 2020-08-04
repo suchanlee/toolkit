@@ -19,6 +19,7 @@ export namespace TodoItem {
     todo: Todo;
     listId: string;
     rowIndex: number;
+    dndIndex: number;
     isReadonly: boolean;
     isDragDisabled: boolean;
   }
@@ -56,10 +57,10 @@ class TodoItemInternal extends React.PureComponent<TodoItem.Props> {
   }
 
   public render() {
-    const { todo, isReadonly, rowIndex, isDragDisabled, isActive } = this.props;
+    const { todo, isReadonly, dndIndex, isDragDisabled, isActive } = this.props;
 
     return (
-      <Draggable draggableId={todo.id} index={rowIndex} isDragDisabled={isDragDisabled}>
+      <Draggable draggableId={todo.id} index={dndIndex} isDragDisabled={isDragDisabled}>
         {provided => (
           <React.Fragment>
             <div
@@ -88,7 +89,7 @@ class TodoItemInternal extends React.PureComponent<TodoItem.Props> {
                       "-finished": todo.status === TodoStatus.FINISHED
                     })}
                   >
-                    {linkifyText(todo.value)} [{rowIndex}]
+                    {linkifyText(todo.value)}
                   </span>
                 }
               />
@@ -102,7 +103,6 @@ class TodoItemInternal extends React.PureComponent<TodoItem.Props> {
                 />
               )}
             </div>
-            {(provided as any).placeholder}
           </React.Fragment>
         )}
       </Draggable>

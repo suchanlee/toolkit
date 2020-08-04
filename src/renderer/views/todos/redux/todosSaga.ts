@@ -159,7 +159,7 @@ function* removeTodo(action: TypedAction<TodosActions.RemoveTodoPayload>) {
 }
 
 function* moveTodo(action: TypedAction<TodosActions.MoveTodoPayload>) {
-  const { date, fromIndex, toIndex } = action.payload;
+  const { date, fromGroup, toGroup, fromLocalIndex, toLocalIndex } = action.payload;
   if (!isTodayTodoDate(date)) {
     return;
   }
@@ -172,14 +172,29 @@ function* moveTodo(action: TypedAction<TodosActions.MoveTodoPayload>) {
     return;
   }
 
-  const fromTodo = day.todos[fromIndex];
-  const toTodo = day.todos[toIndex];
+  const todosByGroup = groupBy(day.todos, todo => todo.group);
+  const groups = getTodoGroups(day.todos);
 
-  if (fromTodo == null || toTodo == null) {
-    return;
+  const getIndex = (group: string, localIndex: number) => {
+    let index = 0;
+    for (const g of groups) {
+      if (g === group) {
+        break;
+      }
+
+      index += todosByGroup[g!].length;
+    }
+    return index + localIndex;
+  };
+
+  const fromIndex = getIndex(fromGroup!, fromLocalIndex);
+  let toIndex = getIndex(toGroup!, toLocalIndex);
+
+  if (fromGroup !== toGroup && fromIndex < toIndex) {
+    toIndex -= 1;
   }
 
-  const groupUpdatedFromTodo = { ...fromTodo, group: toTodo.group };
+  const groupUpdatedFromTodo = { ...day.todos[fromIndex], group: toGroup };
   const newTodos = [...day.todos];
   newTodos.splice(fromIndex, 1);
   newTodos.splice(toIndex, 0, groupUpdatedFromTodo);

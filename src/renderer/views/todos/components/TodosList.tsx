@@ -40,15 +40,18 @@ export namespace TodosList {
   export type Props = OwnProps & StoreProps & DispatchProps;
 
   export type State = {
-    isDraggingGroups: boolean;
+    isDraggingGroup: boolean;
+    isDraggingTodo: boolean;
   };
 }
 
 const GROUP_DRAGGABLE_ID = "group";
+const TODOS_DROPPABLE_ID_PREFIX = "todos-";
 
 class TodosListInternal extends React.PureComponent<TodosList.Props> {
   public state: TodosList.State = {
-    isDraggingGroups: false
+    isDraggingGroup: false,
+    isDraggingTodo: false
   };
 
   public componentDidMount() {
@@ -67,7 +70,7 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
     }
 
     const { day, isReadonly, listId } = this.props;
-    const { isDraggingGroups } = this.state;
+    const { isDraggingGroup, isDraggingTodo } = this.state;
     const groupedTodos = this.getGroupedTodos(day.todos);
     const groups = getTodoGroups(day.todos);
     let rowIndex = 0;
@@ -75,7 +78,7 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
       <DragDropContext onDragEnd={this.handleDragEnd} onDragStart={this.handleDragStart}>
         <Droppable
           droppableId={GROUP_DRAGGABLE_ID}
-          isDropDisabled={this.props.isReadonly}
+          isDropDisabled={this.props.isReadonly || isDraggingTodo}
           type="droppableSubItem"
         >
           {provided => (
@@ -88,7 +91,7 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
                     key={group}
                     draggableId={group}
                     index={index}
-                    isDragDisabled={isReadonly}
+                    isDragDisabled={isReadonly || isDraggingTodo}
                   >
                     {provided => (
                       <div
@@ -97,12 +100,10 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
                         {...provided.dragHandleProps}
                         {...provided.draggableProps}
                       >
-                        <div className="todos-list-group">
-                          {group} [{index}]
-                        </div>
+                        <div className="todos-list-group">{group}</div>
                         <Droppable
-                          droppableId="todos"
-                          isDropDisabled={isDraggingGroups || isReadonly}
+                          droppableId={`${TODOS_DROPPABLE_ID_PREFIX}${group}`}
+                          isDropDisabled={isDraggingGroup || isReadonly}
                           type="droppableSubItem"
                         >
                           {provided => (
@@ -114,10 +115,11 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
                                     todo={todo}
                                     date={day.date}
                                     isReadonly={isReadonly}
-                                    isDragDisabled={isDraggingGroups || isReadonly}
+                                    isDragDisabled={isDraggingGroup || isReadonly}
                                     listId={listId}
                                     // tslint:disable-next-line: no-increment-decrement
                                     rowIndex={rowIndex++}
+                                    dndIndex={index}
                                   />
                                 ))}
                               </div>
@@ -125,7 +127,6 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
                             </div>
                           )}
                         </Droppable>
-                        {(provided as any).placeholder}
                       </div>
                     )}
                   </Draggable>
@@ -159,7 +160,17 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
   };
 
   private handleDragStart = (initial: DragStart) => {
-    this.setState({ isDraggingGroups: initial.source.droppableId === GROUP_DRAGGABLE_ID });
+    if (initial.source.droppableId === GROUP_DRAGGABLE_ID) {
+      this.setState({
+        isDraggingGroup: initial.source.droppableId === GROUP_DRAGGABLE_ID,
+        isDraggingTodo: false
+      });
+    } else if (initial.source.droppableId.startsWith(TODOS_DROPPABLE_ID_PREFIX)) {
+      this.setState({
+        isDraggingGroup: false,
+        isDraggingTodo: true
+      });
+    }
   };
 
   private handleDragEnd = (result: DropResult) => {
@@ -168,8 +179,8 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
     }
 
     if (result.source.droppableId === GROUP_DRAGGABLE_ID) {
-      if (this.state.isDraggingGroups) {
-        this.setState({ isDraggingGroups: false });
+      if (this.state.isDraggingGroup) {
+        this.setState({ isDraggingGroup: false });
       }
 
       if (result.destination?.droppableId === GROUP_DRAGGABLE_ID) {
@@ -179,18 +190,33 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
           toIndex: result.destination.index
         });
       }
-    } else if (result.destination != null) {
-      // this.props.moveTodo({
-      //   date: this.props.day.date,
-      //   fromIndex: result.source.index,
-      //   toIndex: result.destination.index
-      // });
+    } else if (result.source.droppableId.startsWith(TODOS_DROPPABLE_ID_PREFIX)) {
+      if (this.state.isDraggingTodo) {
+        this.setState({ isDraggingTodo: false });
+
+        if (result.destination?.droppableId.startsWith(TODOS_DROPPABLE_ID_PREFIX)) {
+          const fromGroup = getGroupFromTodosDroppableId(result.source.droppableId);
+          const toGroup = getGroupFromTodosDroppableId(result.destination.droppableId);
+          this.props.moveTodo({
+            fromGroup,
+            toGroup,
+            date: this.props.day.date,
+            fromLocalIndex: result.source.index,
+            toLocalIndex: result.destination.index
+          });
+        }
+      }
     }
   };
 
   private getGroupedTodos = defaultMemoize((todos: readonly Todo[]) =>
     groupBy(todos, todo => todo.group)
   );
+}
+
+function getGroupFromTodosDroppableId(todosDroppableId: string) {
+  const group = todosDroppableId.replace(TODOS_DROPPABLE_ID_PREFIX, "");
+  return group === TODO_DEFAULT_GROUP ? undefined : group;
 }
 
 function mapStateToProps(state: RootState, ownProps: TodosList.OwnProps): TodosList.StoreProps {

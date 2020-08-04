@@ -28,8 +28,10 @@ export namespace TodosActions {
 
   export interface MoveTodoPayload {
     date: TodoDate;
-    fromIndex: number;
-    toIndex: number;
+    fromGroup: string | undefined;
+    toGroup: string | undefined;
+    fromLocalIndex: number;
+    toLocalIndex: number;
   }
 
   export interface SetTodoStatusPayload {
