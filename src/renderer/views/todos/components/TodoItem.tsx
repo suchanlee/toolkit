@@ -2,7 +2,9 @@ import { Checkbox, Icon } from "@blueprintjs/core";
 import classNames from "classnames";
 import { noop } from "lodash-es";
 import * as React from "react";
+import { Draggable } from "react-beautiful-dnd";
 import { connect } from "react-redux";
+import { KeyNavListActions } from "../../../actions/keyNavListActions";
 import { selectKeyNavListLocations } from "../../../selectors/keyNavListSelectors";
 import { RootState } from "../../../states/rootState";
 import { TodosActions } from "../redux/todosActions";
@@ -18,6 +20,7 @@ export namespace TodoItem {
     listId: string;
     rowIndex: number;
     isReadonly: boolean;
+    isDragDisabled: boolean;
   }
 
   export interface StoreProps {
@@ -27,6 +30,7 @@ export namespace TodoItem {
   export interface DispatchProps {
     remove: typeof TodosActions.removeTodo;
     setStatus: typeof TodosActions.setTodoStatus;
+    keyNavSet: typeof KeyNavListActions.set;
   }
 
   export type Props = OwnProps & StoreProps & DispatchProps;
@@ -52,46 +56,67 @@ class TodoItemInternal extends React.PureComponent<TodoItem.Props> {
   }
 
   public render() {
-    const { todo, isReadonly } = this.props;
-    return (
-      <div className="todos-todo-item">
-        <span
-          className={classNames("todos-todo-item-status-indicator", {
-            "-not-started": todo.status === TodoStatus.NOT_STARTED,
-            "-in-progress": todo.status === TodoStatus.IN_PROGRESS,
-            "-finished": todo.status === TodoStatus.FINISHED
-          })}
-        />
-        <Checkbox
-          checked={todo.status === TodoStatus.FINISHED}
-          indeterminate={todo.status === TodoStatus.IN_PROGRESS}
-          onChange={isReadonly ? noop : this.handleItemClick}
-          className="todos-todo-checkbox"
-          labelElement={
-            <span
-              className={classNames("todos-todo-item-label", {
-                "-finished": todo.status === TodoStatus.FINISHED
-              })}
-            >
-              {linkifyText(todo.value)}
-            </span>
-          }
-        />
+    const { todo, isReadonly, rowIndex, isDragDisabled, isActive } = this.props;
 
-        {!isReadonly && (
-          <Icon
-            className="todos-todo-remove-icon"
-            icon="cross"
-            title="Click to remove this todo"
-            onClick={this.handleRemoveClick}
-          />
+    return (
+      <Draggable draggableId={todo.id} index={rowIndex} isDragDisabled={isDragDisabled}>
+        {provided => (
+          <React.Fragment>
+            <div
+              className={classNames("todos-todo-item", {
+                "-active": isActive
+              })}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              ref={provided.innerRef}
+            >
+              <span
+                className={classNames("todos-todo-item-status-indicator", {
+                  "-not-started": todo.status === TodoStatus.NOT_STARTED,
+                  "-in-progress": todo.status === TodoStatus.IN_PROGRESS,
+                  "-finished": todo.status === TodoStatus.FINISHED
+                })}
+              />
+              <Checkbox
+                checked={todo.status === TodoStatus.FINISHED}
+                indeterminate={todo.status === TodoStatus.IN_PROGRESS}
+                onChange={isReadonly ? noop : this.handleItemClick}
+                className="todos-todo-checkbox"
+                labelElement={
+                  <span
+                    className={classNames("todos-todo-item-label", {
+                      "-finished": todo.status === TodoStatus.FINISHED
+                    })}
+                  >
+                    {linkifyText(todo.value)} [{rowIndex}]
+                  </span>
+                }
+              />
+
+              {!isReadonly && (
+                <Icon
+                  className="todos-todo-remove-icon"
+                  icon="cross"
+                  title="Click to remove this todo"
+                  onClick={this.handleRemoveClick}
+                />
+              )}
+            </div>
+            {(provided as any).placeholder}
+          </React.Fragment>
         )}
-      </div>
+      </Draggable>
     );
   }
 
   private handleItemClick = () => {
     this.changeStatus();
+    this.props.keyNavSet({
+      id: this.props.listId,
+      location: {
+        row: this.props.rowIndex
+      }
+    });
   };
 
   private handleRemoveClick = (evt: React.SyntheticEvent) => {
@@ -143,7 +168,8 @@ function mapStoreToProps(rootState: RootState, ownProps: TodoItem.OwnProps): Tod
 
 const mapDispatchToProps: TodoItem.DispatchProps = {
   remove: TodosActions.removeTodo,
-  setStatus: TodosActions.setTodoStatus
+  setStatus: TodosActions.setTodoStatus,
+  keyNavSet: KeyNavListActions.set
 };
 
 const enhance = connect(mapStoreToProps, mapDispatchToProps);

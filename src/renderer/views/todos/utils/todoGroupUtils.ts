@@ -8,9 +8,5 @@ export function getTodoGroups(todos: readonly Todo[]) {
     }
   }
 
-  if (groups.length === 0) {
-    groups.push(undefined);
-  }
-
   return groups;
 }

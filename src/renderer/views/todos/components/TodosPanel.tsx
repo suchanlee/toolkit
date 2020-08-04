@@ -4,8 +4,8 @@ import { v4 as uuid } from "uuid";
 import { PanelContainer } from "../../../shared-components/PanelContainer";
 import { RootState } from "../../../states/rootState";
 import { TodosActions } from "../redux/todosActions";
-import { selectActiveTodosDay, selectTodosIsReadonly } from "../redux/todosSelectors";
-import { TodosDay } from "../redux/todosTypes";
+import { selectTodosActiveDate, selectTodosIsReadonly } from "../redux/todosSelectors";
+import { TodoDate } from "../redux/todosTypes";
 import { todoDateToStr } from "../utils/todoDateUtils";
 import { TodoInput } from "./TodoInput";
 import { TodosList } from "./TodosList";
@@ -15,7 +15,7 @@ require("./TodosPanel.scss");
 
 export namespace TodosPanel {
   export interface StoreProps {
-    active: TodosDay | undefined;
+    activeDate: TodoDate | undefined;
     isReadonly: boolean;
   }
 
@@ -38,15 +38,17 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props, TodosPane
   };
 
   public render() {
-    const { active, isReadonly } = this.props;
+    const { activeDate, isReadonly } = this.props;
     return (
       <PanelContainer
         className="todos-panel-container"
-        title={active != null ? `Todos for ${todoDateToStr(active.date)}` : "Active date not set."}
-        isOpen={active != null}
+        title={
+          activeDate != null ? `Todos for ${todoDateToStr(activeDate)}` : "Active date not set."
+        }
+        isOpen={activeDate != null}
         onClose={this.handleClose}
       >
-        {active != null && (
+        {activeDate != null && (
           <div className="todos-panel">
             <TodosPanelBanner listId={this.listId} isReadonly={isReadonly} />
             {!isReadonly && (
@@ -57,8 +59,6 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props, TodosPane
             )}
             <TodosList
               listId={this.listId}
-              day={active}
-              isReadonly={isReadonly}
               setEscapeKeyCloseDisabled={this.setEscapeKeyCloseDisabled}
             />
           </div>
@@ -80,7 +80,7 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props, TodosPane
 
 function mapStateToProps(state: RootState): TodosPanel.StoreProps {
   return {
-    active: selectActiveTodosDay(state),
+    activeDate: selectTodosActiveDate(state),
     isReadonly: selectTodosIsReadonly(state)
   };
 }

@@ -25,6 +25,7 @@ export function* todosSaga() {
     yield takeLatest(TodosActions.initToday.TYPE, createTodosToday),
     yield takeLatest(TodosActions.addTodo.TYPE, addTodo),
     yield takeLatest(TodosActions.removeTodo.TYPE, removeTodo),
+    yield takeLatest(TodosActions.moveTodo.TYPE, moveTodo),
     yield takeLatest(TodosActions.setTodoStatus.TYPE, setTodoStatus),
     yield takeLatest(TodosActions.updateGroup.TYPE, updateGroup),
     yield takeLatest(TodosActions.moveGroup.TYPE, moveGroup)
@@ -157,6 +158,43 @@ function* removeTodo(action: TypedAction<TodosActions.RemoveTodoPayload>) {
   yield writeTodos();
 }
 
+function* moveTodo(action: TypedAction<TodosActions.MoveTodoPayload>) {
+  const { date, fromIndex, toIndex } = action.payload;
+  if (!isTodayTodoDate(date)) {
+    return;
+  }
+
+  const days: TodosDaysByDateStrs = yield select(selectTodosDays);
+  const dateStr = todoDateToStr(date);
+  const day = days[dateStr];
+
+  if (day == null) {
+    return;
+  }
+
+  const fromTodo = day.todos[fromIndex];
+  const toTodo = day.todos[toIndex];
+
+  if (fromTodo == null || toTodo == null) {
+    return;
+  }
+
+  const groupUpdatedFromTodo = { ...fromTodo, group: toTodo.group };
+  const newTodos = [...day.todos];
+  newTodos.splice(fromIndex, 1);
+  newTodos.splice(toIndex, 0, groupUpdatedFromTodo);
+
+  const newDays = setWith(days, {
+    [dateStr]: {
+      ...day,
+      todos: newTodos
+    }
+  });
+
+  yield put(InternalTodosActions.setTodos({ days: newDays }));
+  yield writeTodos();
+}
+
 function* setTodoStatus(action: TypedAction<TodosActions.SetTodoStatusPayload>) {
   const { date, todoId, status } = action.payload;
   if (!isTodayTodoDate(date)) {
@@ -232,7 +270,7 @@ function* updateGroup(action: TypedAction<TodosActions.UpdateGroupPayload>) {
 }
 
 function* moveGroup(action: TypedAction<TodosActions.MoveGroupPayload>) {
-  const { date, group, direction } = action.payload;
+  const { date, fromIndex, toIndex } = action.payload;
   if (!isTodayTodoDate(date)) {
     return;
   }
@@ -246,24 +284,8 @@ function* moveGroup(action: TypedAction<TodosActions.MoveGroupPayload>) {
   }
 
   const groups = getTodoGroups(day.todos);
-  const index = groups.findIndex(g => g === group);
-  if (index < 0) {
-    return;
-  } else if (index === 0 && direction === "up") {
-    return;
-  } else if (index === groups.length - 1 && direction === "down") {
-    return;
-  }
-
-  if (direction === "up") {
-    const temp = groups[index - 1];
-    groups[index - 1] = groups[index];
-    groups[index] = temp;
-  } else if (direction === "down") {
-    const temp = groups[index + 1];
-    groups[index + 1] = groups[index];
-    groups[index] = temp;
-  }
+  const movedGroup = groups.splice(fromIndex, 1)[0];
+  groups.splice(toIndex, 0, movedGroup);
 
   const todosByGroup = groupBy(day.todos, todo => todo.group);
   const newTodos: Todo[] = [];

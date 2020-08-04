@@ -7,6 +7,7 @@ export namespace TodosActions {
   export const initToday = TypedAction.define("todos::init-today")<InitTodayPayload>();
   export const addTodo = TypedAction.define("todos::add-todo")<AddTodoPayload>();
   export const removeTodo = TypedAction.define("todos::remove-todo")<RemoveTodoPayload>();
+  export const moveTodo = TypedAction.define("todos::move-todo")<MoveTodoPayload>();
   export const setTodoStatus = TypedAction.define("todos::set-todo-status")<SetTodoStatusPayload>();
   export const updateGroup = TypedAction.define("todos::update-group")<string>();
   export const moveGroup = TypedAction.define("todos::move-group")<MoveGroupPayload>();
@@ -25,6 +26,12 @@ export namespace TodosActions {
     todoId: string;
   }
 
+  export interface MoveTodoPayload {
+    date: TodoDate;
+    fromIndex: number;
+    toIndex: number;
+  }
+
   export interface SetTodoStatusPayload {
     date: TodoDate;
     todoId: string;
@@ -39,8 +46,8 @@ export namespace TodosActions {
 
   export interface MoveGroupPayload {
     date: TodoDate;
-    group: string;
-    direction: "up" | "down";
+    fromIndex: number;
+    toIndex: number;
   }
 }
 
