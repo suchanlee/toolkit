@@ -38,6 +38,7 @@ class NoteListInternal extends React.Component<NoteList.Props> {
     if (this.props.notes.length === 0) {
       return <p className="note-list-non-ideal-state">No notes.</p>;
     }
+
     return (
       <KNL
         className="note-list"
@@ -52,7 +53,9 @@ class NoteListInternal extends React.Component<NoteList.Props> {
   }
 
   private handleSelect = (note: Note) => {
-    this.props.setActive(note.id);
+    if (!this.props.hasActive) {
+      this.props.setActive(note.id);
+    }
   };
 
   private renderItem = (note: Note) => {

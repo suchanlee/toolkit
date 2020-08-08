@@ -34,7 +34,11 @@ export namespace KeyNavList {
   export type Props<T> = OwnProps<T> & StoreProps & DispatchProps;
 }
 
-class KeyNavListInternal<T> extends React.PureComponent<KeyNavList.Props<T>> {
+class KeyNavListInternal<T> extends React.Component<KeyNavList.Props<T>> {
+  public shouldComponentUpdate(nextProps: KeyNavList.Props<T>) {
+    return nextProps.isDisabled == null || !nextProps.isDisabled;
+  }
+
   public componentDidMount() {
     this.props.init({ id: this.props.id });
     // use document.addEventListener since we need to support multiple
