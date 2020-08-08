@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { TodosDay, TodoStatus } from "../redux/todosTypes";
-import { linkifyText } from "../utils/linkifyText";
 import { createTodayTodoDate, isTodoDatesEqual, todoDateToDate } from "../utils/todoDateUtils";
+import { TodosWeekSummaryGroupedTodos } from "./TodosWeekSummaryGroupedTodos";
 
 const DAY_OF_WEEK = [
   "Sunday ",
@@ -36,21 +36,13 @@ export const TodosWeekSummaryDay = memo((props: TodosWeekSummaryDayProps) => {
       {finishedTodos.length > 0 && (
         <React.Fragment>
           <h4 className="todos-week-summary-panel-finished">FINISHED</h4>
-          <ul>
-            {finishedTodos.map(task => (
-              <li key={task.id}>{linkifyText(task.value)}</li>
-            ))}
-          </ul>
+          <TodosWeekSummaryGroupedTodos todos={finishedTodos} />
         </React.Fragment>
       )}
       {showInProgress && inProgressTodos.length > 0 && (
         <React.Fragment>
           <h4 className="todos-week-summary-panel-in-progress">IN PROGRESS</h4>
-          <ul>
-            {inProgressTodos.map(task => (
-              <li key={task.id}>{linkifyText(task.value)}</li>
-            ))}
-          </ul>
+          <TodosWeekSummaryGroupedTodos todos={inProgressTodos} />
         </React.Fragment>
       )}
     </React.Fragment>
