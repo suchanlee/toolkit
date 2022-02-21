@@ -4,7 +4,6 @@ import * as path from "path";
 import * as url from "url";
 import { registerMainIpcListeners } from "./ipc";
 import { registerMenu } from "./menu/registerMenu";
-import { registerMorningNotification } from "./notification/registerMorningNotification";
 
 let win: BrowserWindow | null;
 
@@ -54,7 +53,6 @@ const createWindow = async () => {
   }
 
   registerMenu();
-  registerMorningNotification();
   registerMainIpcListeners();
   autoUpdater.checkForUpdatesAndNotify();
 
