@@ -18,6 +18,10 @@ export function readData(fileName: string) {
     return undefined;
   }
 
+  if (data == null || data.trim().length === 0) {
+    return {};
+  }
+
   try {
     return JSON.parse(data);
   } catch (e) {
