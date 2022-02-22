@@ -11,6 +11,7 @@ export namespace TodosActions {
   export const setTodoStatus = TypedAction.define("todos::set-todo-status")<SetTodoStatusPayload>();
   export const updateGroup = TypedAction.define("todos::update-group")<string>();
   export const moveGroup = TypedAction.define("todos::move-group")<MoveGroupPayload>();
+  export const createGroup = TypedAction.define("todos::create-group")<CreateGroupPayload>();
 
   export interface InitTodayPayload {
     shouldInherit: boolean;
@@ -50,6 +51,11 @@ export namespace TodosActions {
     date: TodoDate;
     fromIndex: number;
     toIndex: number;
+  }
+
+  export interface CreateGroupPayload {
+    date: TodoDate;
+    name: string;
   }
 }
 

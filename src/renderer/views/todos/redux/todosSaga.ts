@@ -28,7 +28,8 @@ export function* todosSaga() {
     yield takeLatest(TodosActions.moveTodo.TYPE, moveTodo),
     yield takeLatest(TodosActions.setTodoStatus.TYPE, setTodoStatus),
     yield takeLatest(TodosActions.updateGroup.TYPE, updateGroup),
-    yield takeLatest(TodosActions.moveGroup.TYPE, moveGroup)
+    yield takeLatest(TodosActions.moveGroup.TYPE, moveGroup),
+    yield takeLatest(TodosActions.createGroup.TYPE, createGroup)
   ]);
 }
 
@@ -313,6 +314,27 @@ function* moveGroup(action: TypedAction<TodosActions.MoveGroupPayload>) {
     [dateStr]: {
       ...day,
       todos: newTodos
+    }
+  });
+
+  yield put(InternalTodosActions.setTodos({ days: newDays }));
+  yield writeTodos();
+}
+
+function* createGroup(action: TypedAction<TodosActions.CreateGroupPayload>) {
+  const { date, name } = action.payload;
+  if (!isTodayTodoDate(date)) {
+    return;
+  }
+
+  const days: TodosDaysByDateStrs = yield select(selectTodosDays);
+  const dateStr = todoDateToStr(date);
+  const today = days[dateStr];
+
+  const newDays = setWith(days, {
+    [dateStr]: {
+      ...today,
+      groups: [...today.groups, name]
     }
   });
 
