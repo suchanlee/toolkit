@@ -76,16 +76,16 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
 
     const { day, listId, viewOptions } = this.props;
     const { isDraggingGroup, isDraggingTodo } = this.state;
-    const filteredTodos = this.getViewOptionsAppliedTodos(day.todos, viewOptions);
-    const groupedTodos = this.getGroupedTodos(filteredTodos);
-    const groups = getTodoGroups(filteredTodos);
-    const isReadonly = this.props.isReadonly || viewOptions.isSorted;
+    const groupedTodos = this.getGroupedTodos(day.todos, viewOptions);
+    const groups = getTodoGroups(day.todos);
+    const isGroupDnDDisabled = this.props.isReadonly;
+    const isTodoDnDDisabled = this.props.isReadonly || viewOptions.isSorted;
     let rowIndex = 0;
     return (
       <DragDropContext onDragEnd={this.handleDragEnd} onDragStart={this.handleDragStart}>
         <Droppable
           droppableId={GROUP_DRAGGABLE_ID}
-          isDropDisabled={isReadonly || isDraggingTodo}
+          isDropDisabled={isGroupDnDDisabled || isDraggingTodo}
           type="droppableSubItem"
         >
           {provided => (
@@ -98,7 +98,7 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
                     key={group}
                     draggableId={group}
                     index={index}
-                    isDragDisabled={isReadonly || isDraggingTodo}
+                    isDragDisabled={isGroupDnDDisabled || isDraggingTodo}
                   >
                     {provided => (
                       <div
@@ -110,19 +110,19 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
                         <div className="todos-list-group">{group}</div>
                         <Droppable
                           droppableId={`${TODOS_DROPPABLE_ID_PREFIX}${group}`}
-                          isDropDisabled={isDraggingGroup || isReadonly}
+                          isDropDisabled={isDraggingGroup || isTodoDnDDisabled}
                           type="droppableSubItem"
                         >
                           {provided => (
                             <div>
                               <div ref={provided.innerRef} {...provided.droppableProps}>
-                                {groupedTodos[g!].map((todo, index) => (
+                                {(groupedTodos[g!] ?? []).map((todo, index) => (
                                   <TodoItem
                                     key={todo.id}
                                     todo={todo}
                                     date={day.date}
-                                    isReadonly={isReadonly}
-                                    isDragDisabled={isDraggingGroup || isReadonly}
+                                    isReadonly={this.props.isReadonly}
+                                    isDragDisabled={isDraggingGroup || isTodoDnDDisabled}
                                     listId={listId}
                                     // tslint:disable-next-line: no-increment-decrement
                                     rowIndex={rowIndex++}
@@ -216,14 +216,14 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
     }
   };
 
-  private getViewOptionsAppliedTodos = defaultMemoize(
+  private getGroupedTodos = defaultMemoize(
     (todos: readonly Todo[], viewOptions: TodosViewOptions) => {
       let appliedTodos = todos;
       if (viewOptions.isFinishedHidden) {
         appliedTodos = todos.filter(todo => todo.status !== TodoStatus.FINISHED);
       }
       if (viewOptions.isSorted) {
-        appliedTodos = [...todos].sort((t1, t2) => {
+        appliedTodos = [...appliedTodos].sort((t1, t2) => {
           if (t1.status === t2.status) {
             return 0;
           } else if (t1.status === TodoStatus.FINISHED) {
@@ -237,12 +237,8 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
           }
         });
       }
-      return appliedTodos;
+      return groupBy(appliedTodos, todo => todo.group);
     }
-  );
-
-  private getGroupedTodos = defaultMemoize((todos: readonly Todo[]) =>
-    groupBy(todos, todo => todo.group)
   );
 }
 
