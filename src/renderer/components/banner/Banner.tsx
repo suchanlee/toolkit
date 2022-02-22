@@ -54,7 +54,12 @@ const BannerInternal = React.memo((props: Banner.Props) => {
 
   const input = (
     <div onKeyDown={swallowKeyDown}>
-      <EditableText value={inputValue} onChange={handleChange} onConfirm={handleConfirm} />
+      <EditableText
+        className="banner-editable-text"
+        value={inputValue}
+        onChange={handleChange}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
   return <InfoBanner className="banner-info-banner" value={input} />;
