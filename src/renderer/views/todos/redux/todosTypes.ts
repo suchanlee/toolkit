@@ -34,4 +34,5 @@ export interface PersistedTodos {
 
 export interface TodosViewOptions {
   isFinishedHidden: boolean;
+  isSorted: boolean;
 }

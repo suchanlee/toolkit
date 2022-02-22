@@ -30,6 +30,7 @@ export function TodosControls() {
   return (
     <div className="todos-controls-container">
       <Checkbox
+        className="todos-controls-checkbox"
         label={`Hide Finished ${numFinished != null ? `(${numFinished})` : ""}`}
         checked={viewOptions.isFinishedHidden}
         onChange={evt => {
@@ -37,6 +38,19 @@ export function TodosControls() {
             TodosActions.setViewOptions({
               ...viewOptions,
               isFinishedHidden: evt.currentTarget.checked
+            })
+          );
+        }}
+      />
+      <Checkbox
+        className="todos-controls-checkbox"
+        label="Sort Todos"
+        checked={viewOptions.isSorted}
+        onChange={evt => {
+          dispatch(
+            TodosActions.setViewOptions({
+              ...viewOptions,
+              isSorted: evt.currentTarget.checked
             })
           );
         }}

@@ -22,7 +22,8 @@ export function createInitialTodosState(): TodosState {
     days: {},
     dateStrs: [],
     viewOptions: {
-      isFinishedHidden: false
+      isFinishedHidden: false,
+      isSorted: false
     }
   };
 }

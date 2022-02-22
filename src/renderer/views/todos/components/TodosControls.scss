@@ -1,5 +1,18 @@
 .todos-controls-container {
   display: flex;
   align-items: center;
-  padding: 10px 10px 0;
+  padding: 10px;
+}
+
+.todos-controls-container .todos-controls-checkbox {
+  margin-bottom: 0;
+  margin-right: 16px;
+}
+
+.todos-controls-container .todos-controls-checkbox:last-child {
+  margin-right: 0;
+}
+
+.todos-controls-container .todo-controls-button {
+  font-size: 12px;
 }

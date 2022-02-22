@@ -74,17 +74,18 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
       return;
     }
 
-    const { day, isReadonly, listId, viewOptions } = this.props;
+    const { day, listId, viewOptions } = this.props;
     const { isDraggingGroup, isDraggingTodo } = this.state;
-    const filteredTodos = this.getFilteredTodos(day.todos, viewOptions);
+    const filteredTodos = this.getViewOptionsAppliedTodos(day.todos, viewOptions);
     const groupedTodos = this.getGroupedTodos(filteredTodos);
     const groups = getTodoGroups(filteredTodos);
+    const isReadonly = this.props.isReadonly || viewOptions.isSorted;
     let rowIndex = 0;
     return (
       <DragDropContext onDragEnd={this.handleDragEnd} onDragStart={this.handleDragStart}>
         <Droppable
           droppableId={GROUP_DRAGGABLE_ID}
-          isDropDisabled={this.props.isReadonly || isDraggingTodo}
+          isDropDisabled={isReadonly || isDraggingTodo}
           type="droppableSubItem"
         >
           {provided => (
@@ -215,11 +216,28 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
     }
   };
 
-  private getFilteredTodos = defaultMemoize(
+  private getViewOptionsAppliedTodos = defaultMemoize(
     (todos: readonly Todo[], viewOptions: TodosViewOptions) => {
-      return viewOptions.isFinishedHidden
-        ? todos.filter(todo => todo.status !== TodoStatus.FINISHED)
-        : todos;
+      let appliedTodos = todos;
+      if (viewOptions.isFinishedHidden) {
+        appliedTodos = todos.filter(todo => todo.status !== TodoStatus.FINISHED);
+      }
+      if (viewOptions.isSorted) {
+        appliedTodos = [...todos].sort((t1, t2) => {
+          if (t1.status === t2.status) {
+            return 0;
+          } else if (t1.status === TodoStatus.FINISHED) {
+            return 1;
+          } else if (t2.status === TodoStatus.FINISHED) {
+            return -1;
+          } else if (t1.status === TodoStatus.NOT_STARTED) {
+            return -1;
+          } else {
+            return 1;
+          }
+        });
+      }
+      return appliedTodos;
     }
   );
 
