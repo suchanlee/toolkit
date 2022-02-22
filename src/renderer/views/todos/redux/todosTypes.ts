@@ -31,3 +31,7 @@ export enum TodoStatus {
 export interface PersistedTodos {
   todosDays: readonly TodosDay[];
 }
+
+export interface TodosViewOptions {
+  isFinishedHidden: boolean;
+}

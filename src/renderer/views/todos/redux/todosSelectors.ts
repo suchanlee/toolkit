@@ -17,6 +17,7 @@ export const selectTodosDays = (state: RootState) => state.todos.days;
 export const selectTodosDateStrs = (state: RootState) => state.todos.dateStrs;
 export const selectTodosActiveDate = (state: RootState) => state.todos.activeDate;
 export const selectTodosSummaryDate = (state: RootState) => state.todos.summaryDate;
+export const selectTodosViewOptions = (state: RootState) => state.todos.viewOptions;
 
 export const selectTodosDaysAsArray = createSelector(
   selectTodosDays,

@@ -8,6 +8,7 @@ import { selectTodosActiveDate, selectTodosIsReadonly } from "../redux/todosSele
 import { TodoDate } from "../redux/todosTypes";
 import { todoDateToStr } from "../utils/todoDateUtils";
 import { TodoInput } from "./TodoInput";
+import { TodosControls } from "./TodosControls";
 import { TodosList } from "./TodosList";
 import { TodosPanelBanner } from "./TodosPanelBanner";
 
@@ -57,6 +58,7 @@ class TodosPanelInternal extends React.PureComponent<TodosPanel.Props, TodosPane
                 setEscapeKeyCloseDisabled={this.setEscapeKeyCloseDisabled}
               />
             )}
+            <TodosControls />
             <TodosList
               listId={this.listId}
               setEscapeKeyCloseDisabled={this.setEscapeKeyCloseDisabled}

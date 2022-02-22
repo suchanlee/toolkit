@@ -8,8 +8,12 @@ import { selectKeyNavListLocations } from "../../../selectors/keyNavListSelector
 import { createInitialKeyNavListLocation } from "../../../states/keyNavListState";
 import { RootState } from "../../../states/rootState";
 import { TodosActions } from "../redux/todosActions";
-import { selectActiveTodosDay, selectTodosIsReadonly } from "../redux/todosSelectors";
-import { Todo, TodosDay } from "../redux/todosTypes";
+import {
+  selectActiveTodosDay,
+  selectTodosIsReadonly,
+  selectTodosViewOptions
+} from "../redux/todosSelectors";
+import { Todo, TodosDay, TodoStatus, TodosViewOptions } from "../redux/todosTypes";
 import { TODO_DEFAULT_GROUP } from "../todosObjects";
 import { getTodoGroups } from "../utils/todoGroupUtils";
 import { TodoItem } from "./TodoItem";
@@ -24,6 +28,7 @@ export namespace TodosList {
 
   export interface StoreProps {
     day: TodosDay | undefined;
+    viewOptions: TodosViewOptions;
     isReadonly: boolean;
     isLastRow: boolean;
   }
@@ -69,10 +74,11 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
       return;
     }
 
-    const { day, isReadonly, listId } = this.props;
+    const { day, isReadonly, listId, viewOptions } = this.props;
     const { isDraggingGroup, isDraggingTodo } = this.state;
-    const groupedTodos = this.getGroupedTodos(day.todos);
-    const groups = getTodoGroups(day.todos);
+    const filteredTodos = this.getFilteredTodos(day.todos, viewOptions);
+    const groupedTodos = this.getGroupedTodos(filteredTodos);
+    const groups = getTodoGroups(filteredTodos);
     let rowIndex = 0;
     return (
       <DragDropContext onDragEnd={this.handleDragEnd} onDragStart={this.handleDragStart}>
@@ -209,6 +215,14 @@ class TodosListInternal extends React.PureComponent<TodosList.Props> {
     }
   };
 
+  private getFilteredTodos = defaultMemoize(
+    (todos: readonly Todo[], viewOptions: TodosViewOptions) => {
+      return viewOptions.isFinishedHidden
+        ? todos.filter(todo => todo.status !== TodoStatus.FINISHED)
+        : todos;
+    }
+  );
+
   private getGroupedTodos = defaultMemoize((todos: readonly Todo[]) =>
     groupBy(todos, todo => todo.group)
   );
@@ -225,6 +239,7 @@ function mapStateToProps(state: RootState, ownProps: TodosList.OwnProps): TodosL
   const day = selectActiveTodosDay(state);
   return {
     day,
+    viewOptions: selectTodosViewOptions(state),
     isReadonly: selectTodosIsReadonly(state),
     isLastRow: day != null && location.row === day.todos.length - 1
   };

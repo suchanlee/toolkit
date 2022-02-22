@@ -19,4 +19,9 @@ export const todosReducer = TypedReducer.builder<TodosState>()
       summaryDate: payload
     });
   })
+  .withHandler(TodosActions.setViewOptions.TYPE, (state, payload) => {
+    return setWith(state, {
+      viewOptions: payload
+    });
+  })
   .build();
